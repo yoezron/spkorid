@@ -1,235 +1,148 @@
 <?= $this->extend('layouts/main') ?>
 
+<?= $this->section('title') ?>
+Dashboard Pengurus
+<?= $this->endSection() ?>
+
+<?= $this->section('styles') ?>
+<link href="<?= base_url('assets/css/dashboard/dash_2.css') ?>" rel="stylesheet" type="text/css" />
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
-<div class="pengurus-dashboard">
-    <!-- Summary Cards -->
-    <div class="summary-cards">
-        <div class="summary-card orange">
-            <div class="card-icon">
-                <i class="fas fa-user-clock"></i>
-            </div>
-            <div class="card-content">
-                <h3><?= $member_stats['pending'] ?></h3>
-                <p>Calon Anggota</p>
-                <a href="<?= base_url('pengurus/members/pending') ?>" class="card-link">
-                    Verifikasi <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
 
-        <div class="summary-card blue">
-            <div class="card-icon">
-                <i class="fas fa-file-alt"></i>
-            </div>
-            <div class="card-content">
-                <h3><?= count($pending_posts) ?></h3>
-                <p>Artikel Pending</p>
-                <a href="<?= base_url('pengurus/blog/pending') ?>" class="card-link">
-                    Review <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
+<div class="row layout-top-spacing">
 
-        <div class="summary-card red">
-            <div class="card-icon">
-                <i class="fas fa-exclamation-circle"></i>
-            </div>
-            <div class="card-content">
-                <h3><?= count($open_pengaduan) ?></h3>
-                <p>Pengaduan Baru</p>
-                <a href="<?= base_url('pengurus/pengaduan') ?>" class="card-link">
-                    Tangani <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
-
-        <div class="summary-card green">
-            <div class="card-icon">
-                <i class="fas fa-poll"></i>
-            </div>
-            <div class="card-content">
-                <h3><?= count($active_surveys) ?></h3>
-                <p>Survei Aktif</p>
-                <a href="<?= base_url('pengurus/surveys') ?>" class="card-link">
-                    Kelola <i class="fas fa-arrow-right"></i>
-                </a>
+    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
+        <div class="widget widget-card-four">
+            <div class="widget-content">
+                <div class="w-content">
+                    <div class="w-info">
+                        <h6 class="value"><?= number_format($member_stats['pending'] ?? 0) ?></h6>
+                        <p class="">Calon Anggota</p>
+                    </div>
+                </div>
+                <div class="w-action">
+                    <a href="<?= base_url('pengurus/members/pending') ?>" class="btn btn-primary">Verifikasi</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Pending Members Table -->
-    <div class="dashboard-section">
-        <div class="section-header">
-            <h3>Calon Anggota Menunggu Verifikasi</h3>
-            <a href="<?= base_url('pengurus/members/pending') ?>" class="btn btn-sm btn-primary">
-                Lihat Semua
-            </a>
+    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
+        <div class="widget widget-card-four">
+            <div class="widget-content">
+                <div class="w-content">
+                    <div class="w-info">
+                        <h6 class="value"><?= count($pending_posts ?? []) ?></h6>
+                        <p class="">Artikel Pending</p>
+                    </div>
+                </div>
+                <div class="w-action">
+                    <a href="<?= base_url('pengurus/blog/pending') ?>" class="btn btn-warning">Review</a>
+                </div>
+            </div>
         </div>
-        <div class="section-body">
-            <?php if (!empty($pending_members)): ?>
+    </div>
+
+    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
+        <div class="widget widget-card-four">
+            <div class="widget-content">
+                <div class="w-content">
+                    <div class="w-info">
+                        <h6 class="value"><?= count($open_pengaduan ?? []) ?></h6>
+                        <p class="">Pengaduan Baru</p>
+                    </div>
+                </div>
+                <div class="w-action">
+                    <a href="<?= base_url('pengurus/pengaduan') ?>" class="btn btn-danger">Tangani</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+        <div class="widget widget-table-three">
+            <div class="widget-heading">
+                <h5 class="">Anggota Menunggu Verifikasi</h5>
+                <div class="task-action">
+                    <a href="<?= base_url('pengurus/members/pending') ?>" class="btn btn-sm btn-outline-primary">Lihat Semua</a>
+                </div>
+            </div>
+            <div class="widget-content">
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-scroll">
                         <thead>
                             <tr>
-                                <th>Foto</th>
-                                <th>Nama Lengkap</th>
-                                <th>Email</th>
-                                <th>Kampus</th>
-                                <th>Tanggal Daftar</th>
-                                <th>Aksi</th>
+                                <th>
+                                    <div class="th-content">Nama</div>
+                                </th>
+                                <th>
+                                    <div class="th-content">Kampus</div>
+                                </th>
+                                <th>
+                                    <div class="th-content">Aksi</div>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach (array_slice($pending_members, 0, 5) as $member): ?>
+                            <?php if (!empty($pending_members)): ?>
+                                <?php foreach (array_slice($pending_members, 0, 5) as $member): ?>
+                                    <tr>
+                                        <td>
+                                            <div class="td-content customer-name">
+                                                <img src="<?= base_url($member['foto_path'] ?? 'assets/img/90x90.jpg') ?>" alt="avatar">
+                                                <span><?= esc($member['nama_lengkap']) ?></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="td-content"><?= esc($member['nama_kampus'] ?? 'N/A') ?></div>
+                                        </td>
+                                        <td>
+                                            <div class="td-content"><a href="<?= base_url('pengurus/members/view/' . $member['id']) ?>" class="btn btn-sm btn-primary">Review</a></div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
                                 <tr>
-                                    <td>
-                                        <img src="<?= $member['foto'] ?? base_url('images/default-avatar.png') ?>"
-                                            alt="<?= $member['nama_lengkap'] ?>"
-                                            class="table-avatar">
-                                    </td>
-                                    <td><?= $member['nama_lengkap'] ?></td>
-                                    <td><?= $member['email'] ?></td>
-                                    <td><?= $member['nama_kampus'] ?? '-' ?></td>
-                                    <td><?= date('d/m/Y', strtotime($member['created_at'])) ?></td>
-                                    <td>
-                                        <a href="<?= base_url('pengurus/members/view/' . $member['id']) ?>"
-                                            class="btn btn-sm btn-info">
-                                            <i class="fas fa-eye"></i> Review
-                                        </a>
+                                    <td colspan="3">
+                                        <div class="td-content text-center">Tidak ada anggota menunggu verifikasi.</div>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
-            <?php else: ?>
-                <p class="text-muted text-center">Tidak ada calon anggota yang menunggu verifikasi</p>
-            <?php endif; ?>
+            </div>
         </div>
     </div>
 
-    <!-- Pending Articles -->
-    <div class="dashboard-section">
-        <div class="section-header">
-            <h3>Artikel Menunggu Review</h3>
-            <a href="<?= base_url('pengurus/blog/pending') ?>" class="btn btn-sm btn-primary">
-                Lihat Semua
-            </a>
-        </div>
-        <div class="section-body">
-            <?php if (!empty($pending_posts)): ?>
-                <div class="article-list">
-                    <?php foreach (array_slice($pending_posts, 0, 3) as $post): ?>
-                        <div class="article-item">
-                            <div class="article-content">
-                                <h4><?= $post['judul'] ?></h4>
-                                <p><?= character_limiter(strip_tags($post['konten']), 150) ?></p>
-                                <div class="article-meta">
-                                    <span><i class="fas fa-user"></i> <?= $post['author_name'] ?></span>
-                                    <span><i class="fas fa-clock"></i> <?= date('d/m/Y H:i', strtotime($post['created_at'])) ?></span>
+    <div class="col-xl-5 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
+        <div class="widget widget-activity-four">
+            <div class="widget-heading">
+                <h5 class="">Aktivitas Terbaru Serikat</h5>
+            </div>
+            <div class="widget-content">
+                <div class="mt-container mx-auto">
+                    <div class="timeline-line">
+                        <?php if (!empty($recent_activities)): ?>
+                            <?php foreach (array_slice($recent_activities, 0, 5) as $activity): ?>
+                                <div class="item-timeline timeline-<?= $activity['type'] == 'new_member' ? 'success' : 'primary' ?>">
+                                    <div class="t-dot" data-original-title="" title=""></div>
+                                    <div class="t-text">
+                                        <p><?= esc($activity['message']) ?></p>
+                                        <span class="badge badge-info"><?= \CodeIgniter\I18n\Time::parse($activity['date'])->humanize() ?></span>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="article-actions">
-                                <a href="<?= base_url('pengurus/blog/review/' . $post['id']) ?>"
-                                    class="btn btn-sm btn-primary">Review</a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p class="text-center">Belum ada aktivitas terbaru.</p>
+                        <?php endif; ?>
+                    </div>
                 </div>
-            <?php else: ?>
-                <p class="text-muted text-center">Tidak ada artikel yang menunggu review</p>
-            <?php endif; ?>
+            </div>
         </div>
     </div>
 
-    <!-- Open Complaints -->
-    <div class="dashboard-section">
-        <div class="section-header">
-            <h3>Pengaduan Terbaru</h3>
-            <a href="<?= base_url('pengurus/pengaduan') ?>" class="btn btn-sm btn-primary">
-                Lihat Semua
-            </a>
-        </div>
-        <div class="section-body">
-            <?php if (!empty($open_pengaduan)): ?>
-                <div class="complaint-list">
-                    <?php foreach (array_slice($open_pengaduan, 0, 5) as $pengaduan): ?>
-                        <div class="complaint-item">
-                            <div class="complaint-header">
-                                <h5><?= $pengaduan['subject'] ?></h5>
-                                <span class="badge badge-<?= $pengaduan['status'] == 'new' ? 'danger' : 'warning' ?>">
-                                    <?= ucfirst($pengaduan['status']) ?>
-                                </span>
-                            </div>
-                            <p class="complaint-sender">
-                                <i class="fas fa-user"></i> <?= $pengaduan['nama'] ?> - <?= $pengaduan['email'] ?>
-                            </p>
-                            <p class="complaint-preview"><?= character_limiter($pengaduan['pesan'], 100) ?></p>
-                            <div class="complaint-footer">
-                                <small><?= date('d/m/Y H:i', strtotime($pengaduan['created_at'])) ?></small>
-                                <a href="<?= base_url('pengurus/pengaduan/view/' . $pengaduan['id']) ?>"
-                                    class="btn btn-sm btn-outline-primary">Tangani</a>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php else: ?>
-                <p class="text-muted text-center">Tidak ada pengaduan baru</p>
-            <?php endif; ?>
-        </div>
-    </div>
-
-    <!-- Quick Tools -->
-    <div class="quick-tools">
-        <h3>Quick Tools</h3>
-        <div class="tools-grid">
-            <a href="<?= base_url('pengurus/informasi/create') ?>" class="tool-card">
-                <i class="fas fa-bullhorn"></i>
-                <span>Kirim Informasi</span>
-            </a>
-            <a href="<?= base_url('pengurus/surveys/create') ?>" class="tool-card">
-                <i class="fas fa-poll"></i>
-                <span>Buat Survei</span>
-            </a>
-            <a href="<?= base_url('pengurus/blog/create') ?>" class="tool-card">
-                <i class="fas fa-pen"></i>
-                <span>Tulis Artikel</span>
-            </a>
-            <a href="<?= base_url('pengurus/members/export') ?>" class="tool-card">
-                <i class="fas fa-file-excel"></i>
-                <span>Export Data</span>
-            </a>
-            <a href="<?= base_url('pengurus/reports/salary') ?>" class="tool-card">
-                <i class="fas fa-chart-bar"></i>
-                <span>Data Survei Upah</span>
-            </a>
-            <a href="<?= base_url('pengurus/forum/moderate') ?>" class="tool-card">
-                <i class="fas fa-comments"></i>
-                <span>Moderasi Forum</span>
-            </a>
-        </div>
-    </div>
 </div>
+
 <?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script>
-    // Auto-refresh for pending items
-    setInterval(function() {
-        checkPendingItems();
-    }, 60000); // Check every minute
-
-    function checkPendingItems() {
-        fetch('<?= base_url('pengurus/api/pending-count') ?>')
-            .then(response => response.json())
-            .then(data => {
-                updateBadges(data);
-            });
-    }
-
-    function updateBadges(data) {
-        // Update badge counts dynamically
-        if (data.pending_members > 0) {
-            showNotification('Ada ' + data.pending_members + ' calon anggota baru menunggu verifikasi');
-        }
-    }

@@ -89,4 +89,16 @@ class PaymentHistoryModel extends Model
 
         return $builder->first();
     }
+
+    // Get payments by date range with member and verifier names
+    public function getPaymentsByDateRange($startDate, $endDate)
+    {
+        return $this->select('payment_history.*, m.nama_lengkap, u.username as verifier_name')
+            ->join('members m', 'm.id = payment_history.member_id', 'left')
+            ->join('users u', 'u.id = payment_history.verified_by', 'left')
+            ->where('payment_history.tanggal_pembayaran >=', $startDate . ' 00:00:00')
+            ->where('payment_history.tanggal_pembayaran <=', $endDate . ' 23:59:59')
+            ->orderBy('payment_history.tanggal_pembayaran', 'DESC')
+            ->findAll();
+    }
 }

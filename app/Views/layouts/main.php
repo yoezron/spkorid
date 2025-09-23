@@ -2,51 +2,74 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="<?= $this->renderSection('meta_description') ?>">
-    <title><?= $title ?? 'Serikat Pekerja Kampus' ?></title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
+    <title><?= esc($title ?? 'Dashboard - Serikat Pekerja Kampus') ?></title>
 
-    <!-- CSS Files -->
-    <link rel="stylesheet" href="<?= base_url('css/main.css') ?>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/x-icon" href="<?= base_url('images/favicon.ico') ?>">
 
+    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+    <link href="<?= base_url('bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets/css/main.css') ?>" rel="stylesheet" type="text/css" />
+    <link href="<?= base_url('assets/css/custom.css') ?>" rel="stylesheet" type="text/css" />
     <?= $this->renderSection('styles') ?>
 </head>
 
-<body class="<?= session()->get('logged_in') ? 'logged-in' : 'guest' ?>">
+<body class="layout-boxed">
 
-    <?php if (session()->get('logged_in')): ?>
-        <!-- Sidebar -->
-        <?= $this->include('partials/sidebar') ?>
+    <div id="load_screen">
+        <div class="loader">
+            <div class="loader-content">
+                <div class="spinner-grow align-self-center"></div>
+            </div>
+        </div>
+    </div>
+    <div class="main-container" id="container">
+        <div class="overlay"></div>
+        <div class="search-overlay"></div>
 
-        <!-- Main Content Wrapper -->
-        <div class="main-wrapper">
-            <!-- Top Navbar -->
-            <?= $this->include('partials/navbar') ?>
+        <?php if (session()->get('logged_in')): ?>
 
-            <!-- Content -->
-            <main class="content-area">
-                <?= $this->include('partials/breadcrumb') ?>
+            <?= $this->include('partials/sidebar') ?>
+            <div id="content" class="main-content">
+                <div class="layout-px-spacing">
+                    <div class="page-header">
+                        <div class="page-title">
+                            <h3><?= esc($title ?? 'Dashboard') ?></h3>
+                        </div>
+                    </div>
+
+                    <?= $this->include('partials/flash_messages') ?>
+
+                    <?= $this->renderSection('content') ?>
+                </div>
+
+                <?= $this->include('partials/footer') ?>
+            </div>
+        <?php else: ?>
+
+            <?= $this->include('partials/guest_header') ?>
+            <div class="guest-content">
                 <?= $this->include('partials/flash_messages') ?>
                 <?= $this->renderSection('content') ?>
-            </main>
+            </div>
+            <?= $this->include('partials/guest_footer') ?>
 
-            <!-- Footer -->
-            <?= $this->include('partials/footer') ?>
-        </div>
-    <?php else: ?>
-        <!-- Guest Layout -->
-        <?= $this->include('partials/guest_header') ?>
-        <main class="guest-content">
-            <?= $this->include('partials/flash_messages') ?>
-            <?= $this->renderSection('content') ?>
-        </main>
-        <?= $this->include('partials/guest_footer') ?>
-    <?php endif; ?>
+        <?php endif; ?>
 
-    <!-- Scripts -->
-    <script src="<?= base_url('js/app.js') ?>"></script>
+    </div>
+    <script src="<?= base_url('assets/js/libs/jquery-3.1.1.min.js') ?>"></script>
+    <script src="<?= base_url('bootstrap/js/popper.min.js') ?>"></script>
+    <script src="<?= base_url('bootstrap/js/bootstrap.min.js') ?>"></script>
+    <script src="<?= base_url('plugins/perfect-scrollbar/perfect-scrollbar.min.js') ?>"></script>
+    <script src="<?= base_url('assets/js/app.js') ?>"></script>
+    <script>
+        $(document).ready(function() {
+            App.init();
+        });
+    </script>
+    <script src="<?= base_url('assets/js/custom.js') ?>"></script>
     <?= $this->renderSection('scripts') ?>
 </body>
 

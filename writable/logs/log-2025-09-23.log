@@ -34,3 +34,347 @@ in SYSTEMPATH\Filters\Filters.php on line 842.
  7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
  9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:47:20 --> CodeIgniter\Filters\Exceptions\FilterException: "pengurus/*" filter must have a matching alias defined.
+[Method: GET, Route: /]
+in SYSTEMPATH\Filters\Filters.php on line 842.
+ 1 SYSTEMPATH\Filters\Filters.php(842): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('pengurus/*')
+ 2 SYSTEMPATH\Filters\Filters.php(488): CodeIgniter\Filters\Filters->processAliasesToClass('after')
+ 3 SYSTEMPATH\Filters\Filters.php(218): CodeIgniter\Filters\Filters->initialize('')
+ 4 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('', 'before')
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:48:38 --> CodeIgniter\Filters\Exceptions\FilterException: "member/*" filter must have a matching alias defined.
+[Method: GET, Route: login]
+in SYSTEMPATH\Filters\Filters.php on line 842.
+ 1 SYSTEMPATH\Filters\Filters.php(842): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('member/*')
+ 2 SYSTEMPATH\Filters\Filters.php(488): CodeIgniter\Filters\Filters->processAliasesToClass('after')
+ 3 SYSTEMPATH\Filters\Filters.php(218): CodeIgniter\Filters\Filters->initialize('login')
+ 4 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('login', 'before')
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:48:49 --> CodeIgniter\Filters\Exceptions\FilterException: "member/*" filter must have a matching alias defined.
+[Method: GET, Route: register]
+in SYSTEMPATH\Filters\Filters.php on line 842.
+ 1 SYSTEMPATH\Filters\Filters.php(842): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('member/*')
+ 2 SYSTEMPATH\Filters\Filters.php(488): CodeIgniter\Filters\Filters->processAliasesToClass('after')
+ 3 SYSTEMPATH\Filters\Filters.php(218): CodeIgniter\Filters\Filters->initialize('register')
+ 4 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('register', 'before')
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:50:46 --> CodeIgniter\Filters\Exceptions\FilterException: "pengurus/*" filter must have a matching alias defined.
+[Method: GET, Route: register]
+in SYSTEMPATH\Filters\Filters.php on line 842.
+ 1 SYSTEMPATH\Filters\Filters.php(842): CodeIgniter\Filters\Exceptions\FilterException::forNoAlias('pengurus/*')
+ 2 SYSTEMPATH\Filters\Filters.php(488): CodeIgniter\Filters\Filters->processAliasesToClass('after')
+ 3 SYSTEMPATH\Filters\Filters.php(218): CodeIgniter\Filters\Filters->initialize('register')
+ 4 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('register', 'before')
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+ERROR - 2025-09-23 09:51:36 --> mysqli_sql_exception: Table 'spk.settings' doesn't exist in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\laragon\www\spkorid\app\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\laragon\www\spkorid\system\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#6 C:\laragon\www\spkorid\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#7 C:\laragon\www\spkorid\system\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('register', 'before')
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#10 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#13 {main}
+CRITICAL - 2025-09-23 09:51:36 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'spk.settings' doesn't exist
+[Method: GET, Route: register]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `settings`
+WHERE `key` = :key:', [...], false)
+ 2 APPPATH\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 4 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 5 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('register', 'before')
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:51:36 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'spk.settings' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `settings`
+WHERE `key` = :key:', [...], false)
+ 4 APPPATH\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 6 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 7 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('register', 'before')
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:51:36 --> [Caused by] mysqli_sql_exception: Table 'spk.settings' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `settings`
+WHERE `key` = :key:', [...], false)
+ 5 APPPATH\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 7 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 8 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('register', 'before')
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+ERROR - 2025-09-23 09:51:46 --> mysqli_sql_exception: Table 'spk.settings' doesn't exist in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\laragon\www\spkorid\app\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\laragon\www\spkorid\system\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#6 C:\laragon\www\spkorid\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#7 C:\laragon\www\spkorid\system\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('', 'before')
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#10 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#13 {main}
+CRITICAL - 2025-09-23 09:51:46 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'spk.settings' doesn't exist
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `settings`
+WHERE `key` = :key:', [...], false)
+ 2 APPPATH\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 4 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 5 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('', 'before')
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:51:46 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'spk.settings' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `settings`
+WHERE `key` = :key:', [...], false)
+ 4 APPPATH\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 6 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 7 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('', 'before')
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:51:46 --> [Caused by] mysqli_sql_exception: Table 'spk.settings' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `settings`
+WHERE `key` = :key:', [...], false)
+ 5 APPPATH\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 7 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 8 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('', 'before')
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+ERROR - 2025-09-23 09:54:55 --> mysqli_sql_exception: Table 'spk.settings' doesn't exist in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\laragon\www\spkorid\app\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\laragon\www\spkorid\system\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), NULL)
+#6 C:\laragon\www\spkorid\system\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore(Array)
+#7 C:\laragon\www\spkorid\system\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('', 'before')
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#10 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#13 {main}
+CRITICAL - 2025-09-23 09:54:55 --> CodeIgniter\Database\Exceptions\DatabaseException: Table 'spk.settings' doesn't exist
+[Method: GET, Route: /]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `settings`
+WHERE `key` = :key:', [...], false)
+ 2 APPPATH\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 4 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 5 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('', 'before')
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:54:55 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Table 'spk.settings' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `settings`
+WHERE `key` = :key:', [...], false)
+ 4 APPPATH\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 6 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 7 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('', 'before')
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:54:55 --> [Caused by] mysqli_sql_exception: Table 'spk.settings' doesn't exist
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `settings`
+WHERE `key` = \'maintenance_mode\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `settings`
+WHERE `key` = :key:', [...], false)
+ 5 APPPATH\Filters\MaintenanceFilter.php(25): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\Filters\Filters.php(241): App\Filters\MaintenanceFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 7 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 8 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('', 'before')
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-23 09:55:50 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "public/home.php"
+[Method: GET, Route: /]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('public/home.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('public/home', [], true)
+ 3 APPPATH\Controllers\Home.php(43): view('public/home', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Home->index()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Home))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-23 10:00:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-23 10:00:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-23 10:00:19 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "partials/guest_header.php"
+[Method: GET, Route: login]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('partials/guest_header.php')
+ 2 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('partials/guest_header', null, true)
+ 3 APPPATH\Views\layouts\main.php(40): CodeIgniter\View\View->include('partials/guest_header')
+ 4 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\layouts\\main.php')
+ 5 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 6 SYSTEMPATH\View\View.php(242): CodeIgniter\View\View->render('layouts/main', [], true)
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/login', [], true)
+ 8 APPPATH\Controllers\AuthController.php(38): view('auth/login', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AuthController->login()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-23 10:00:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-23 10:04:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-23 10:04:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-23 10:04:06 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "partials/guest_header.php"
+[Method: GET, Route: login]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('partials/guest_header.php')
+ 2 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('partials/guest_header', null, true)
+ 3 APPPATH\Views\layouts\main.php(40): CodeIgniter\View\View->include('partials/guest_header')
+ 4 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\layouts\\main.php')
+ 5 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 6 SYSTEMPATH\View\View.php(242): CodeIgniter\View\View->render('layouts/main', [], true)
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/login', [], true)
+ 8 APPPATH\Controllers\AuthController.php(38): view('auth/login', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AuthController->login()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-23 10:48:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-23 10:48:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-23 10:48:06 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "partials/guest_header.php"
+[Method: GET, Route: login]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('partials/guest_header.php')
+ 2 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('partials/guest_header', null, true)
+ 3 APPPATH\Views\layouts\main.php(40): CodeIgniter\View\View->include('partials/guest_header')
+ 4 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\layouts\\main.php')
+ 5 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 6 SYSTEMPATH\View\View.php(242): CodeIgniter\View\View->render('layouts/main', [], true)
+ 7 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('auth/login', [], true)
+ 8 APPPATH\Controllers\AuthController.php(38): view('auth/login', [...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\AuthController->login()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')

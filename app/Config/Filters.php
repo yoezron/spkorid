@@ -67,22 +67,22 @@ class Filters extends BaseConfig
     /**
      * List of filters for specific routes
      */
-    public $filters = [
-        'api/*' => [
-            'before' => ['cors', 'api_auth'],
-            'after' => ['cors']
-        ],
-        'admin/*' => [
-            'before' => ['auth:super_admin'],
-            'after' => []
-        ],
-        'pengurus/*' => [
-            'before' => ['auth:super_admin,pengurus'],
-            'after' => []
-        ],
-        'member/*' => [
-            'before' => ['auth'],
-            'after' => []
-        ],
-    ];
+    // public $filters = [
+    //     'api/*' => [
+    //         'before' => ['cors', 'api_auth'],
+    //         'after' => ['cors']
+    //     ],
+    //     'admin/*' => [
+    //         'before' => ['auth:super_admin'],
+    //         'after' => []
+    //     ],
+    //     'pengurus/*' => [
+    //         'before' => ['auth:super_admin,pengurus'],
+    //         'after' => []
+    //     ],
+    //     'member/*' => [
+    //         'before' => ['auth'],
+    //         'after' => []
+    //     ],
+    // ];
 }

@@ -103,11 +103,26 @@ class SurveyManagementController extends BaseController
             return redirect()->back()->with('error', 'Survei tidak ditemukan');
         }
 
+        // Ambil data responden
+        $responses = $this->responseModel->getResponsesWithMembers($id);
+        $db = \Config\Database::connect();
+
+        // Untuk setiap responden, ambil jawabannya
+        foreach ($responses as &$response) {
+            $answers = $db->table('survey_answers')
+                ->where('response_id', $response['id'])
+                ->get()
+                ->getResultArray();
+
+            // Ubah array jawaban menjadi format yang mudah diakses: [question_id => answer_text]
+            $response['answers'] = array_column($answers, 'answer_text', 'question_id');
+        }
+
         $data = [
-            'title' => 'Hasil Survei: ' . $survey['title'],
-            'survey' => $survey,
+            'title'      => 'Hasil Survei: ' . esc($survey['title']),
+            'survey'     => $survey,
             'statistics' => $this->surveyModel->getSurveyStatistics($id),
-            'responses' => $this->responseModel->getResponsesWithMembers($id)
+            'responses'  => $responses
         ];
 
         return view('admin/survey/results', $data);

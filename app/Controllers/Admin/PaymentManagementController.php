@@ -132,7 +132,7 @@ class PaymentManagementController extends BaseController
             'startDate'  => $startDate,
             'endDate'    => $endDate,
             'summary'    => $this->paymentModel->getPaymentSummary($startDate, $endDate),
-            'payments'   => $this->paymentModel->getPaymentsByDateRange($startDate, $endDate), // Lebih baik di model
+            'payments'   => $this->paymentModel->getPaymentsByDateRange($startDate, $endDate), // Gunakan method baru
         ];
 
         return view('admin/payment/report', $data);

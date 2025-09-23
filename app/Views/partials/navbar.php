@@ -1,55 +1,94 @@
-<nav class="navbar">
-    <div class="navbar-left">
-        <button class="sidebar-toggle" onclick="toggleSidebar()">
-            <i class="fas fa-bars"></i>
-        </button>
-        <h1 class="page-title"><?= $title ?? 'Dashboard' ?></h1>
-    </div>
+<div class="header-container fixed-top">
+    <header class="header navbar navbar-expand-sm">
+        <ul class="navbar-item theme-brand flex-row  text-center">
+            <li class="nav-item theme-logo">
+                <a href="<?= base_url('dashboard') ?>">
+                    <img src="<?= base_url('assets/img/logo.svg') ?>" class="navbar-logo" alt="logo">
+                </a>
+            </li>
+            <li class="nav-item theme-text">
+                <a href="<?= base_url('dashboard') ?>" class="nav-link"> SPK </a>
+            </li>
+        </ul>
 
-    <div class="navbar-right">
-        <!-- Notifications -->
-        <div class="navbar-item dropdown">
-            <button class="navbar-btn" onclick="toggleDropdown('notifications')">
-                <i class="fas fa-bell"></i>
-                <span class="badge">3</span>
-            </button>
-            <div class="dropdown-menu" id="notifications-dropdown">
-                <div class="dropdown-header">Notifikasi</div>
-                <div class="dropdown-body">
-                    <a href="#" class="notification-item">
-                        <i class="fas fa-info-circle text-info"></i>
-                        <div>
-                            <p>Pengumuman rapat bulanan</p>
-                            <small>2 jam yang lalu</small>
+        <ul class="navbar-item flex-row ml-md-0 ml-auto">
+            <li class="nav-item align-self-center search-animated">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search toggle-search">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <form class="form-inline search-full form-inline search" role="search">
+                    <div class="search-bar">
+                        <input type="text" class="form-control search-form-control  ml-lg-auto" placeholder="Search...">
+                    </div>
+                </form>
+            </li>
+        </ul>
+
+        <ul class="navbar-item flex-row ml-md-auto">
+
+            <li class="nav-item dropdown notification-dropdown">
+                <a href="javascript:void(0);" class="nav-link dropdown-toggle" id="notificationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                    </svg><span class="badge badge-success"></span>
+                </a>
+                <div class="dropdown-menu position-absolute" aria-labelledby="notificationDropdown">
+                    <div class="notification-scroll">
+                        <div class="dropdown-item">
+                            <div class="media server-log">
+                                <div class="media-body">
+                                    <div class="data-info">
+                                        <h6 class="">Pemberitahuan Baru</h6>
+                                        <p class="">Contoh notifikasi akan muncul di sini.</p>
+                                    </div>
+                                    <div class="icon-status">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
-                <div class="dropdown-footer">
-                    <a href="<?= base_url('notifications') ?>">Lihat Semua</a>
-                </div>
-            </div>
-        </div>
+            </li>
 
-        <!-- User Menu -->
-        <div class="navbar-item dropdown">
-            <button class="navbar-btn user-menu" onclick="toggleDropdown('user')">
-                <img src="<?= session()->get('foto_path') ?? base_url('images/default-avatar.png') ?>"
-                    alt="User" class="navbar-avatar">
-                <span><?= session()->get('nama_lengkap') ?></span>
-                <i class="fas fa-chevron-down"></i>
-            </button>
-            <div class="dropdown-menu" id="user-dropdown">
-                <a href="<?= base_url('profile') ?>" class="dropdown-item">
-                    <i class="fas fa-user"></i> Profil Saya
+            <li class="nav-item dropdown user-profile-dropdown">
+                <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="userProfileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <?php
+                    $foto = session()->get('foto_path');
+                    $default_foto = base_url('assets/img/90x90.jpg'); // Ganti dengan path foto default Anda
+                    $user_foto = ($foto && file_exists(FCPATH . $foto)) ? base_url($foto) : $default_foto;
+                    ?>
+                    <img src="<?= $user_foto ?>" alt="avatar">
                 </a>
-                <a href="<?= base_url('change-password') ?>" class="dropdown-item">
-                    <i class="fas fa-key"></i> Ubah Password
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="<?= base_url('logout') ?>" class="dropdown-item text-danger">
-                    <i class="fas fa-sign-out-alt"></i> Logout
-                </a>
-            </div>
-        </div>
-    </div>
-</nav>
+                <div class="dropdown-menu position-absolute" aria-labelledby="userProfileDropdown">
+                    <div class="">
+                        <div class="dropdown-item">
+                            <a class="" href="<?= base_url('member/profile') ?>">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                                <?= esc(session()->get('nama_lengkap')) ?>
+                            </a>
+                        </div>
+                        <div class="dropdown-item">
+                            <a class="" href="<?= base_url('logout') ?>">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-log-out">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                                </svg>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </header>
+</div>
