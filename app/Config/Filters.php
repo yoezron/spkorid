@@ -1,110 +1,88 @@
 <?php
 
+// ============================================
+// FILTER CONFIGURATION
+// ============================================
+
+// app/Config/Filters.php
 namespace Config;
 
-use CodeIgniter\Config\Filters as BaseFilters;
-use CodeIgniter\Filters\Cors;
+use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Filters\CSRF;
 use CodeIgniter\Filters\DebugToolbar;
-use CodeIgniter\Filters\ForceHTTPS;
 use CodeIgniter\Filters\Honeypot;
 use CodeIgniter\Filters\InvalidChars;
-use CodeIgniter\Filters\PageCache;
-use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
 
-class Filters extends BaseFilters
+class Filters extends BaseConfig
 {
     /**
-     * Configures aliases for Filter classes to
-     * make reading things nicer and simpler.
-     *
-     * @var array<string, class-string|list<class-string>>
-     *
-     * [filter_name => classname]
-     * or [filter_name => [classname1, classname2, ...]]
+     * Configures aliases for Filter classes
      */
-    public array $aliases = [
+    public $aliases = [
         'csrf'          => CSRF::class,
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
-        'cors'          => Cors::class,
-        'forcehttps'    => ForceHTTPS::class,
-        'pagecache'     => PageCache::class,
-        'performance'   => PerformanceMetrics::class,
+        // Custom filters
+        'auth'          => \App\Filters\AuthFilter::class,
+        'noauth'        => \App\Filters\NoAuthFilter::class,
+        'api_auth'      => \App\Filters\ApiAuthFilter::class,
+        'permission'    => \App\Filters\PermissionFilter::class,
+        'maintenance'   => \App\Filters\MaintenanceFilter::class,
+        'throttle'      => \App\Filters\ThrottleFilter::class,
+        'cors'          => \App\Filters\CorsFilter::class,
+        'xss'           => \App\Filters\XssFilter::class,
+        'activity_log'  => \App\Filters\ActivityLogFilter::class,
     ];
 
     /**
-     * List of special required filters.
-     *
-     * The filters listed here are special. They are applied before and after
-     * other kinds of filters, and always applied even if a route does not exist.
-     *
-     * Filters set by default provide framework functionality. If removed,
-     * those functions will no longer work.
-     *
-     * @see https://codeigniter.com/user_guide/incoming/filters.html#provided-filters
-     *
-     * @var array{before: list<string>, after: list<string>}
+     * List of filters to run before every request
      */
-    public array $required = [
+    public $globals = [
         'before' => [
-            'forcehttps', // Force Global Secure Requests
-            'pagecache',  // Web Page Caching
+            'maintenance',
+            'honeypot',
+            'csrf' => ['except' => ['api/*']],
+            'xss' => ['except' => ['api/*']],
+            'invalidchars',
         ],
         'after' => [
-            'pagecache',   // Web Page Caching
-            'performance', // Performance Metrics
-            'toolbar',     // Debug Toolbar
+            'toolbar',
+            'secureheaders',
+            'activity_log',
         ],
     ];
 
     /**
-     * List of filter aliases that are always
-     * applied before and after every request.
-     *
-     * @var array{
-     *     before: array<string, array{except: list<string>|string}>|list<string>,
-     *     after: array<string, array{except: list<string>|string}>|list<string>
-     * }
+     * List of filters for specific HTTP methods
      */
-    public array $globals = [
-        'before' => [
-            // 'honeypot',
-            // 'csrf',
-            // 'invalidchars',
-        ],
-        'after' => [
-            // 'honeypot',
-            // 'secureheaders',
-        ],
+    public $methods = [
+        'post' => ['throttle:30,1'], // 30 requests per minute for POST
+        'put'  => ['throttle:30,1'],
+        'delete' => ['throttle:30,1'],
     ];
 
     /**
-     * List of filter aliases that works on a
-     * particular HTTP method (GET, POST, etc.).
-     *
-     * Example:
-     * 'POST' => ['foo', 'bar']
-     *
-     * If you use this, you should disable auto-routing because auto-routing
-     * permits any HTTP method to access a controller. Accessing the controller
-     * with a method you don't expect could bypass the filter.
-     *
-     * @var array<string, list<string>>
+     * List of filters for specific routes
      */
-    public array $methods = [];
-
-    /**
-     * List of filter aliases that should run on any
-     * before or after URI patterns.
-     *
-     * Example:
-     * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
-     *
-     * @var array<string, array<string, list<string>>>
-     */
-    public array $filters = [];
+    public $filters = [
+        'api/*' => [
+            'before' => ['cors', 'api_auth'],
+            'after' => ['cors']
+        ],
+        'admin/*' => [
+            'before' => ['auth:super_admin'],
+            'after' => []
+        ],
+        'pengurus/*' => [
+            'before' => ['auth:super_admin,pengurus'],
+            'after' => []
+        ],
+        'member/*' => [
+            'before' => ['auth'],
+            'after' => []
+        ],
+    ];
 }
