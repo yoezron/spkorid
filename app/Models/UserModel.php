@@ -129,4 +129,17 @@ class UserModel extends Model
             ->where('users.role_id', $roleId)
             ->findAll();
     }
+
+    // Add these methods
+    public function getUserWithRole($id)
+    {
+        return $this->select('users.*, roles.role_name, roles.role_slug')
+            ->join('roles', 'roles.id = users.role_id')
+            ->find($id);
+    }
+
+    public function attemptLogin($email, $password)
+    {
+        // Implementation with brute force protection
+    }
 }

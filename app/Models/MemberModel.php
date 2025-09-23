@@ -367,4 +367,14 @@ class MemberModel extends Model
 
         return $csvData;
     }
+
+    public function getMemberComplete($id)
+    {
+        return $this->select('members.*, 
+                         ref_status_kepegawaian.nama_status,
+                         ref_kampus.nama_kampus,
+                         // ... other joins')
+            ->join('ref_status_kepegawaian', '...')
+            ->find($id);
+    }
 }

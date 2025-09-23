@@ -85,4 +85,27 @@ class Filters extends BaseConfig
             'after' => []
         ],
     ];
+
+    public $aliases = [
+        'auth'     => \App\Filters\AuthFilter::class,
+        'role'     => \App\Filters\RoleFilter::class,
+        'throttle' => \App\Filters\ThrottleFilter::class,
+        'verified' => \App\Filters\VerifiedFilter::class,
+    ];
+
+    public $filters = [
+        'auth' => [
+            'before' => [
+                'admin/*',
+                'member/*',
+                'pengurus/*'
+            ]
+        ],
+        'throttle' => [
+            'before' => [
+                'auth/login',
+                'auth/register'
+            ]
+        ]
+    ];
 }
