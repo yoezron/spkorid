@@ -16,10 +16,10 @@ use App\Models\RefKampusModel;
 use App\Models\RefProdiModel;
 
 // Import TCPDF class
-use TCPDF;
+use \TCPDF;
 
 // Ensure TCPDF is loaded if not using Composer autoload
-if (!class_exists('TCPDF')) {
+if (!class_exists('\TCPDF')) {
     require_once(ROOTPATH . 'vendor/tecnickcom/tcpdf/tcpdf.php');
 }
 
@@ -202,6 +202,10 @@ class MemberController extends BaseController
         }
 
         // Generate PDF (using TCPDF or DomPDF)
+        // Ensure TCPDF is loaded before instantiation
+        if (!class_exists('\TCPDF')) {
+            require_once(ROOTPATH . 'vendor/tecnickcom/tcpdf/tcpdf.php');
+        }
         $pdf = new \TCPDF('L', 'mm', 'CR80', true, 'UTF-8', false);
 
         // Set document information
