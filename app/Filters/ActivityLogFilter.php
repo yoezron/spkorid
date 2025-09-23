@@ -1,48 +1,25 @@
 <?php
 
-// ============================================
-// ACTIVITY LOG FILTER
-// ============================================
-
-// app/Filters/ActivityLogFilter.php
 namespace App\Filters;
 
+use CodeIgniter\Filters\FilterInterface;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use CodeIgniter\Filters\FilterInterface;
+use Config\Services;
 use App\Models\ActivityLogModel;
 
 class ActivityLogFilter implements FilterInterface
 {
-    protected $activityLog;
-
-    public function __construct()
-    {
-        $this->activityLog = new ActivityLogModel();
-    }
-
-    /**
-     * Log user activity
-     */
     public function before(RequestInterface $request, $arguments = null)
     {
-        // Skip logging for certain routes
-        $skipRoutes = ['/api', '/assets', '/uploads'];
-        $currentPath = $request->uri->getPath();
-
-        foreach ($skipRoutes as $route) {
-            if (strpos($currentPath, $route) === 0) {
-                return;
-            }
-        }
+        // Nothing to do here
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
-        $session = session();
+        $session = Services::session();
 
-        // Only log for authenticated users
-        if (!$session->get('logged_in')) {
+        if (! $session->get('logged_in')) {
             return;
         }
 
@@ -53,23 +30,27 @@ class ActivityLogFilter implements FilterInterface
 
         // Log the activity
         $userId = $session->get('user_id');
-        $activityType = $request->getMethod() . '_' . str_replace('/', '_', $request->uri->getPath());
+
+        // --- BARIS YANG DIPERBAIKI ---
+        $path = $request->getUri()->getPath();
+        $activityType = $request->getMethod() . '_' . str_replace('/', '_', $path);
         $description = sprintf(
             '%s request to %s',
             strtoupper($request->getMethod()),
-            $request->uri->getPath()
+            $path
         );
 
         // Add POST data to description (excluding sensitive fields)
         if ($request->getMethod() === 'post') {
             $postData = $request->getPost();
-            unset($postData['password'], $postData['password_confirm'], $postData['current_password']);
+            unset($postData['password'], $postData['confirm_password'], $postData['current_password']);
 
             if (!empty($postData)) {
-                $description .= ' | Data: ' . json_encode($postData);
+                $description .= ' with data: ' . json_encode($postData);
             }
         }
 
-        $this->activityLog->logActivity($userId, $activityType, $description);
+        $activityLog = new ActivityLogModel();
+        $activityLog->logActivity($userId, $activityType, $description);
     }
 }
