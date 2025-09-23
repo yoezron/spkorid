@@ -40,6 +40,10 @@ class Home extends BaseController
             'upcoming_events' => $this->getUpcomingEvents()
         ];
 
+        // Menyesuaikan nama variabel untuk view baru
+        $data['latest_posts'] = $data['recent_posts'];
+        // --------------------------
+
         return view('public/home', $data);
     }
 
