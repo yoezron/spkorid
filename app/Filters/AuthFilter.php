@@ -1,5 +1,5 @@
 <?php
-
+// app/Filters/AuthFilter.php
 namespace App\Filters;
 
 use CodeIgniter\HTTP\RequestInterface;
@@ -12,69 +12,50 @@ class AuthFilter implements FilterInterface
     {
         $session = session();
 
-        if (! $session->get('logged_in')) {
-            $session->set('redirect_url', current_url());
-            return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
+        if (!$session->get('logged_in')) {
+            if ($request->isAjax()) {
+                return response()->setJSON([
+                    'status' => false,
+                    'message' => 'Session expired',
+                    'redirect' => base_url('login')
+                ])->setStatusCode(401);
+            }
+
+            session()->setFlashdata('error', 'Silakan login terlebih dahulu');
+            return redirect()->to('/login');
         }
 
-        if (! $session->get('user_id')) {
-            $session->destroy();
-            return redirect()->to('/login')->with('error', 'Sesi tidak valid');
-        }
-
+        // Check role permissions if arguments provided
         if ($arguments !== null) {
+            $allowedRoles = is_array($arguments) ? $arguments : [$arguments];
             $userRole = $session->get('role_id');
-            $allowedRoles = [];
 
-            foreach ($arguments as $role) {
-                switch ($role) {
-                    case 'super_admin':
-                        $allowedRoles[] = 1;
-                        break;
-                    case 'pengurus':
-                        $allowedRoles[] = 2;
-                        break;
-                    case 'anggota':
-                        $allowedRoles[] = 3;
-                        break;
+            // Map role names to IDs
+            $roleMap = [
+                'super_admin' => 1,
+                'pengurus' => 2,
+                'member' => 3
+            ];
+
+            $allowedRoleIds = array_map(function ($role) use ($roleMap) {
+                return $roleMap[$role] ?? $role;
+            }, $allowedRoles);
+
+            if (!in_array($userRole, $allowedRoleIds)) {
+                if ($request->isAjax()) {
+                    return response()->setJSON([
+                        'status' => false,
+                        'message' => 'Unauthorized access'
+                    ])->setStatusCode(403);
                 }
-            }
 
-            if (! in_array($userRole, $allowedRoles)) {
-                return redirect()->to('/dashboard')->with('error', 'Anda tidak memiliki akses ke halaman ini');
+                throw new \CodeIgniter\Exceptions\PageNotFoundException('Halaman tidak ditemukan');
             }
         }
-
-        // --- BARIS YANG DIPERBAIKI ---
-        if ($session->get('force_password_change') && !in_array($request->getUri()->getPath(), ['/change-password', '/logout'])) {
-            return redirect()->to('/change-password')->with('warning', 'Anda harus mengganti password terlebih dahulu');
-        }
-
-        $this->updateLastActivity();
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
         // Do nothing
-    }
-
-    private function updateLastActivity()
-    {
-        $session = session();
-        $userId = $session->get('user_id');
-
-        if ($userId) {
-            $lastUpdate = $session->get('last_activity_update');
-            $now = time();
-
-            if (! $lastUpdate || ($now - $lastUpdate) > 300) {
-                $db = \Config\Database::connect();
-                $db->table('users')
-                    ->where('id', $userId)
-                    ->update(['last_activity' => date('Y-m-d H:i:s')]);
-
-                $session->set('last_activity_update', $now);
-            }
-        }
     }
 }

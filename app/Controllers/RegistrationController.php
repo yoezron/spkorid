@@ -1,20 +1,13 @@
 <?php
-// app/Controllers/RegistrationController.php
-
+// app/Controllers/RegistrationController.php (improved version)
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\MemberModel;
 use App\Models\UserModel;
 use App\Models\PaymentHistoryModel;
-use App\Models\RefStatusKepegawaianModel;
-use App\Models\RefPemberiGajiModel;
-use App\Models\RefRangeGajiModel;
-use App\Models\RefProvinsiModel;
-use App\Models\RefKotaModel;
-use App\Models\RefJenisPTModel;
-use App\Models\RefKampusModel;
-use App\Models\RefProdiModel;
+use App\Libraries\NomorAnggotaGenerator;
+use App\Libraries\EmailService;
 
 class RegistrationController extends BaseController
 {
@@ -22,7 +15,7 @@ class RegistrationController extends BaseController
     protected $userModel;
     protected $paymentModel;
     protected $validation;
-    protected $email;
+    protected $emailService;
     protected $db;
 
     public function __construct()
@@ -31,84 +24,26 @@ class RegistrationController extends BaseController
         $this->userModel = new UserModel();
         $this->paymentModel = new PaymentHistoryModel();
         $this->validation = \Config\Services::validation();
-        $this->email = \Config\Services::email();
+        $this->emailService = new EmailService();
         $this->db = \Config\Database::connect();
     }
 
     /**
-     * Display registration form
-     */
-    public function index()
-    {
-        // Load all reference data for dropdowns
-        $data = [
-            'title' => 'Registrasi Anggota SPK',
-            'status_kepegawaian' => (new RefStatusKepegawaianModel())->where('is_active', 1)->findAll(),
-            'pemberi_gaji' => (new RefPemberiGajiModel())->where('is_active', 1)->findAll(),
-            'range_gaji' => (new RefRangeGajiModel())->where('is_active', 1)->findAll(),
-            'provinsi' => (new RefProvinsiModel())->where('is_active', 1)->findAll(),
-            'jenis_pt' => (new RefJenisPTModel())->where('is_active', 1)->findAll(),
-        ];
-
-        return view('registration/form', $data);
-    }
-
-    /**
-     * Get cities by province (AJAX)
-     */
-    public function getCities($provinsi_id)
-    {
-        $kotaModel = new RefKotaModel();
-        $cities = $kotaModel->where('provinsi_id', $provinsi_id)
-            ->where('is_active', 1)
-            ->findAll();
-
-        return $this->response->setJSON($cities);
-    }
-
-    /**
-     * Get kampus by jenis PT (AJAX)
-     */
-    public function getKampus($jenis_pt_id)
-    {
-        $kampusModel = new RefKampusModel();
-        $kampus = $kampusModel->where('jenis_pt_id', $jenis_pt_id)
-            ->where('is_active', 1)
-            ->findAll();
-
-        return $this->response->setJSON($kampus);
-    }
-
-    /**
-     * Get prodi by kampus (AJAX)
-     */
-    public function getProdi($kampus_id)
-    {
-        $prodiModel = new RefProdiModel();
-        $prodi = $prodiModel->where('kampus_id', $kampus_id)
-            ->where('is_active', 1)
-            ->findAll();
-
-        return $this->response->setJSON($prodi);
-    }
-
-    /**
-     * Process registration form
+     * Process registration with transaction
      */
     public function register()
     {
-        // Validation rules
+        // Enhanced validation rules
         $rules = [
             'nama_lengkap' => [
-                'rules' => 'required|min_length[3]|max_length[200]',
+                'rules' => 'required|min_length[3]|max_length[100]',
                 'errors' => [
                     'required' => 'Nama lengkap wajib diisi',
-                    'min_length' => 'Nama lengkap minimal 3 karakter',
-                    'max_length' => 'Nama lengkap maksimal 200 karakter'
+                    'min_length' => 'Nama lengkap minimal 3 karakter'
                 ]
             ],
             'email' => [
-                'rules' => 'required|valid_email|is_unique[members.email]|is_unique[users.email]',
+                'rules' => 'required|valid_email|is_unique[members.email]',
                 'errors' => [
                     'required' => 'Email wajib diisi',
                     'valid_email' => 'Format email tidak valid',
@@ -127,134 +62,62 @@ class RegistrationController extends BaseController
                 'rules' => 'required|matches[password]',
                 'errors' => [
                     'required' => 'Konfirmasi password wajib diisi',
-                    'matches' => 'Konfirmasi password tidak cocok'
-                ]
-            ],
-            'jenis_kelamin' => [
-                'rules' => 'required|in_list[Laki-laki,Perempuan]',
-                'errors' => [
-                    'required' => 'Jenis kelamin wajib dipilih',
-                    'in_list' => 'Jenis kelamin tidak valid'
-                ]
-            ],
-            'alamat_lengkap' => [
-                'rules' => 'required|min_length[10]',
-                'errors' => [
-                    'required' => 'Alamat lengkap wajib diisi',
-                    'min_length' => 'Alamat lengkap minimal 10 karakter'
+                    'matches' => 'Konfirmasi password tidak sama'
                 ]
             ],
             'nomor_whatsapp' => [
-                'rules' => 'required|regex_match[/^(\+62|62|0)[0-9]{9,12}$/]',
+                'rules' => 'required|regex_match[/^(\+62|62|0)8[1-9][0-9]{6,11}$/]',
                 'errors' => [
-                    'required' => 'Nomor WhatsApp wajib diisi',
                     'regex_match' => 'Format nomor WhatsApp tidak valid'
                 ]
             ],
-            'status_kepegawaian_id' => [
-                'rules' => 'required|is_natural_no_zero',
-                'errors' => ['required' => 'Status kepegawaian wajib dipilih']
-            ],
-            'pemberi_gaji_id' => [
-                'rules' => 'required|is_natural_no_zero',
-                'errors' => ['required' => 'Pemberi gaji wajib dipilih']
-            ],
-            'range_gaji_id' => [
-                'rules' => 'required|is_natural_no_zero',
-                'errors' => ['required' => 'Range gaji wajib dipilih']
-            ],
-            'gaji_pokok' => [
-                'rules' => 'required|numeric|greater_than[0]',
-                'errors' => [
-                    'required' => 'Gaji pokok wajib diisi',
-                    'numeric' => 'Gaji pokok harus berupa angka',
-                    'greater_than' => 'Gaji pokok harus lebih dari 0'
-                ]
-            ],
-            'provinsi_id' => [
-                'rules' => 'required|is_natural_no_zero',
-                'errors' => ['required' => 'Provinsi wajib dipilih']
-            ],
-            'kota_id' => [
-                'rules' => 'required|is_natural_no_zero',
-                'errors' => ['required' => 'Kota/Kabupaten wajib dipilih']
-            ],
-            'jenis_pt_id' => [
-                'rules' => 'required|is_natural_no_zero',
-                'errors' => ['required' => 'Jenis perguruan tinggi wajib dipilih']
-            ],
-            'kampus_id' => [
-                'rules' => 'required|is_natural_no_zero',
-                'errors' => ['required' => 'Kampus wajib dipilih']
-            ],
-            'prodi_id' => [
-                'rules' => 'required|is_natural_no_zero',
-                'errors' => ['required' => 'Program studi wajib dipilih']
-            ],
-            'bidang_keahlian' => [
-                'rules' => 'required|min_length[5]',
-                'errors' => [
-                    'required' => 'Bidang keahlian wajib diisi',
-                    'min_length' => 'Bidang keahlian minimal 5 karakter'
-                ]
-            ],
-            'motivasi_berserikat' => [
-                'rules' => 'required|min_length[20]',
-                'errors' => [
-                    'required' => 'Motivasi berserikat wajib diisi',
-                    'min_length' => 'Motivasi berserikat minimal 20 karakter'
-                ]
-            ],
             'foto' => [
-                'rules' => 'uploaded[foto]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]|max_size[foto,2048]',
+                'rules' => 'uploaded[foto]|max_size[foto,2048]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]',
                 'errors' => [
                     'uploaded' => 'Foto wajib diupload',
+                    'max_size' => 'Ukuran foto maksimal 2MB',
                     'is_image' => 'File harus berupa gambar',
-                    'mime_in' => 'Format foto harus JPG, JPEG, atau PNG',
-                    'max_size' => 'Ukuran foto maksimal 2MB'
+                    'mime_in' => 'Format foto harus JPG, JPEG, atau PNG'
                 ]
             ],
             'bukti_pembayaran' => [
-                'rules' => 'uploaded[bukti_pembayaran]|mime_in[bukti_pembayaran,image/jpg,image/jpeg,image/png,application/pdf]|max_size[bukti_pembayaran,5120]',
+                'rules' => 'uploaded[bukti_pembayaran]|max_size[bukti_pembayaran,5120]|mime_in[bukti_pembayaran,image/jpg,image/jpeg,image/png,application/pdf]',
                 'errors' => [
                     'uploaded' => 'Bukti pembayaran wajib diupload',
-                    'mime_in' => 'Format bukti pembayaran harus JPG, JPEG, PNG, atau PDF',
-                    'max_size' => 'Ukuran bukti pembayaran maksimal 5MB'
+                    'max_size' => 'Ukuran file maksimal 5MB',
+                    'mime_in' => 'Format file harus JPG, JPEG, PNG, atau PDF'
                 ]
             ]
         ];
 
-        // Validate
         if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validation->getErrors());
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        // Start transaction
         $this->db->transStart();
 
         try {
-            // Handle file uploads
+            // Handle file uploads with proper naming
             $foto = $this->request->getFile('foto');
             $buktiPembayaran = $this->request->getFile('bukti_pembayaran');
 
-            // Generate unique filenames
-            $fotoName = $foto->getRandomName();
-            $buktiName = $buktiPembayaran->getRandomName();
+            $fotoName = $this->generateFileName($foto, 'FOTO');
+            $buktiName = $this->generateFileName($buktiPembayaran, 'BUKTI');
 
-            // Move uploaded files
+            // Move files to proper directories
             $foto->move(ROOTPATH . 'public/uploads/photos', $fotoName);
             $buktiPembayaran->move(ROOTPATH . 'public/uploads/payments', $buktiName);
 
             // Generate verification token
             $verificationToken = bin2hex(random_bytes(32));
 
-            // Prepare member data
+            // Prepare member data with sanitization
             $memberData = [
-                'nama_lengkap' => $this->request->getPost('nama_lengkap'),
+                'nama_lengkap' => esc($this->request->getPost('nama_lengkap')),
                 'email' => $this->request->getPost('email'),
                 'jenis_kelamin' => $this->request->getPost('jenis_kelamin'),
-                'alamat_lengkap' => $this->request->getPost('alamat_lengkap'),
-                'nomor_whatsapp' => $this->request->getPost('nomor_whatsapp'),
+                'alamat_lengkap' => esc($this->request->getPost('alamat_lengkap')),
+                'nomor_whatsapp' => $this->normalizePhoneNumber($this->request->getPost('nomor_whatsapp')),
                 'status_kepegawaian_id' => $this->request->getPost('status_kepegawaian_id'),
                 'pemberi_gaji_id' => $this->request->getPost('pemberi_gaji_id'),
                 'range_gaji_id' => $this->request->getPost('range_gaji_id'),
@@ -265,9 +128,9 @@ class RegistrationController extends BaseController
                 'jenis_pt_id' => $this->request->getPost('jenis_pt_id'),
                 'kampus_id' => $this->request->getPost('kampus_id'),
                 'prodi_id' => $this->request->getPost('prodi_id'),
-                'bidang_keahlian' => $this->request->getPost('bidang_keahlian'),
-                'motivasi_berserikat' => $this->request->getPost('motivasi_berserikat'),
-                'media_sosial' => $this->request->getPost('media_sosial'),
+                'bidang_keahlian' => esc($this->request->getPost('bidang_keahlian')),
+                'motivasi_berserikat' => esc($this->request->getPost('motivasi_berserikat')),
+                'media_sosial' => esc($this->request->getPost('media_sosial')),
                 'foto_path' => 'uploads/photos/' . $fotoName,
                 'bukti_pembayaran_path' => 'uploads/payments/' . $buktiName,
                 'status_keanggotaan' => 'pending'
@@ -276,12 +139,15 @@ class RegistrationController extends BaseController
             // Insert member
             $memberId = $this->memberModel->insert($memberData);
 
+            // Generate unique username
+            $username = $this->generateUsername($memberData['nama_lengkap']);
+
             // Create user account
             $userData = [
                 'member_id' => $memberId,
-                'username' => strtolower(str_replace(' ', '', $this->request->getPost('nama_lengkap'))),
+                'username' => $username,
                 'email' => $this->request->getPost('email'),
-                'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+                'password' => password_hash($this->request->getPost('password'), PASSWORD_BCRYPT),
                 'role_id' => 3, // Default role: anggota
                 'is_active' => 0,
                 'is_verified' => 0,
@@ -293,9 +159,11 @@ class RegistrationController extends BaseController
             // Create payment record
             $paymentData = [
                 'member_id' => $memberId,
-                'nomor_transaksi' => 'TRX-' . date('YmdHis') . '-' . $memberId,
+                'nomor_transaksi' => $this->generateTransactionNumber($memberId),
                 'jenis_pembayaran' => 'iuran_pertama',
-                'jumlah' => 100000, // Default first payment amount
+                'periode_bulan' => date('n'),
+                'periode_tahun' => date('Y'),
+                'jumlah' => 100000, // Get from settings
                 'metode_pembayaran' => 'transfer',
                 'bukti_pembayaran' => 'uploads/payments/' . $buktiName,
                 'tanggal_pembayaran' => date('Y-m-d H:i:s'),
@@ -304,26 +172,28 @@ class RegistrationController extends BaseController
 
             $this->paymentModel->insert($paymentData);
 
-            // Send verification email
-            $this->sendVerificationEmail(
-                $this->request->getPost('email'),
-                $this->request->getPost('nama_lengkap'),
-                $verificationToken
-            );
-
             $this->db->transComplete();
 
             if ($this->db->transStatus() === false) {
-                throw new \Exception('Terjadi kesalahan saat menyimpan data');
+                throw new \Exception('Gagal menyimpan data registrasi');
             }
 
-            // Set success message
-            session()->setFlashdata('success', 'Registrasi berhasil! Silakan cek email Anda untuk verifikasi akun.');
+            // Send verification email
+            $this->emailService->sendVerificationEmail(
+                $this->request->getPost('email'),
+                $memberData['nama_lengkap'],
+                $verificationToken
+            );
+
+            // Send notification to admin
+            $this->emailService->sendNewMemberNotification($memberId);
+
+            session()->setFlashdata('success', 'Registrasi berhasil! Silakan cek email Anda untuk verifikasi.');
             return redirect()->to('/login');
         } catch (\Exception $e) {
             $this->db->transRollback();
 
-            // Delete uploaded files if exists
+            // Clean up uploaded files
             if (isset($fotoName) && file_exists(ROOTPATH . 'public/uploads/photos/' . $fotoName)) {
                 unlink(ROOTPATH . 'public/uploads/photos/' . $fotoName);
             }
@@ -331,53 +201,62 @@ class RegistrationController extends BaseController
                 unlink(ROOTPATH . 'public/uploads/payments/' . $buktiName);
             }
 
-            session()->setFlashdata('error', 'Registrasi gagal: ' . $e->getMessage());
-            return redirect()->back()->withInput();
+            log_message('error', 'Registration error: ' . $e->getMessage());
+
+            return redirect()->back()->withInput()
+                ->with('error', 'Terjadi kesalahan saat registrasi. Silakan coba lagi.');
         }
     }
 
     /**
-     * Send verification email
+     * Generate unique file name
      */
-    private function sendVerificationEmail($email, $name, $token)
+    private function generateFileName($file, $prefix = '')
     {
-        $verificationLink = base_url('verify-email/' . $token);
-
-        $this->email->setFrom('noreply@spk.org', 'SPK - Serikat Pekerja Kampus');
-        $this->email->setTo($email);
-        $this->email->setSubject('Verifikasi Email - SPK');
-
-        $message = view('emails/verification', [
-            'name' => $name,
-            'verification_link' => $verificationLink
-        ]);
-
-        $this->email->setMessage($message);
-        $this->email->send();
+        $extension = $file->getExtension();
+        return $prefix . '_' . date('YmdHis') . '_' . uniqid() . '.' . $extension;
     }
 
     /**
-     * Verify email
+     * Generate unique username
      */
-    public function verifyEmail($token)
+    private function generateUsername($nama)
     {
-        $user = $this->userModel->where('verification_token', $token)
-            ->where('is_verified', 0)
-            ->first();
+        $base = strtolower(str_replace(' ', '', $nama));
+        $username = $base;
+        $counter = 1;
 
-        if (!$user) {
-            session()->setFlashdata('error', 'Token verifikasi tidak valid atau sudah kadaluarsa.');
-            return redirect()->to('/login');
+        while ($this->userModel->where('username', $username)->first()) {
+            $username = $base . $counter;
+            $counter++;
         }
 
-        // Update user verification status
-        $this->userModel->update($user['id'], [
-            'is_verified' => 1,
-            'email_verified_at' => date('Y-m-d H:i:s'),
-            'verification_token' => null
-        ]);
+        return $username;
+    }
 
-        session()->setFlashdata('success', 'Email berhasil diverifikasi! Silakan tunggu konfirmasi dari pengurus.');
-        return redirect()->to('/login');
+    /**
+     * Generate transaction number
+     */
+    private function generateTransactionNumber($memberId)
+    {
+        return 'TRX-' . date('YmdHis') . '-' . str_pad($memberId, 6, '0', STR_PAD_LEFT);
+    }
+
+    /**
+     * Normalize phone number
+     */
+    private function normalizePhoneNumber($phone)
+    {
+        // Remove non-numeric characters
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+
+        // Convert to 62 format
+        if (substr($phone, 0, 1) == '0') {
+            $phone = '62' . substr($phone, 1);
+        } elseif (substr($phone, 0, 1) != '6') {
+            $phone = '62' . $phone;
+        }
+
+        return $phone;
     }
 }
