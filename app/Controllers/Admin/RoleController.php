@@ -19,12 +19,20 @@ class RoleController extends BaseController
 
     /**
      * Menampilkan daftar semua role.
+     * (PERBAIKAN DI METHOD INI)
      */
     public function index()
     {
+        // Menggunakan Query Builder untuk mengambil data yang dibutuhkan view
+        $roles = $this->roleModel
+            ->select('roles.id, roles.role_name, roles.role_description as description, COUNT(users.id) as user_count')
+            ->join('users', 'users.role_id = roles.id', 'left')
+            ->groupBy('roles.id, roles.role_name, roles.role_description')
+            ->findAll();
+
         $data = [
             'title' => 'Manajemen Role & Hak Akses',
-            'roles' => $this->roleModel->findAll(),
+            'roles' => $roles,
         ];
         return view('admin/roles/index', $data);
     }

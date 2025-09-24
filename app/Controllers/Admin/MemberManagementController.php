@@ -1,11 +1,10 @@
-
 <?php
+
+namespace App\Controllers\Admin;
+
 // ============================================
 // ADMIN MEMBER MANAGEMENT CONTROLLER
 // ============================================
-
-// app/Controllers/Admin/MemberManagementController.php
-namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use App\Models\MemberModel;
@@ -340,5 +339,49 @@ class MemberManagementController extends BaseController
         ]);
         $emailService->setMessage($message);
         $emailService->send();
+    }
+
+    public function edit($id)
+    {
+        $member = $this->memberModel->find($id);
+        if (!$member) {
+            return redirect()->to('admin/members')->with('error', 'Anggota tidak ditemukan.');
+        }
+
+        $data = [
+            'title'  => 'Edit Anggota',
+            'member' => $member,
+            'user'   => $this->userModel->where('member_id', $id)->first()
+        ];
+
+        return view('admin/members/edit', $data);
+    }
+
+    /**
+     * Memproses pembaruan data anggota.
+     * (TAMBAHKAN METHOD INI)
+     */
+    public function update($id)
+    {
+        $rules = [
+            'nama_lengkap'    => 'required|min_length[3]',
+            'nomor_anggota'   => "required|is_unique[members.nomor_anggota,id,{$id}]",
+            'status_keanggotaan' => 'required|in_list[pending,active,suspended,terminated]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $this->memberModel->update($id, [
+            'nama_lengkap'       => $this->request->getPost('nama_lengkap'),
+            'nomor_anggota'      => $this->request->getPost('nomor_anggota'),
+            'nomor_whatsapp'     => $this->request->getPost('nomor_telepon'), // Sesuaikan dengan nama field di view
+            'alamat_lengkap'     => $this->request->getPost('alamat'), // Sesuaikan dengan nama field di view
+            'status_keanggotaan' => $this->request->getPost('status_keanggotaan'),
+            'tanggal_bergabung'  => $this->request->getPost('tanggal_bergabung'),
+        ]);
+
+        return redirect()->to('admin/members/view/' . $id)->with('success', 'Data anggota berhasil diperbarui.');
     }
 }

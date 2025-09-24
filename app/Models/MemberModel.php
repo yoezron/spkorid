@@ -322,4 +322,28 @@ class MemberModel extends Model
 
         return $builder->findAll();
     }
+
+    /**
+     * Mengambil data detail anggota dengan menggabungkan tabel-tabel terkait.
+     *
+     * @param int $id ID Anggota
+     * @return array|null
+     */
+    public function getMemberWithDetails(int $id)
+    {
+        return $this->select('
+                members.*,
+                rk.nama_kampus,
+                rp.nama_prodi,
+                rsk.nama_status as status_kepegawaian,
+                u.username,
+                u.is_active as user_status
+            ')
+            ->join('ref_kampus rk', 'rk.id = members.kampus_id', 'left')
+            ->join('ref_prodi rp', 'rp.id = members.prodi_id', 'left')
+            ->join('ref_status_kepegawaian rsk', 'rsk.id = members.status_kepegawaian_id', 'left')
+            ->join('users u', 'u.member_id = members.id', 'left')
+            ->where('members.id', $id)
+            ->first();
+    }
 }

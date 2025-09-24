@@ -18,9 +18,9 @@ Detail Anggota: <?= esc($member['nama_lengkap']) ?>
     <div class="col-xl-4">
         <div class="card">
             <div class="card-body text-center">
-                <img src="<?= base_url('uploads/avatars/' . ($user['avatar'] ?? 'default.png')) ?>" class="img-fluid rounded-circle mb-3" alt="avatar" style="width: 120px; height: 120px; object-fit: cover;">
+                <img src="<?= base_url($member['foto_path'] ?? 'neptune-assets/images/avatars/avatar.png') ?>" class="img-fluid rounded-circle mb-3" alt="avatar" style="width: 120px; height: 120px; object-fit: cover;">
                 <h5 class="card-title"><?= esc($member['nama_lengkap']) ?></h5>
-                <p class="card-text text-muted"><?= esc($user['email']) ?></p>
+                <p class="card-text text-muted"><?= esc($member['email']) ?></p>
                 <?php
                 $statusClass = 'badge-secondary';
                 if ($member['status_keanggotaan'] == 'active') {
@@ -64,10 +64,10 @@ Detail Anggota: <?= esc($member['nama_lengkap']) ?>
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">Nomor Anggota: <strong><?= esc($member['nomor_anggota']) ?></strong></li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">Nomor Telepon: <strong><?= esc($member['nomor_telepon']) ?></strong></li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">Alamat: <strong><?= esc($member['alamat']) ?></strong></li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">Tanggal Bergabung: <strong><?= date('d F Y', strtotime($member['tanggal_bergabung'])) ?></strong></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">Nomor Anggota: <strong><?= esc($member['nomor_anggota'] ?? 'N/A') ?></strong></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">Nomor WhatsApp: <strong><?= esc($member['nomor_whatsapp'] ?? 'N/A') ?></strong></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">Alamat: <strong><?= esc($member['alamat_lengkap'] ?? 'N/A') ?></strong></li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">Tanggal Bergabung: <strong><?= date('d F Y', strtotime($member['tanggal_bergabung'] ?? time())) ?></strong></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">Asal Kampus: <strong><?= esc($member['nama_kampus'] ?? 'N/A') ?></strong></li>
                             <li class="list-group-item d-flex justify-content-between align-items-center">Program Studi: <strong><?= esc($member['nama_prodi'] ?? 'N/A') ?></strong></li>
                         </ul>
@@ -77,17 +77,17 @@ Detail Anggota: <?= esc($member['nama_lengkap']) ?>
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th>Invoice</th>
+                                        <th>Transaksi</th>
                                         <th>Tanggal</th>
                                         <th>Jumlah</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (!empty($payments)): ?>
-                                        <?php foreach ($payments as $p): ?>
+                                    <?php if (!empty($payment_history)): ?>
+                                        <?php foreach ($payment_history as $p): ?>
                                             <tr>
-                                                <td><?= esc($p['invoice_number']) ?></td>
+                                                <td><?= esc($p['nomor_transaksi']) ?></td>
                                                 <td><?= date('d M Y', strtotime($p['tanggal_pembayaran'])) ?></td>
                                                 <td>Rp <?= number_format($p['jumlah'], 0, ',', '.') ?></td>
                                                 <td>
@@ -111,61 +111,10 @@ Detail Anggota: <?= esc($member['nama_lengkap']) ?>
 </div>
 
 <div class="modal fade" id="verifyModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Verifikasi</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Apakah Anda yakin ingin memverifikasi anggota ini? Statusnya akan berubah menjadi "Active".
-            </div>
-            <div class="modal-footer">
-                <?= form_open('admin/members/verify/' . $member['id']) ?>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-success">Ya, Verifikasi</button>
-                <?= form_close() ?>
-            </div>
-        </div>
-    </div>
 </div>
 <div class="modal fade" id="suspendModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Suspend</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Apakah Anda yakin ingin men-suspend anggota ini?
-            </div>
-            <div class="modal-footer">
-                <?= form_open('admin/members/suspend/' . $member['id']) ?>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-warning">Ya, Suspend</button>
-                <?= form_close() ?>
-            </div>
-        </div>
-    </div>
 </div>
 <div class="modal fade" id="reactivateModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Konfirmasi Aktivasi Ulang</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Apakah Anda yakin ingin mengaktifkan kembali anggota ini?
-            </div>
-            <div class="modal-footer">
-                <?= form_open('admin/members/reactivate/' . $member['id']) ?>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-info">Ya, Aktifkan</button>
-                <?= form_close() ?>
-            </div>
-        </div>
-    </div>
 </div>
 
 <?= $this->endSection() ?>
