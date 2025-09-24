@@ -1,67 +1,103 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('title') ?>
-Verifikasi Anggota
+Anggota Menunggu Verifikasi
 <?= $this->endSection() ?>
 
-<?= $this->section('styles') ?>
-<link rel="stylesheet" type="text/css" href="<?= base_url('plugins/table/datatable/datatables.css') ?>">
-<link rel="stylesheet" type="text/css" href="<?= base_url('plugins/table/datatable/dt-global_style.css') ?>">
+<?= $this->section('pageStyles') ?>
+<link href="<?= base_url('neptune-assets/plugins/datatables/datatables.min.css') ?>" rel="stylesheet">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 
-<div class="row layout-top-spacing">
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
-        <div class="widget-content widget-content-area br-6">
-            <div class="table-responsive mb-4 mt-4">
+<div class="row">
+    <div class="col">
+        <div class="page-description">
+            <h1>Anggota Menunggu Verifikasi</h1>
+            <p>Daftar calon anggota yang telah mendaftar dan menunggu persetujuan Anda.</p>
+        </div>
+    </div>
+</div>
 
-                <h4 class="mb-4">Anggota Menunggu Verifikasi</h4>
-
-                <table id="pending-table" class="table table-hover" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>Nama Lengkap</th>
-                            <th>Email</th>
-                            <th>Kampus</th>
-                            <th>Tanggal Daftar</th>
-                            <th class="no-content">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (!empty($pending_members)): ?>
-                            <?php foreach ($pending_members as $member): ?>
-                                <tr>
-                                    <td>
-                                        <div class="d-flex">
-                                            <?php
-                                            $foto = $member['foto_path'];
-                                            $default_foto = base_url('assets/img/90x90.jpg');
-                                            $user_foto = ($foto && file_exists(FCPATH . $foto)) ? base_url($foto) : $default_foto;
-                                            ?>
-                                            <div class="usr-img-frame mr-2 rounded-circle">
-                                                <img alt="avatar" class="img-fluid rounded-circle" src="<?= $user_foto ?>">
-                                            </div>
-                                            <p class="align-self-center mb-0"><?= esc($member['nama_lengkap']) ?></p>
-                                        </div>
-                                    </td>
-                                    <td><?= esc($member['email']) ?></td>
-                                    <td><?= esc($member['nama_kampus'] ?? 'N/A') ?></td>
-                                    <td><?= date('d M Y, H:i', strtotime($member['created_at'])) ?></td>
-                                    <td>
-                                        <a href="<?= base_url('admin/members/view/' . $member['id']) ?>" class="btn btn-sm btn-primary">
-                                            <i data-feather="eye" class="mr-1"></i> Review & Verifikasi
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else: ?>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <?= $this->include('partials/flash_messages') ?>
+                <div class="table-responsive">
+                    <table id="pending-members-table" class="display" style="width:100%">
+                        <thead>
                             <tr>
-                                <td colspan="5" class="text-center">Tidak ada anggota yang menunggu verifikasi saat ini.</td>
+                                <th>#</th>
+                                <th>Nama Lengkap</th>
+                                <th>Email</th>
+                                <th>Tanggal Daftar</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php if (!empty($pending_members)): ?>
+                                <?php $i = 1; ?>
+                                <?php foreach ($pending_members as $member): ?>
+                                    <tr>
+                                        <td><?= $i++ ?></td>
+                                        <td><?= esc($member['nama_lengkap']) ?></td>
+                                        <td><?= esc($member['email']) ?></td>
+                                        <td><?= date('d M Y, H:i', strtotime($member['created_at'])) ?></td>
+                                        <td class="text-center">
+                                            <div class="btn-group" role="group">
+                                                <a href="<?= base_url('admin/members/view/' . $member['id']) ?>" class="btn btn-sm btn-outline-secondary">Detail</a>
+                                                <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal" data-bs-target="#verifyModal<?= $member['id'] ?>">Verifikasi</button>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#rejectModal<?= $member['id'] ?>">Tolak</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <div class="modal fade" id="verifyModal<?= $member['id'] ?>" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Konfirmasi Verifikasi</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Yakin ingin memverifikasi pendaftaran "<?= esc($member['nama_lengkap']) ?>"?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <?= form_open('admin/members/verify/' . $member['id']) ?>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-success">Ya, Verifikasi</button>
+                                                    <?= form_close() ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal fade" id="rejectModal<?= $member['id'] ?>" tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Konfirmasi Penolakan</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Yakin ingin menolak pendaftaran "<?= esc($member['nama_lengkap']) ?>"?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <?= form_open('admin/members/reject/' . $member['id']) ?>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                    <button type="submit" class="btn btn-danger">Ya, Tolak</button>
+                                                    <?= form_close() ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -69,27 +105,14 @@ Verifikasi Anggota
 
 <?= $this->endSection() ?>
 
-<?= $this->section('scripts') ?>
-<script src="<?= base_url('plugins/table/datatable/datatables.js') ?>"></script>
+<?= $this->section('pageScripts') ?>
+<script src="<?= base_url('neptune-assets/plugins/datatables/datatables.min.js') ?>"></script>
 <script>
     $(document).ready(function() {
-        $('#pending-table').DataTable({
-            "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
-                "<'table-responsive'tr>" +
-                "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
-            "oLanguage": {
-                "oPaginate": {
-                    "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>',
-                    "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>'
-                },
-                "sInfo": "Menampilkan halaman _PAGE_ dari _PAGES_",
-                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
-                "sSearchPlaceholder": "Cari...",
-                "sLengthMenu": "Hasil :  _MENU_",
-            },
-            "stripeClasses": [],
-            "lengthMenu": [10, 20, 50],
-            "pageLength": 10
+        $('#pending-members-table').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.22/i18n/Indonesian.json"
+            }
         });
     });
 </script>

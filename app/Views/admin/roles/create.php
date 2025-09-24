@@ -4,61 +4,53 @@
 Tambah Role Baru
 <?= $this->endSection() ?>
 
-<?= $this->section('styles') ?>
-<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/forms/switches.css') ?>">
-<?= $this->endSection() ?>
-
 <?= $this->section('content') ?>
 
-<div class="row layout-top-spacing">
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
-        <div class="widget-content widget-content-area br-6">
-            <div class="p-4">
-                <h4>Formulir Role Baru</h4>
-                <p>Buat role pengguna baru untuk sistem.</p>
-                <hr>
+<div class="row">
+    <div class="col">
+        <div class="page-description">
+            <h1>Tambah Role Baru</h1>
+        </div>
+    </div>
+</div>
 
-                <?php if (session()->has('errors')): ?>
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            <?php foreach (session('errors') as $error): ?>
-                                <li><?= esc($error) ?></li>
-                            <?php endforeach ?>
-                        </ul>
-                    </div>
-                <?php endif ?>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Formulir Role</h5>
+            </div>
+            <div class="card-body">
+                <?= $this->include('partials/flash_messages') ?>
 
-                <form action="<?= base_url('admin/roles/store') ?>" method="post">
-                    <?= csrf_field() ?>
+                <?= form_open('admin/roles/store') ?>
 
-                    <div class="form-group">
-                        <label for="role_name">Nama Role</label>
-                        <input type="text" class="form-control" id="role_name" name="role_name" value="<?= old('role_name') ?>" placeholder="Contoh: bendahara" required>
-                        <small>Gunakan format `snake_case` (huruf kecil dan garis bawah), contoh: `divisi_advokasi`.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="role_description">Deskripsi Role</label>
-                        <textarea class="form-control" id="role_description" name="role_description" rows="3" required><?= old('role_description') ?></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Status</label>
-                        <div>
-                            <label class="switch s-icons s-outline s-outline-success">
-                                <input type="hidden" name="is_active" value="0">
-                                <input type="checkbox" name="is_active" value="1" checked>
-                                <span class="slider round"></span>
-                            </label>
-                            <span class="ml-2">Aktif</span>
+                <div class="mb-3">
+                    <label for="role_name" class="form-label">Nama Role</label>
+                    <input type="text" class="form-control <?= (validation_show_error('role_name')) ? 'is-invalid' : '' ?>" id="role_name" name="role_name" value="<?= old('role_name') ?>" placeholder="Contoh: Bendahara" required>
+                    <?php if (validation_show_error('role_name')): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('role_name') ?>
                         </div>
-                    </div>
+                    <?php endif; ?>
+                </div>
 
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-success">Simpan Role</button>
-                        <a href="<?= base_url('admin/roles') ?>" class="btn btn-secondary">Batal</a>
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Deskripsi</label>
+                    <textarea class="form-control <?= (validation_show_error('description')) ? 'is-invalid' : '' ?>" id="description" name="description" rows="3" placeholder="Jelaskan secara singkat fungsi dari role ini" required><?= old('description') ?></textarea>
+                    <?php if (validation_show_error('description')): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('description') ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Simpan Role</button>
+                    <a href="<?= base_url('admin/roles') ?>" class="btn btn-light">Batal</a>
+                </div>
+
+                <?= form_close() ?>
             </div>
         </div>
     </div>

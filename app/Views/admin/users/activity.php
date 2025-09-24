@@ -1,49 +1,71 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('title') ?>
-Aktivitas User: <?= esc($user['username']) ?>
+Aktivitas Pengguna: <?= esc($user['username']) ?>
 <?= $this->endSection() ?>
 
-<?= $this->section('styles') ?>
-<link rel="stylesheet" type="text/css" href="<?= base_url('plugins/table/datatable/datatables.css') ?>">
-<link rel="stylesheet" type="text/css" href="<?= base_url('plugins/table/datatable/dt-global_style.css') ?>">
+<?= $this->section('pageStyles') ?>
+<link href="<?= base_url('neptune-assets/plugins/datatables/datatables.min.css') ?>" rel="stylesheet">
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 
-<div class="row layout-top-spacing">
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
-        <div class="widget-content widget-content-area br-6">
-            <div class="p-4">
-                <h4>Log Aktivitas untuk <span class="text-primary"><?= esc($user['username']) ?></span></h4>
-                <p>Menampilkan 100 aktivitas terakhir yang dilakukan oleh user ini.</p>
-                <a href="<?= base_url('admin/users') ?>" class="btn btn-secondary mb-4">
-                    <i data-feather="arrow-left"></i> Kembali ke Daftar User
-                </a>
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="<?= base_url('admin/users') ?>">Manajemen Pengguna</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Log Aktivitas</li>
+            </ol>
+        </nav>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col">
+        <div class="page-description">
+            <h1>Log Aktivitas Pengguna</h1>
+            <p>Menampilkan rekaman aktivitas untuk pengguna: <strong><?= esc($user['username']) ?></strong></p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
                 <div class="table-responsive">
-                    <table id="activity-table" class="table table-hover" style="width:100%">
+                    <table id="activity-log-table" class="display" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Tanggal & Waktu</th>
-                                <th>Tipe Aktivitas</th>
-                                <th>Deskripsi</th>
-                                <th>Alamat IP</th>
+                                <th>#</th>
+                                <th>Deskripsi Aktivitas</th>
+                                <th>IP Address</th>
+                                <th>User Agent</th>
+                                <th>Timestamp</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (!empty($activities)): ?>
+                                <?php $i = 1; ?>
                                 <?php foreach ($activities as $activity): ?>
                                     <tr>
-                                        <td><?= date('d M Y, H:i:s', strtotime($activity['created_at'])) ?></td>
-                                        <td><span class="badge badge-info"><?= esc($activity['activity_type']) ?></span></td>
-                                        <td><?= esc($activity['activity_description']) ?></td>
+                                        <td><?= $i++ ?></td>
+                                        <td><?= esc($activity['description']) ?></td>
                                         <td><?= esc($activity['ip_address']) ?></td>
+                                        <td>
+                                            <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" title="<?= esc($activity['user_agent']) ?>">
+                                                <?= character_limiter(esc($activity['user_agent']), 50) ?>
+                                            </span>
+                                        </td>
+                                        <td><?= date('d M Y, H:i:s', strtotime($activity['created_at'])) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="4" class="text-center">Tidak ada aktivitas yang tercatat untuk user ini.</td>
+                                    <td colspan="5" class="text-center">
+                                        <p class="my-4">Tidak ada aktivitas yang tercatat untuk pengguna ini.</p>
+                                    </td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -56,30 +78,17 @@ Aktivitas User: <?= esc($user['username']) ?>
 
 <?= $this->endSection() ?>
 
-<?= $this->section('scripts') ?>
-<script src="<?= base_url('plugins/table/datatable/datatables.js') ?>"></script>
+<?= $this->section('pageScripts') ?>
+<script src="<?= base_url('neptune-assets/plugins/datatables/datatables.min.js') ?>"></script>
 <script>
     $(document).ready(function() {
-        $('#activity-table').DataTable({
-            "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
-                "<'table-responsive'tr>" +
-                "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
-            "oLanguage": {
-                "oPaginate": {
-                    "sPrevious": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-left"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>',
-                    "sNext": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-right"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>'
-                },
-                "sInfo": "Menampilkan halaman _PAGE_ dari _PAGES_",
-                "sSearch": '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>',
-                "sSearchPlaceholder": "Cari...",
-                "sLengthMenu": "Hasil :  _MENU_",
-            },
+        $('#activity-log-table').DataTable({
             "order": [
-                [0, "desc"]
-            ], // Urutkan berdasarkan kolom pertama (Tanggal) secara descending
-            "stripeClasses": [],
-            "lengthMenu": [10, 25, 50, 100],
-            "pageLength": 25
+                [4, "desc"]
+            ], // Urutkan berdasarkan kolom timestamp terbaru
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.22/i18n/Indonesian.json"
+            }
         });
     });
 </script>
