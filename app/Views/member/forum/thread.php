@@ -4,168 +4,97 @@
 <?= esc($thread['title']) ?>
 <?= $this->endSection() ?>
 
-<?= $this->section('styles') ?>
-<link href="<?= base_url('plugins/editors/quill/quill.snow.css') ?>" rel="stylesheet" type="text/css">
-<style>
-    .thread-post,
-    .reply-post {
-        display: flex;
-        margin-bottom: 25px;
-    }
-
-    .post-author-info {
-        flex-shrink: 0;
-        width: 150px;
-        text-align: center;
-        padding-right: 20px;
-        border-right: 1px solid #e0e6ed;
-    }
-
-    .post-author-info img {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 10px;
-    }
-
-    .post-author-info .author-name {
-        font-weight: 600;
-    }
-
-    .post-author-info .author-role {
-        font-size: 0.9em;
-        color: #888ea8;
-    }
-
-    .post-content {
-        padding-left: 20px;
-        width: 100%;
-    }
-
-    .post-meta {
-        color: #888ea8;
-        font-size: 0.9em;
-        margin-bottom: 15px;
-    }
-
-    .post-body {
-        line-height: 1.8;
-    }
-
-    .reply-form {
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 2px solid #e0e6ed;
-    }
-</style>
-<?= $this->endSection() ?>
-
 <?= $this->section('content') ?>
 
-<div class="layout-px-spacing">
-    <div class="row layout-top-spacing">
-        <div class="col-xl-12 col-lg-12 col-sm-12">
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="<?= base_url('member/forum') ?>">Forum</a></li>
+                <li class="breadcrumb-item"><a href="<?= base_url('member/forum/category/' . $thread['category_slug']) ?>"><?= esc($thread['category_name']) ?></a></li>
+                <li class="breadcrumb-item active" aria-current="page"><?= esc(character_limiter($thread['title'], 50)) ?></li>
+            </ol>
+        </nav>
+    </div>
+</div>
 
-            <div class="widget-content widget-content-area br-6 p-4">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <a href="<?= base_url('member/forum/category/' . $thread['category_slug']) ?>" class="btn btn-secondary mb-3"><i data-feather="arrow-left"></i> Kembali ke Daftar Thread</a>
-                        <h2><?= esc($thread['title']) ?></h2>
-                    </div>
-                </div>
-                <hr>
-
-                <div class="thread-post">
-                    <div class="post-author-info">
-                        <img src="<?= base_url($thread['author_photo'] ?? 'assets/img/90x90.jpg') ?>" alt="avatar">
-                        <p class="author-name"><?= esc($thread['author_name']) ?></p>
-                        <p class="author-role"><?= esc(ucwords(str_replace('_', ' ', $thread['author_role']))) ?></p>
-                    </div>
-                    <div class="post-content">
-                        <div class="post-meta">
-                            <span>Diposting pada: <?= date('d M Y, H:i', strtotime($thread['created_at'])) ?></span>
-                        </div>
-                        <div class="post-body">
-                            <?= $thread['content'] // Tampilkan HTML asli 
-                            ?>
-                        </div>
-                    </div>
-                </div>
-
-                <?php if (!empty($replies)): ?>
-                    <?php foreach ($replies as $reply): ?>
-                        <hr>
-                        <div class="reply-post">
-                            <div class="post-author-info">
-                                <img src="<?= base_url($reply['author_photo'] ?? 'assets/img/90x90.jpg') ?>" alt="avatar">
-                                <p class="author-name"><?= esc($reply['author_name']) ?></p>
-                                <p class="author-role"><?= esc(ucwords(str_replace('_', ' ', $reply['author_role']))) ?></p>
-                            </div>
-                            <div class="post-content">
-                                <div class="post-meta">
-                                    <span>Membalas pada: <?= date('d M Y, H:i', strtotime($reply['created_at'])) ?></span>
-                                </div>
-                                <div class="post-body">
-                                    <?= $reply['content'] // Tampilkan HTML asli 
-                                    ?>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-
-                <div class="reply-form">
-                    <h4>Tulis Balasan Anda</h4>
-                    <?php if ($thread['is_locked']): ?>
-                        <div class="alert alert-warning">Diskusi ini telah dikunci oleh moderator. Anda tidak dapat mengirim balasan baru.</div>
-                    <?php else: ?>
-                        <form action="<?= base_url('member/forum/reply/' . $thread['id']) ?>" method="post">
-                            <?= csrf_field() ?>
-                            <div class="form-group">
-                                <div id="editor-container" style="min-height: 150px;"></div>
-                                <input type="hidden" name="content" id="content-input">
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">Kirim Balasan</button>
-                        </form>
-                    <?php endif; ?>
-                </div>
-
-            </div>
-
+<div class="row">
+    <div class="col">
+        <div class="page-description">
+            <h1 class="fs-2"><?= esc($thread['title']) ?></h1>
+            <p class="text-muted">
+                Diskusi ini dimulai oleh <?= esc($thread['author_name']) ?> pada <?= date('d F Y, H:i', strtotime($thread['created_at'])) ?>
+            </p>
         </div>
     </div>
 </div>
 
-<?= $this->endSection() ?>
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+            <div class="card-body d-flex">
+                <div class="text-center me-4" style="flex: 0 0 120px;">
+                    <img src="<?= base_url('uploads/avatars/' . ($thread['author_avatar'] ?? 'default.png')) ?>" class="img-fluid rounded-circle mb-2" alt="avatar" style="width: 80px; height: 80px; object-fit: cover;">
+                    <h6 class="card-title mb-0"><?= esc($thread['author_name']) ?></h6>
+                    <small class="text-muted"><?= esc($thread['author_role']) ?></small>
+                </div>
+                <div class="flex-grow-1">
+                    <div class="text-muted small mb-2">
+                        Diposting pada: <?= date('d F Y, H:i', strtotime($thread['created_at'])) ?>
+                    </div>
+                    <div class="forum-content">
+                        <?= nl2br(esc($thread['content'])) ?>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-<?= $this->section('scripts') ?>
-<script src="<?= base_url('plugins/editors/quill/quill.js') ?>"></script>
-<script>
-    $(document).ready(function() {
-        // Hanya inisialisasi editor jika thread tidak dikunci
-        <?php if (!$thread['is_locked']): ?>
-            var quill = new Quill('#editor-container', {
-                theme: 'snow',
-                modules: {
-                    toolbar: [
-                        ['bold', 'italic', 'underline'],
-                        ['link', 'blockquote'],
-                        [{
-                            'list': 'ordered'
-                        }, {
-                            'list': 'bullet'
-                        }]
-                    ]
-                }
-            });
+        <h4 class="mt-5 mb-3">Balasan (<?= count($replies) ?>)</h4>
 
-            var form = document.querySelector('form');
-            form.onsubmit = function() {
-                var contentInput = document.querySelector('#content-input');
-                contentInput.value = quill.root.innerHTML;
-            };
+        <?php if (!empty($replies)): ?>
+            <?php foreach ($replies as $reply): ?>
+                <div class="card mb-3">
+                    <div class="card-body d-flex">
+                        <div class="text-center me-4" style="flex: 0 0 120px;">
+                            <img src="<?= base_url('uploads/avatars/' . ($reply['author_avatar'] ?? 'default.png')) ?>" class="img-fluid rounded-circle mb-2" alt="avatar" style="width: 80px; height: 80px; object-fit: cover;">
+                            <h6 class="card-title mb-0"><?= esc($reply['author_name']) ?></h6>
+                            <small class="text-muted"><?= esc($reply['author_role']) ?></small>
+                        </div>
+                        <div class="flex-grow-1">
+                            <div class="text-muted small mb-2">
+                                Dibalas pada: <?= date('d F Y, H:i', strtotime($reply['created_at'])) ?>
+                            </div>
+                            <div class="forum-content">
+                                <?= nl2br(esc($reply['content'])) ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Belum ada balasan di diskusi ini.</p>
         <?php endif; ?>
-    });
-</script>
+
+        <div class="mt-4">
+            <?= $pager->links('default', 'bootstrap_5') ?>
+        </div>
+
+
+        <div class="card mt-5">
+            <div class="card-header">
+                <h5 class="card-title">Tinggalkan Balasan</h5>
+            </div>
+            <div class="card-body">
+                <?= form_open('member/forum/reply/' . $thread['id']) ?>
+                <div class="mb-3">
+                    <textarea class="form-control" name="content" rows="5" placeholder="Tulis balasan Anda di sini..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Kirim Balasan</button>
+                <?= form_close() ?>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <?= $this->endSection() ?>

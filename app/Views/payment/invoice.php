@@ -1,112 +1,109 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('title') ?>
-Invoice #<?= esc($payment['nomor_transaksi']) ?>
-<?= $this->endSection() ?>
-
-<?= $this->section('styles') ?>
-<link href="<?= base_url('assets/css/apps/invoice-preview.css') ?>" rel="stylesheet" type="text/css" />
+Invoice <?= esc($payment['invoice_number']) ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 
-<div class="row invoice layout-top-spacing">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <div class="app-invoice-preview">
-            <div class="invoice-container">
+<div class="row">
+    <div class="col">
+        <div class="page-description">
+            <h1>Detail Invoice</h1>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
                 <div class="invoice-header">
-                    <div class="row">
+                    <div class="row align-items-center">
                         <div class="col-sm-6">
                             <div class="invoice-logo">
-                                <div class="brand-logo">
-                                    <img src="<?= base_url('assets/img/logo.svg') ?>" alt="logo">
-                                    <span>Serikat Pekerja Kampus</span>
-                                </div>
+                                <span class="logo-text fs-3">SPK - INVOICE</span>
                             </div>
                         </div>
-                        <div class="col-sm-6 text-sm-right">
-                            <p class="invoice-number">Invoice #<?= esc($payment['nomor_transaksi']) ?></p>
-                            <div class="invoice-date">
-                                <p><span>Tanggal Invoice:</span> <?= date('d M Y', strtotime($payment['created_at'])) ?></p>
-                                <p><span>Tanggal Bayar:</span> <?= date('d M Y', strtotime($payment['tanggal_pembayaran'])) ?></p>
-                            </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <p class="invoice-id">Invoice #<?= esc($payment['invoice_number']) ?></p>
+                            <p class="invoice-date">Tanggal: <?= date('d F Y', strtotime($payment['tanggal_pembayaran'])) ?></p>
                         </div>
                     </div>
-
-                    <hr class="mt-4 mb-4">
-
+                </div>
+                <hr>
+                <div class="invoice-info">
                     <div class="row">
                         <div class="col-sm-6">
-                            <h5 class="inv-title">Dibayarkan Oleh:</h5>
-                            <div class="inv-to">
-                                <p><?= esc($member['nama_lengkap']) ?></p>
-                                <p><?= esc($member['email']) ?></p>
-                                <p><?= esc($member['nomor_whatsapp']) ?></p>
-                                <p><?= esc($member['alamat_lengkap']) ?></p>
-                            </div>
+                            <p class="invoice-info-title">Ditagihkan Kepada:</p>
+                            <p class="invoice-info-text">
+                                <strong><?= esc($member['nama_lengkap']) ?></strong><br>
+                                <?= esc($member['nomor_anggota']) ?><br>
+                                <?= esc($user['email']) ?><br>
+                                <?= esc($member['nomor_telepon']) ?>
+                            </p>
                         </div>
-                        <div class="col-sm-6 text-sm-right">
-                            <h5 class="inv-title">Dibayarkan Kepada:</h5>
-                            <div class="inv-from">
-                                <p>Serikat Pekerja Kampus</p>
-                                <p>Sekretariat SPK</p>
-                                <p>email@spk.org</p>
-                            </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <p class="invoice-info-title">Status:</p>
+                            <?php
+                            $statusClass = 'badge-secondary';
+                            if ($payment['status_pembayaran'] == 'verified') {
+                                $statusClass = 'badge-success';
+                            } elseif ($payment['status_pembayaran'] == 'pending') {
+                                $statusClass = 'badge-warning';
+                            } elseif ($payment['status_pembayaran'] == 'rejected') {
+                                $statusClass = 'badge-danger';
+                            }
+                            ?>
+                            <span class="badge <?= $statusClass ?> fs-6"><?= esc(ucfirst($payment['status_pembayaran'])) ?></span>
                         </div>
                     </div>
                 </div>
 
-                <div class="invoice-body">
+                <div class="invoice-body mt-4">
                     <div class="table-responsive">
-                        <table class="table">
+                        <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th class="">Deskripsi</th>
-                                    <th class="text-right">Jumlah</th>
+                                    <th>Deskripsi</th>
+                                    <th class="text-end">Jumlah</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td>
-                                        <p class="m-0">Pembayaran <?= esc(ucwords(str_replace('_', ' ', $payment['jenis_pembayaran']))) ?></p>
-                                        <p class="m-0 text-muted">Untuk periode: <?= date('F Y', mktime(0, 0, 0, $payment['periode_bulan'], 1, $payment['periode_tahun'])) ?></p>
-                                    </td>
-                                    <td class="text-right">Rp <?= number_format($payment['jumlah'], 2, ',', '.') ?></td>
+                                    <td>Iuran Keanggotaan Serikat Pekerja Kampus</td>
+                                    <td class="text-end">Rp <?= number_format($payment['jumlah'], 0, ',', '.') ?></td>
                                 </tr>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="1" class="text-right"><strong>Total</strong></td>
-                                    <td class="text-right"><strong>Rp <?= number_format($payment['jumlah'], 2, ',', '.') ?></strong></td>
+                                    <th colspan="1" class="text-end">Total</th>
+                                    <th class="text-end">Rp <?= number_format($payment['jumlah'], 0, ',', '.') ?></th>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 </div>
 
-                <div class="invoice-footer">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <p class="inv-status">Status Pembayaran:
-                                <span class="badge badge-<?= $payment['status_pembayaran'] == 'verified' ? 'success' : 'warning' ?>">
-                                    <?= esc(ucfirst($payment['status_pembayaran'])) ?>
-                                </span>
-                            </p>
-                        </div>
-                        <div class="col-sm-6 text-sm-right">
-                            <button class="btn btn-primary" onclick="window.print();">
-                                <i data-feather="printer" class="mr-2"></i> Cetak Invoice
-                            </button>
-                        </div>
-                    </div>
+                <div class="invoice-footer mt-4">
+                    <p>Terima kasih atas pembayaran Anda. Dana ini akan digunakan untuk mendukung kegiatan dan perjuangan serikat.</p>
                 </div>
+
             </div>
+        </div>
+
+        <div class="invoice-actions text-end mt-4">
+            <a href="javascript:window.print()" class="btn btn-primary">
+                <i class="material-icons-outlined">print</i> Cetak
+            </a>
+            <a href="<?= base_url('member/payment/download-invoice/' . $payment['id']) ?>" class="btn btn-info">
+                <i class="material-icons-outlined">download</i> Unduh PDF
+            </a>
+            <a href="<?= base_url('member/payment/history') ?>" class="btn btn-light">
+                <i class="material-icons-outlined">arrow_back</i> Kembali
+            </a>
         </div>
     </div>
 </div>
 
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script src="<?= base_url('assets/js/apps/invoice-preview.js') ?>"></script>
 <?= $this->endSection() ?>

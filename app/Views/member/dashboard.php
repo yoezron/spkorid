@@ -4,120 +4,104 @@
 Dashboard Anggota
 <?= $this->endSection() ?>
 
-<?= $this->section('styles') ?>
-<link href="<?= base_url('assets/css/dashboard/dash_2.css') ?>" rel="stylesheet" type="text/css" />
-<style>
-    .widget-card-four .w-action {
-        margin-top: 0;
-    }
-</style>
-<?= $this->endSection() ?>
-
 <?= $this->section('content') ?>
 
-<div class="row layout-top-spacing">
+<div class="row">
+    <div class="col">
+        <div class="page-description">
+            <h1>Dashboard</h1>
+        </div>
+    </div>
+</div>
 
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-        <div class="widget widget-chart-one">
-            <div class="widget-heading">
-                <h5 class="">Selamat Datang, <?= esc(session()->get('nama_lengkap')) ?>!</h5>
-            </div>
-            <div class="widget-content">
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Selamat Datang, <?= esc(session()->get('nama_lengkap')) ?>!</h5>
                 <p>Ini adalah pusat informasi Anda. Di sini Anda dapat melihat pengumuman terbaru, mengelola profil, dan berpartisipasi dalam kegiatan serikat.</p>
-                <p>Nomor Anggota Anda: <strong><?= esc($member['nomor_anggota']) ?></strong></p>
+                <p>Nomor Anggota Anda: <strong><?= esc($member['nomor_anggota'] ?? 'N/A') ?></strong></p>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-        <div class="widget widget-card-four">
-            <div class="widget-content">
-                <div class="w-content">
-                    <div class="w-info">
-                        <h6 class="value">Profil Saya</h6>
-                        <p class="">Kelola data pribadi Anda.</p>
+<div class="row">
+    <div class="col-xl-4 col-md-6">
+        <div class="card widget widget-stats">
+            <div class="card-body">
+                <div class="widget-stats-container d-flex align-items-center">
+                    <div class="widget-stats-icon widget-stats-icon-primary">
+                        <i class="material-icons-outlined">person</i>
+                    </div>
+                    <div class="widget-stats-content flex-fill">
+                        <span class="widget-stats-title">Profil Saya</span>
+                        <a href="<?= base_url('member/profile') ?>" class="stretched-link"></a>
                     </div>
                 </div>
-                <div class="w-action">
-                    <a href="<?= base_url('member/profile') ?>" class="btn btn-primary">Lihat Profil</a>
-                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-        <div class="widget widget-card-four">
-            <div class="widget-content">
-                <div class="w-content">
-                    <div class="w-info">
-                        <h6 class="value">Kartu Anggota</h6>
-                        <p class="">Lihat & unduh kartu digital.</p>
+    <div class="col-xl-4 col-md-6">
+        <div class="card widget widget-stats">
+            <div class="card-body">
+                <div class="widget-stats-container d-flex align-items-center">
+                    <div class="widget-stats-icon widget-stats-icon-info">
+                        <i class="material-icons-outlined">badge</i>
+                    </div>
+                    <div class="widget-stats-content flex-fill">
+                        <span class="widget-stats-title">Kartu Anggota</span>
+                        <a href="<?= base_url('member/card') ?>" class="stretched-link"></a>
                     </div>
                 </div>
-                <div class="w-action">
-                    <a href="<?= base_url('member/card') ?>" class="btn btn-info">Lihat Kartu</a>
-                </div>
             </div>
         </div>
     </div>
-
-    <div class="col-xl-4 col-lg-6 col-md-6 col-sm-6 col-12 layout-spacing">
-        <div class="widget widget-card-four">
-            <div class="widget-content">
-                <div class="w-content">
-                    <div class="w-info">
-                        <h6 class="value">Riwayat Iuran</h6>
-                        <p class="">Lihat histori pembayaran.</p>
+    <div class="col-xl-4 col-md-6">
+        <div class="card widget widget-stats">
+            <div class="card-body">
+                <div class="widget-stats-container d-flex align-items-center">
+                    <div class="widget-stats-icon widget-stats-icon-warning">
+                        <i class="material-icons-outlined">history</i>
+                    </div>
+                    <div class="widget-stats-content flex-fill">
+                        <span class="widget-stats-title">Riwayat Iuran</span>
+                        <a href="<?= base_url('member/payment/history') ?>" class="stretched-link"></a>
                     </div>
                 </div>
-                <div class="w-action">
-                    <a href="<?= base_url('member/payment/history') ?>" class="btn btn-warning">Lihat Riwayat</a>
-                </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-        <div class="widget widget-table-three">
-            <div class="widget-heading">
-                <h5 class="">Informasi & Pengumuman Terbaru</h5>
+<div class="row">
+    <div class="col-xl-7">
+        <div class="card widget widget-list">
+            <div class="card-header">
+                <h5 class="card-title">Informasi & Pengumuman Terbaru</h5>
             </div>
-            <div class="widget-content">
+            <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-scroll">
+                    <table class="table">
                         <thead>
                             <tr>
-                                <th>
-                                    <div class="th-content">Judul</div>
-                                </th>
-                                <th>
-                                    <div class="th-content">Kategori</div>
-                                </th>
-                                <th>
-                                    <div class="th-content">Tanggal</div>
-                                </th>
+                                <th>Judul</th>
+                                <th>Kategori</th>
+                                <th>Tanggal</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (!empty($recent_info)): ?>
                                 <?php foreach ($recent_info as $info): ?>
                                     <tr>
-                                        <td>
-                                            <div class="td-content customer-name"><?= esc($info['judul']) ?></div>
-                                        </td>
-                                        <td>
-                                            <div class="td-content"><span class="badge badge-primary"><?= esc($info['kategori']) ?></span></div>
-                                        </td>
-                                        <td>
-                                            <div class="td-content"><?= date('d M Y', strtotime($info['published_at'])) ?></div>
-                                        </td>
+                                        <td><?= esc($info['judul']) ?></td>
+                                        <td><span class="badge badge-primary"><?= esc($info['kategori']) ?></span></td>
+                                        <td><?= date('d M Y', strtotime($info['published_at'])) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="3">
-                                        <div class="td-content text-center">Belum ada informasi terbaru.</div>
-                                    </td>
+                                    <td colspan="3" class="text-center">Belum ada informasi terbaru.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -127,38 +111,37 @@ Dashboard Anggota
         </div>
     </div>
 
-    <div class="col-xl-5 col-lg-12 col-md-12 col-sm-12 col-12 layout-spacing">
-        <div class="widget widget-activity-four">
-            <div class="widget-heading">
-                <h5 class="">Artikel Terpublikasi Saya</h5>
+    <div class="col-xl-5">
+        <div class="card widget widget-list">
+            <div class="card-header">
+                <h5 class="card-title">Artikel Terpublikasi Saya</h5>
             </div>
-            <div class="widget-content">
-                <div class="mt-container mx-auto">
-                    <div class="timeline-line">
-                        <?php if (!empty($my_posts)): ?>
-                            <?php foreach ($my_posts as $post): ?>
-                                <div class="item-timeline timeline-primary">
-                                    <div class="t-dot" data-original-title="" title=""></div>
-                                    <div class="t-text">
-                                        <a href="<?= base_url('blog/view/' . $post['slug']) ?>" target="_blank">
-                                            <p><?= esc($post['title']) ?></p>
-                                        </a>
-                                        <span class="badge badge-success">Dilihat <?= esc($post['view_count']) ?> kali</span>
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <p class="text-center">Anda belum memiliki artikel yang dipublikasikan.</p>
-                            <div class="text-center mt-3">
-                                <a href="<?= base_url('member/posts/create') ?>" class="btn btn-success">Tulis Artikel Sekarang</a>
-                            </div>
-                        <?php endif; ?>
-                    </div>
-                </div>
+            <div class="card-body">
+                <ul class="widget-list-content list-unstyled">
+                    <?php if (!empty($my_posts)): ?>
+                        <?php foreach ($my_posts as $post): ?>
+                            <li class="widget-list-item">
+                                <span class="widget-list-item-icon"><i class="material-icons-outlined">article</i></span>
+                                <span class="widget-list-item-description">
+                                    <a href="<?= base_url('blog/view/' . $post['slug']) ?>" target="_blank" class="widget-list-item-description-title">
+                                        <?= esc($post['title']) ?>
+                                    </a>
+                                    <span class="widget-list-item-description-subtitle">
+                                        Dilihat <?= esc($post['view_count']) ?> kali
+                                    </span>
+                                </span>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li class="text-center p-3">
+                            <p>Anda belum memiliki artikel yang dipublikasikan.</p>
+                            <a href="<?= base_url('member/posts/create') ?>" class="btn btn-success mt-2">Tulis Artikel Sekarang</a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
             </div>
         </div>
     </div>
-
 </div>
 
 <?= $this->endSection() ?>

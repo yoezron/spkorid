@@ -4,92 +4,84 @@
 Buat Thread Baru
 <?= $this->endSection() ?>
 
-<?= $this->section('styles') ?>
-<link href="<?= base_url('plugins/editors/quill/quill.snow.css') ?>" rel="stylesheet" type="text/css">
-<link href="<?= base_url('plugins/select2/select2.min.css') ?>" rel="stylesheet" type="text/css" />
-<?= $this->endSection() ?>
-
 <?= $this->section('content') ?>
 
-<div class="row layout-top-spacing">
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
-        <div class="widget-content widget-content-area br-6">
-            <div class="p-4">
-                <h4>Mulai Diskusi Baru</h4>
-                <p>Pilih kategori yang sesuai, tulis judul yang jelas, dan mulailah diskusi Anda.</p>
-                <hr>
+<div class="row">
+    <div class="col">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="<?= base_url('member/forum') ?>">Forum</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Buat Thread Baru</li>
+            </ol>
+        </nav>
+    </div>
+</div>
 
-                <form action="<?= base_url('member/forum/store-thread') ?>" method="post">
-                    <?= csrf_field() ?>
+<div class="row">
+    <div class="col">
+        <div class="page-description">
+            <h1>Buat Diskusi Baru</h1>
+        </div>
+    </div>
+</div>
 
-                    <div class="form-group">
-                        <label for="title">Judul Thread</label>
-                        <input type="text" class="form-control" name="title" id="title" value="<?= old('title') ?>" required>
-                    </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Formulir Diskusi</h5>
+            </div>
+            <div class="card-body">
+                <?= $this->include('partials/flash_messages') ?>
 
-                    <div class="form-group">
-                        <label for="category_id">Kategori</label>
-                        <select class="form-control select2" name="category_id" id="category_id" required>
-                            <option value="">Pilih Kategori</option>
-                            <?php if (!empty($categories)): ?>
-                                <?php foreach ($categories as $category): ?>
-                                    <option value="<?= $category['id'] ?>"><?= esc($category['name']) ?></option>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                        </select>
-                    </div>
+                <?= form_open('member/forum/store-thread') ?>
 
-                    <div class="form-group">
-                        <label for="content">Isi Diskusi</label>
-                        <div id="editor-container" style="min-height: 200px;"></div>
-                        <input type="hidden" name="content" id="content-input">
-                    </div>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Judul Diskusi</label>
+                    <input type="text" class="form-control <?= (validation_show_error('title')) ? 'is-invalid' : '' ?>" id="title" name="title" value="<?= old('title') ?>" placeholder="Apa yang ingin Anda diskusikan?" required>
+                    <?php if (validation_show_error('title')): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('title') ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Publikasikan Thread</button>
-                        <a href="<?= base_url('member/forum') ?>" class="btn btn-secondary">Batal</a>
-                    </div>
-                </form>
+                <div class="mb-3">
+                    <label for="category_id" class="form-label">Pilih Kategori</label>
+                    <select class="form-select <?= (validation_show_error('category_id')) ? 'is-invalid' : '' ?>" id="category_id" name="category_id" required>
+                        <option value="">-- Pilih Kategori --</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option value="<?= $category['id'] ?>" <?= (old('category_id') == $category['id']) ? 'selected' : '' ?>>
+                                <?= esc($category['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                    <?php if (validation_show_error('category_id')): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('category_id') ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mb-3">
+                    <label for="content" class="form-label">Isi Diskusi</label>
+                    <textarea class="form-control <?= (validation_show_error('content')) ? 'is-invalid' : '' ?>" id="content" name="content" rows="8" placeholder="Tuliskan detail pertanyaan atau topik diskusi Anda di sini." required><?= old('content') ?></textarea>
+                    <?php if (validation_show_error('content')): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('content') ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Publikasikan Thread</button>
+                    <a href="<?= base_url('member/forum') ?>" class="btn btn-light">Batal</a>
+                </div>
+
+                <?= form_close() ?>
             </div>
         </div>
     </div>
 </div>
 
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script src="<?= base_url('plugins/editors/quill/quill.js') ?>"></script>
-<script src="<?= base_url('plugins/select2/select2.min.js') ?>"></script>
-<script>
-    $(document).ready(function() {
-        // Inisialisasi Select2
-        $('.select2').select2();
-
-        // Inisialisasi Quill Editor
-        var quill = new Quill('#editor-container', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{
-                        'header': [1, 2, false]
-                    }],
-                    ['bold', 'italic', 'underline'],
-                    ['link', 'blockquote'],
-                    [{
-                        'list': 'ordered'
-                    }, {
-                        'list': 'bullet'
-                    }]
-                ]
-            }
-        });
-
-        // Sinkronkan konten Quill ke input tersembunyi
-        var form = document.querySelector('form');
-        form.onsubmit = function() {
-            var contentInput = document.querySelector('#content-input');
-            contentInput.value = quill.root.innerHTML;
-        };
-    });
-</script>
 <?= $this->endSection() ?>

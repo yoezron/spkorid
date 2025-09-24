@@ -1,107 +1,97 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('title') ?>
-Edit Anggota: <?= esc($member['nama_lengkap']) ?>
-<?= $this->endSection() ?>
-
-<?= $this->section('styles') ?>
-<link href="<?= base_url('plugins/select2/select2.min.css') ?>" rel="stylesheet" type="text/css" />
+Edit Anggota
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 
-<div class="row layout-top-spacing">
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
-        <div class="widget-content widget-content-area br-6">
-            <div class="p-4">
-                <h4>Edit Detail Anggota</h4>
-                <p>Ubah informasi anggota di bawah ini dan klik simpan.</p>
-                <hr>
+<div class="row">
+    <div class="col">
+        <div class="page-description">
+            <h1>Edit Anggota: <?= esc($member['nama_lengkap']) ?></h1>
+        </div>
+    </div>
+</div>
 
-                <form action="<?= base_url('admin/members/update/' . $member['id']) ?>" method="post" enctype="multipart/form-data">
-                    <?= csrf_field() ?>
-                    <input type="hidden" name="_method" value="POST">
-                    <h5>Data Pribadi & Akun</h5>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="nama_lengkap">Nama Lengkap</label>
-                            <input type="text" class="form-control" id="nama_lengkap" name="nama_lengkap" value="<?= old('nama_lengkap', $member['nama_lengkap']) ?>" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" name="email" value="<?= old('email', $member['user_email']) ?>" required>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="nomor_whatsapp">Nomor WhatsApp</label>
-                            <input type="text" class="form-control" id="nomor_whatsapp" name="nomor_whatsapp" value="<?= old('nomor_whatsapp', $member['nomor_whatsapp']) ?>" required>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="status_keanggotaan">Status Keanggotaan</label>
-                            <select class="form-control" id="status_keanggotaan" name="status_keanggotaan">
-                                <option value="active" <?= $member['status_keanggotaan'] == 'active' ? 'selected' : '' ?>>Aktif</option>
-                                <option value="suspended" <?= $member['status_keanggotaan'] == 'suspended' ? 'selected' : '' ?>>Suspended</option>
-                                <option value="terminated" <?= $member['status_keanggotaan'] == 'terminated' ? 'selected' : '' ?>>Terminated</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="alamat_lengkap">Alamat Lengkap</label>
-                        <textarea class="form-control" id="alamat_lengkap" name="alamat_lengkap" rows="3"><?= old('alamat_lengkap', $member['alamat_lengkap']) ?></textarea>
-                    </div>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Formulir Data Anggota</h5>
+            </div>
+            <div class="card-body">
+                <?= $this->include('partials/flash_messages') ?>
 
-                    <hr>
-                    <h5>Data Kepegawaian & Akademik</h5>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="nidn_nip">NIDN/NIP</label>
-                            <input type="text" class="form-control" id="nidn_nip" name="nidn_nip" value="<?= old('nidn_nip', $member['nidn_nip']) ?>">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="kampus_id">Kampus</label>
-                            <select class="form-control select2" id="kampus_id" name="kampus_id">
-                                <?php foreach ($kampus_list as $kampus): ?>
-                                    <option value="<?= $kampus['id'] ?>" <?= $member['kampus_id'] == $kampus['id'] ? 'selected' : '' ?>><?= esc($kampus['nama_kampus']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="status_kepegawaian_id">Status Kepegawaian</label>
-                            <select class="form-control select2" id="status_kepegawaian_id" name="status_kepegawaian_id">
-                                <?php foreach ($status_kepegawaian as $status): ?>
-                                    <option value="<?= $status['id'] ?>" <?= $member['status_kepegawaian_id'] == $status['id'] ? 'selected' : '' ?>><?= esc($status['nama_status']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="gaji_pokok">Gaji Pokok</label>
-                            <input type="number" class="form-control" id="gaji_pokok" name="gaji_pokok" value="<?= old('gaji_pokok', $member['gaji_pokok']) ?>">
-                        </div>
-                    </div>
+                <?= form_open('admin/members/update/' . $member['id']) ?>
+                <input type="hidden" name="_method" value="PUT">
 
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                        <a href="<?= base_url('admin/members/view/' . $member['id']) ?>" class="btn btn-secondary">Batal</a>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="nama_lengkap" class="form-label">Nama Lengkap</label>
+                            <input type="text" class="form-control <?= (validation_show_error('nama_lengkap')) ? 'is-invalid' : '' ?>" id="nama_lengkap" name="nama_lengkap" value="<?= old('nama_lengkap', $member['nama_lengkap'] ?? '') ?>" required>
+                            <?php if (validation_show_error('nama_lengkap')): ?>
+                                <div class="invalid-feedback"><?= validation_show_error('nama_lengkap') ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nomor_anggota" class="form-label">Nomor Anggota</label>
+                            <input type="text" class="form-control <?= (validation_show_error('nomor_anggota')) ? 'is-invalid' : '' ?>" id="nomor_anggota" name="nomor_anggota" value="<?= old('nomor_anggota', $member['nomor_anggota'] ?? '') ?>" required>
+                            <?php if (validation_show_error('nomor_anggota')): ?>
+                                <div class="invalid-feedback"><?= validation_show_error('nomor_anggota') ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
+                            <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" value="<?= old('nomor_telepon', $member['nomor_telepon'] ?? '') ?>">
+                        </div>
                     </div>
-                </form>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="<?= esc($user['email']) ?>" disabled readonly>
+                            <div class="form-text">Email tidak dapat diubah dari halaman ini.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="status_keanggotaan" class="form-label">Status Keanggotaan</label>
+                            <select class="form-select <?= (validation_show_error('status_keanggotaan')) ? 'is-invalid' : '' ?>" id="status_keanggotaan" name="status_keanggotaan" required>
+                                <option value="pending" <?= ($member['status_keanggotaan'] == 'pending') ? 'selected' : '' ?>>Pending</option>
+                                <option value="active" <?= ($member['status_keanggotaan'] == 'active') ? 'selected' : '' ?>>Active</option>
+                                <option value="suspended" <?= ($member['status_keanggotaan'] == 'suspended') ? 'selected' : '' ?>>Suspended</option>
+                            </select>
+                            <?php if (validation_show_error('status_keanggotaan')): ?>
+                                <div class="invalid-feedback"><?= validation_show_error('status_keanggotaan') ?></div>
+                            <?php endif; ?>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="tanggal_bergabung" class="form-label">Tanggal Bergabung</label>
+                            <input type="date" class="form-control" id="tanggal_bergabung" name="tanggal_bergabung" value="<?= old('tanggal_bergabung', date('Y-m-d', strtotime($member['tanggal_bergabung']))) ?>">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label for="alamat" class="form-label">Alamat</label>
+                            <textarea class="form-control" id="alamat" name="alamat" rows="3"><?= old('alamat', $member['alamat'] ?? '') ?></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <a href="<?= base_url('admin/members/view/' . $member['id']) ?>" class="btn btn-light">Batal</a>
+                </div>
+
+                <?= form_close() ?>
             </div>
         </div>
     </div>
 </div>
 
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script src="<?= base_url('plugins/select2/select2.min.js') ?>"></script>
-<script>
-    $(document).ready(function() {
-        // Inisialisasi Select2 untuk dropdown yang lebih baik
-        $('.select2').select2({
-            // Opsi tambahan jika diperlukan
-        });
-    });
-</script>
 <?= $this->endSection() ?>

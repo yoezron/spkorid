@@ -1,116 +1,93 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('title') ?>
-Lakukan Pembayaran
-<?= $this->endSection() ?>
-
-<?= $this->section('styles') ?>
-<link href="<?= base_url('plugins/file-upload/file-upload-with-preview.min.css') ?>" rel="stylesheet" type="text/css" />
-<link href="<?= base_url('plugins/flatpickr/flatpickr.css') ?>" rel="stylesheet" type="text/css">
+Buat Pembayaran Iuran
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 
-<div class="layout-px-spacing">
-    <div class="row layout-spacing">
-        <div class="col-lg-8 col-md-10 col-sm-12 layout-top-spacing m-auto">
-            <div class="widget-content widget-content-area br-6 p-4">
-                <h4>Formulir Pembayaran Iuran</h4>
-                <p>Silakan isi detail pembayaran dan unggah bukti transfer Anda. Pembayaran akan diverifikasi oleh pengurus dalam 1-2 hari kerja.</p>
-                <hr>
+<div class="row">
+    <div class="col">
+        <div class="page-description">
+            <h1>Pembayaran Iuran</h1>
+        </div>
+    </div>
+</div>
 
-                <?php if (session()->has('errors')): ?>
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            <?php foreach (session('errors') as $error): ?>
-                                <li><?= esc($error) ?></li>
-                            <?php endforeach ?>
-                        </ul>
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Formulir Pembayaran</h5>
+            </div>
+            <div class="card-body">
+                <?= $this->include('partials/flash_messages') ?>
+
+                <?= form_open_multipart('member/payment/store') ?>
+
+                <div class="mb-3">
+                    <label for="jumlah" class="form-label">Jumlah Pembayaran</label>
+                    <div class="input-group">
+                        <span class="input-group-text">Rp</span>
+                        <input type="number" class="form-control <?= (validation_show_error('jumlah')) ? 'is-invalid' : '' ?>" id="jumlah" name="jumlah" value="<?= old('jumlah') ?>" placeholder="Contoh: 50000" required>
+                        <?php if (validation_show_error('jumlah')): ?>
+                            <div class="invalid-feedback">
+                                <?= validation_show_error('jumlah') ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                <?php endif ?>
+                    <div class="form-text">Masukkan nominal tanpa titik atau koma.</div>
+                </div>
 
-                <form action="<?= base_url('member/payment/store') ?>" method="post" enctype="multipart/form-data">
-                    <?= csrf_field() ?>
-
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="jenis_pembayaran">Jenis Pembayaran</label>
-                            <select class="form-control" name="jenis_pembayaran" id="jenis_pembayaran" required>
-                                <option value="iuran_bulanan">Iuran Bulanan</option>
-                                <option value="iuran_tahunan">Iuran Tahunan</option>
-                                <option value="sumbangan">Sumbangan</option>
-                                <option value="lainnya">Lainnya</option>
-                            </select>
+                <div class="mb-3">
+                    <label for="tanggal_pembayaran" class="form-label">Tanggal Pembayaran</label>
+                    <input type="date" class="form-control <?= (validation_show_error('tanggal_pembayaran')) ? 'is-invalid' : '' ?>" id="tanggal_pembayaran" name="tanggal_pembayaran" value="<?= old('tanggal_pembayaran', date('Y-m-d')) ?>" required>
+                    <?php if (validation_show_error('tanggal_pembayaran')): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('tanggal_pembayaran') ?>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="jumlah">Jumlah Pembayaran (Rp)</label>
-                            <input type="number" class="form-control" name="jumlah" id="jumlah" placeholder="Contoh: 50000" value="<?= old('jumlah') ?>" required>
+                    <?php endif; ?>
+                </div>
+
+                <div class="mb-3">
+                    <label for="bukti_pembayaran" class="form-label">Unggah Bukti Pembayaran</label>
+                    <input class="form-control <?= (validation_show_error('bukti_pembayaran')) ? 'is-invalid' : '' ?>" type="file" id="bukti_pembayaran" name="bukti_pembayaran" required>
+                    <?php if (validation_show_error('bukti_pembayaran')): ?>
+                        <div class="invalid-feedback">
+                            <?= validation_show_error('bukti_pembayaran') ?>
                         </div>
-                    </div>
+                    <?php endif; ?>
+                    <div class="form-text">File yang diizinkan: .jpg, .jpeg, .png, .pdf. Maksimal 2MB.</div>
+                </div>
 
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label for="periode_bulan">Untuk Periode Bulan</label>
-                            <select class="form-control" name="periode_bulan" id="periode_bulan">
-                                <?php for ($m = 1; $m <= 12; ++$m): ?>
-                                    <option value="<?= $m ?>" <?= (old('periode_bulan', date('m')) == $m) ? 'selected' : '' ?>><?= date('F', mktime(0, 0, 0, $m, 1)) ?></option>
-                                <?php endfor; ?>
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label for="periode_tahun">Untuk Periode Tahun</label>
-                            <select class="form-control" name="periode_tahun" id="periode_tahun">
-                                <?php for ($y = date('Y'); $y >= date('Y') - 5; --$y): ?>
-                                    <option value="<?= $y ?>" <?= (old('periode_tahun', date('Y')) == $y) ? 'selected' : '' ?>><?= $y ?></option>
-                                <?php endfor; ?>
-                            </select>
-                        </div>
-                    </div>
+                <div class="mb-3">
+                    <label for="catatan" class="form-label">Catatan (Opsional)</label>
+                    <textarea class="form-control" id="catatan" name="catatan" rows="3"><?= old('catatan') ?></textarea>
+                </div>
 
-                    <div class="form-group">
-                        <label for="tanggal_pembayaran">Tanggal Pembayaran / Transfer</label>
-                        <input id="tanggal_pembayaran" name="tanggal_pembayaran" class="form-control flatpickr" type="text" placeholder="Pilih tanggal.." value="<?= old('tanggal_pembayaran', date('Y-m-d')) ?>" required>
-                    </div>
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Kirim Bukti Pembayaran</button>
+                    <a href="<?= base_url('member/payment/history') ?>" class="btn btn-light">Batal</a>
+                </div>
 
-                    <div class="form-group">
-                        <label>Unggah Bukti Pembayaran</label>
-                        <div class="custom-file-container" data-upload-id="proofOfPayment">
-                            <label>Pilih File <a href="javascript:void(0)" class="custom-file-container__image-clear" title="Clear Image">x</a></label>
-                            <label class="custom-file-container__custom-file">
-                                <input type="file" name="bukti_pembayaran" class="custom-file-container__custom-file__custom-file-input" accept="image/*" required>
-                                <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
-                                <span class="custom-file-container__custom-file__custom-file-control"></span>
-                            </label>
-                            <div class="custom-file-container__image-preview"></div>
-                        </div>
-                        <small>Format file: JPG, PNG, atau GIF. Ukuran maksimal: 10MB.</small>
-                    </div>
-
-
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-success">Kirim Bukti Pembayaran</button>
-                        <a href="<?= base_url('member/payment/history') ?>" class="btn btn-secondary">Batal</a>
-                    </div>
-                </form>
+                <?= form_close() ?>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Petunjuk Pembayaran</h5>
+                <p>Silakan lakukan transfer ke rekening berikut:</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item"><strong>Bank:</strong> Bank Central Asia (BCA)</li>
+                    <li class="list-group-item"><strong>No. Rekening:</strong> 1234567890</li>
+                    <li class="list-group-item"><strong>Atas Nama:</strong> Serikat Pekerja Kampus</li>
+                </ul>
+                <p class="mt-3">Setelah melakukan transfer, mohon isi formulir di samping dan unggah bukti transfer Anda untuk proses verifikasi.</p>
             </div>
         </div>
     </div>
 </div>
 
-<?= $this->endSection() ?>
-
-<?= $this->section('scripts') ?>
-<script src="<?= base_url('plugins/file-upload/file-upload-with-preview.min.js') ?>"></script>
-<script src="<?= base_url('plugins/flatpickr/flatpickr.js') ?>"></script>
-<script>
-    $(document).ready(function() {
-        // Inisialisasi upload gambar
-        new FileUploadWithPreview('proofOfPayment');
-
-        // Inisialisasi date picker
-        flatpickr("#tanggal_pembayaran", {
-            defaultDate: "today"
-        });
-    });
-</script>
 <?= $this->endSection() ?>
