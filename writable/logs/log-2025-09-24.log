@@ -1,0 +1,25 @@
+CRITICAL - 2025-09-24 04:41:18 --> ErrorException: Constant expression contains invalid operations
+[Method: GET, Route: /]
+in APPPATH\Config\Database.php on line 27.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-09-24 05:05:19 --> ErrorException: Constant expression contains invalid operations
+[Method: GET, Route: /]
+in APPPATH\Config\Database.php on line 27.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-09-24 05:05:20 --> ErrorException: Constant expression contains invalid operations
+[Method: GET, Route: /]
+in APPPATH\Config\Database.php on line 27.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+CRITICAL - 2025-09-24 05:10:33 --> ParseError: Unmatched '}'
+[Method: GET, Route: /]
+in APPPATH\Models\MemberModel.php on line 147.
+ 1 SYSTEMPATH\Autoloader\Autoloader.php(295): CodeIgniter\Autoloader\Autoloader->includeFile('C:\\laragon\\www\\spkorid\\app\\Models\\MemberModel.php')
+ 2 SYSTEMPATH\Autoloader\Autoloader.php(271): CodeIgniter\Autoloader\Autoloader->loadInNamespace('App\\Models\\MemberModel')
+ 3 APPPATH\Controllers\Home.php(25): CodeIgniter\Autoloader\Autoloader->loadClass('App\\Models\\MemberModel')
+ 4 SYSTEMPATH\CodeIgniter.php(903): App\Controllers\Home->__construct()
+ 5 SYSTEMPATH\CodeIgniter.php(498): CodeIgniter\CodeIgniter->createController()
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
