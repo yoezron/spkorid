@@ -1,29 +1,21 @@
 <?php
-// ============================================
-// AUTHENTICATION CONTROLLERS
-// ============================================
-
 // app/Controllers/AuthController.php
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\UserModel;
-use App\Models\MemberModel;
-use App\Models\ActivityLogModel;
+use App\Libraries\Authentication;
+use App\Libraries\EmailService;
 
 class AuthController extends BaseController
 {
-    protected $userModel;
-    protected $memberModel;
-    protected $activityLog;
+    protected $auth;
+    protected $emailService;
     protected $session;
 
     public function __construct()
     {
-        $this->auth = new \App\Libraries\Authentication();
-        $this->userModel = new UserModel();
-        $this->memberModel = new MemberModel();
-        $this->activityLog = new ActivityLogModel();
+        $this->auth = new Authentication();
+        $this->emailService = new EmailService();
         $this->session = \Config\Services::session();
     }
 
@@ -32,73 +24,62 @@ class AuthController extends BaseController
      */
     public function login()
     {
+        // Redirect if already logged in
         if ($this->session->get('logged_in')) {
-            return redirect()->to('/dashboard');
+            return redirect()->to($this->getRedirectUrl());
         }
 
-        return view('auth/login', ['title' => 'Login - SPK']);
+        return view('auth/login', [
+            'title' => 'Login - Serikat Pekerja Kampus'
+        ]);
     }
 
     /**
-     * Process login
+     * Process login attempt
      */
     public function attemptLogin()
     {
+        // Validate input
         $rules = [
             'email' => 'required|valid_email',
-            'password' => 'required|min_length[8]'
+            'password' => 'required|min_length[8]',
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
         }
 
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
+        $remember = $this->request->getPost('remember') ? true : false;
 
-        $result = $this->userModel->authenticate($email, $password);
+        // Attempt login using Authentication library
+        $result = $this->auth->attemptLogin($email, $password, $remember);
 
-        if ($result === false) {
-            return redirect()->back()->withInput()
-                ->with('error', 'Email atau password salah');
-        }
+        if ($result['success']) {
+            // Login successful
+            session()->setFlashdata('success', $result['message']);
+            return redirect()->to($result['redirect']);
+        } else {
+            // Login failed
+            if (isset($result['locked']) && $result['locked']) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', $result['message']);
+            }
 
-        if (isset($result['error'])) {
-            return redirect()->back()->withInput()
-                ->with('error', $result['error']);
-        }
+            if (isset($result['unverified']) && $result['unverified']) {
+                // Store user_id for resend verification
+                session()->setFlashdata('unverified_user_id', $result['user_id']);
+                return redirect()->to('/verify-reminder')
+                    ->with('warning', $result['message']);
+            }
 
-        // Get user details
-        $userDetails = $this->userModel->getUserWithDetails($result['id']);
-
-        // Set session data
-        $sessionData = [
-            'user_id' => $result['id'],
-            'member_id' => $result['member_id'],
-            'email' => $result['email'],
-            'username' => $result['username'],
-            'role_id' => $result['role_id'],
-            'role_name' => $userDetails['role_name'],
-            'nama_lengkap' => $userDetails['nama_lengkap'],
-            'foto_path' => $userDetails['foto_path'],
-            'logged_in' => true
-        ];
-
-        $this->session->set($sessionData);
-
-        // Log activity
-        $this->activityLog->logActivity($result['id'], 'login', 'User logged in');
-
-        // Redirect based on role
-        switch ($result['role_id']) {
-            case 1: // Super Admin
-                return redirect()->to('/admin/dashboard');
-            case 2: // Pengurus
-                return redirect()->to('/pengurus/dashboard');
-            case 3: // Anggota
-                return redirect()->to('/member/dashboard');
-            default:
-                return redirect()->to('/dashboard');
+            return redirect()->back()
+                ->withInput()
+                ->with('error', $result['message']);
         }
     }
 
@@ -107,26 +88,23 @@ class AuthController extends BaseController
      */
     public function logout()
     {
-        $userId = $this->session->get('user_id');
-
-        if ($userId) {
-            $this->activityLog->logActivity($userId, 'logout', 'User logged out');
-        }
-
-        $this->session->destroy();
-        return redirect()->to('/login')->with('success', 'Anda telah berhasil logout');
+        $this->auth->logout();
+        session()->setFlashdata('success', 'Anda telah berhasil logout.');
+        return redirect()->to('/login');
     }
 
     /**
-     * Forgot password page
+     * Display forgot password page
      */
     public function forgotPassword()
     {
-        return view('auth/forgot_password', ['title' => 'Lupa Password - SPK']);
+        return view('auth/forgot_password', [
+            'title' => 'Lupa Password - Serikat Pekerja Kampus'
+        ]);
     }
 
     /**
-     * Process forgot password
+     * Send password reset link
      */
     public function sendResetLink()
     {
@@ -135,119 +113,182 @@ class AuthController extends BaseController
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
         }
 
         $email = $this->request->getPost('email');
-        $user = $this->userModel->where('email', $email)->first();
-
-        if (!$user) {
-            return redirect()->back()->with('error', 'Email tidak terdaftar');
-        }
 
         // Generate reset token
-        $token = bin2hex(random_bytes(32));
-        $expiry = date('Y-m-d H:i:s', strtotime('+2 hours'));
+        $result = $this->auth->generateResetToken($email);
 
-        // Save token
-        $this->userModel->update($user['id'], [
-            'reset_token' => $token,
-            'reset_token_expires' => $expiry
-        ]);
+        if ($result['success'] && isset($result['user'])) {
+            // Send reset email
+            $emailSent = $this->emailService->sendPasswordResetEmail(
+                $result['user'],
+                $result['token']
+            );
 
-        // Send email (implement email sending)
-        $this->sendPasswordResetEmail($email, $token);
+            if ($emailSent) {
+                session()->setFlashdata('success', 'Link reset password telah dikirim ke email Anda.');
+            } else {
+                session()->setFlashdata('error', 'Gagal mengirim email. Silakan coba lagi.');
+            }
+        } else {
+            // Always show success message for security (don't reveal if email exists)
+            session()->setFlashdata('success', 'Jika email terdaftar, link reset password akan dikirim.');
+        }
 
-        return redirect()->back()->with('success', 'Link reset password telah dikirim ke email Anda');
+        return redirect()->to('/forgot-password');
     }
 
     /**
-     * Reset password page
+     * Display reset password form
      */
     public function resetPassword($token)
     {
-        $user = $this->userModel->where('reset_token', $token)
-            ->where('reset_token_expires >', date('Y-m-d H:i:s'))
-            ->first();
-
-        if (!$user) {
-            return redirect()->to('/login')->with('error', 'Token tidak valid atau sudah kadaluarsa');
-        }
-
         return view('auth/reset_password', [
-            'title' => 'Reset Password - SPK',
+            'title' => 'Reset Password - Serikat Pekerja Kampus',
             'token' => $token
         ]);
     }
 
     /**
-     * Process reset password
+     * Update password with token
      */
     public function updatePassword()
     {
         $rules = [
             'token' => 'required',
-            'password' => 'required|min_length[8]',
+            'password' => 'required|min_length[8]|regex_match[/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/]',
             'password_confirm' => 'required|matches[password]'
         ];
 
-        if (!$this->validate($rules)) {
-            return redirect()->back()->with('errors', $this->validator->getErrors());
+        $errors = [
+            'password' => [
+                'regex_match' => 'Password harus mengandung huruf besar, huruf kecil, angka, dan karakter khusus'
+            ]
+        ];
+
+        if (!$this->validate($rules, $errors)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('errors', $this->validator->getErrors());
         }
 
         $token = $this->request->getPost('token');
-        $password = $this->request->getPost('password');
+        $newPassword = $this->request->getPost('password');
 
-        $user = $this->userModel->where('reset_token', $token)
-            ->where('reset_token_expires >', date('Y-m-d H:i:s'))
-            ->first();
+        // Reset password using token
+        $result = $this->auth->resetPasswordWithToken($token, $newPassword);
 
-        if (!$user) {
-            return redirect()->to('/login')->with('error', 'Token tidak valid atau sudah kadaluarsa');
+        if ($result['success']) {
+            session()->setFlashdata('success', $result['message']);
+            return redirect()->to('/login');
+        } else {
+            session()->setFlashdata('error', $result['message']);
+            return redirect()->back();
         }
-
-        // Update password
-        $this->userModel->update($user['id'], [
-            'password' => password_hash($password, PASSWORD_DEFAULT),
-            'reset_token' => null,
-            'reset_token_expires' => null
-        ]);
-
-        return redirect()->to('/login')->with('success', 'Password berhasil direset. Silakan login dengan password baru');
     }
 
     /**
-     * Send password reset email
+     * Verify email with token
      */
-    private function sendPasswordResetEmail($email, $token)
+    public function verifyEmail($token)
     {
-        $emailService = \Config\Services::email();
-        $resetLink = base_url('reset-password/' . $token);
-
-        $emailService->setFrom('noreply@spk.org', 'SPK Indonesia');
-        $emailService->setTo($email);
-        $emailService->setSubject('Reset Password - SPK');
-
-        $message = view('emails/reset_password', [
-            'reset_link' => $resetLink
-        ]);
-
-        $emailService->setMessage($message);
-        $emailService->send();
-    }
-
-    public function attemptLogin()
-    {
-        $email = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
-        $remember = $this->request->getPost('remember') ? true : false;
-
-        $result = $this->auth->attemptLogin($email, $password, $remember);
-
-        if ($result['success']) {
-            return redirect()->to($result['redirect']);
+        if (empty($token)) {
+            session()->setFlashdata('error', 'Token verifikasi tidak valid.');
+            return redirect()->to('/login');
         }
 
-        return redirect()->back()->with('error', $result['message']);
+        // Verify the token
+        $result = $this->auth->verifyEmailToken($token);
+
+        if ($result['success']) {
+            session()->setFlashdata('success', $result['message']);
+            return redirect()->to('/login');
+        } else {
+            session()->setFlashdata('error', $result['message']);
+            return redirect()->to('/register');
+        }
+    }
+
+    /**
+     * Display verify reminder page
+     */
+    public function verifyReminder()
+    {
+        $unverifiedUserId = session()->getFlashdata('unverified_user_id');
+
+        return view('auth/verify_reminder', [
+            'title' => 'Verifikasi Email - Serikat Pekerja Kampus',
+            'user_id' => $unverifiedUserId
+        ]);
+    }
+
+    /**
+     * Resend verification email
+     */
+    public function resendVerification()
+    {
+        $userId = $this->request->getPost('user_id');
+
+        if (!$userId) {
+            session()->setFlashdata('error', 'User ID tidak valid.');
+            return redirect()->to('/login');
+        }
+
+        // Get user data
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->find($userId);
+
+        if (!$user || $user['is_verified']) {
+            session()->setFlashdata('error', 'User tidak ditemukan atau sudah terverifikasi.');
+            return redirect()->to('/login');
+        }
+
+        // Generate new verification token
+        $token = $this->auth->generateVerificationToken();
+        $userModel->update($userId, ['verification_token' => $token]);
+
+        // Get member data
+        $memberModel = new \App\Models\MemberModel();
+        $member = $memberModel->find($user['member_id']);
+
+        // Send verification email
+        $emailSent = $this->emailService->sendVerificationEmail(
+            [
+                'email' => $user['email'],
+                'nama_lengkap' => $member['nama_lengkap'] ?? 'User'
+            ],
+            $token
+        );
+
+        if ($emailSent) {
+            session()->setFlashdata('success', 'Email verifikasi telah dikirim ulang. Silakan cek inbox Anda.');
+        } else {
+            session()->setFlashdata('error', 'Gagal mengirim email verifikasi. Silakan coba lagi.');
+        }
+
+        return redirect()->to('/verify-reminder');
+    }
+
+    /**
+     * Get redirect URL based on user role
+     */
+    protected function getRedirectUrl()
+    {
+        $roleId = $this->session->get('role_id');
+
+        switch ($roleId) {
+            case 1: // Super Admin
+                return '/admin/dashboard';
+            case 2: // Pengurus
+                return '/pengurus/dashboard';
+            case 3: // Member
+            default:
+                return '/member/profile';
+        }
     }
 }

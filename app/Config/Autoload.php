@@ -17,6 +17,8 @@ use CodeIgniter\Config\AutoloadConfig;
  *
  * NOTE: This class is required prior to Autoloader instantiation,
  *       and does not extend BaseConfig.
+ *
+ * @immutable
  */
 class Autoload extends AutoloadConfig
 {
@@ -81,12 +83,16 @@ class Autoload extends AutoloadConfig
      * -------------------------------------------------------------------
      * Helpers
      * -------------------------------------------------------------------
-     * Prototype:
-     *   $helpers = [
-     *       'form',
-     *   ];
+     * This array lists the helpers that will be loaded automatically upon
+     * class instantiation. This is useful if you want certain helpers
+     * available throughout your entire application.
+     *
+     * The 'auth' helper provides authentication check functions
+     * The 'url' helper provides URL manipulation functions  
+     * The 'form' helper provides form building functions
+     * The 'menu' helper provides menu generation functions
      *
      * @var list<string>
      */
-    public $helpers = [];
+    public $helpers = ['url', 'form', 'auth', 'menu'];
 }
