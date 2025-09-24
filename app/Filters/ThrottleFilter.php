@@ -21,24 +21,39 @@ class ThrottleFilter implements FilterInterface
 
     public function before(RequestInterface $request, $arguments = null)
     {
-        // Parse arguments if provided (e.g., 'throttle:10,2' for 10 attempts in 2 minutes)
+        // Parse arguments if provided
         if ($arguments !== null) {
-            $params = explode(',', $arguments);
-            if (isset($params[0])) {
-                $this->maxAttempts = (int)$params[0];
-            }
-            if (isset($params[1])) {
-                $this->decayMinutes = (int)$params[1];
-            }
-            if (isset($params[2])) {
-                $this->blockDuration = (int)$params[2];
+            // Handle both string and array arguments from CI4 filter system
+            if (is_array($arguments)) {
+                // Arguments come as array from route filters like 'throttle:5,1,15'
+                if (isset($arguments[0])) {
+                    $this->maxAttempts = (int)$arguments[0];
+                }
+                if (isset($arguments[1])) {
+                    $this->decayMinutes = (int)$arguments[1];
+                }
+                if (isset($arguments[2])) {
+                    $this->blockDuration = (int)$arguments[2];
+                }
+            } elseif (is_string($arguments)) {
+                // If arguments is a string, explode it
+                $params = explode(',', $arguments);
+                if (isset($params[0])) {
+                    $this->maxAttempts = (int)$params[0];
+                }
+                if (isset($params[1])) {
+                    $this->decayMinutes = (int)$params[1];
+                }
+                if (isset($params[2])) {
+                    $this->blockDuration = (int)$params[2];
+                }
             }
         }
 
         $key = $this->resolveRequestSignature($request);
 
         // Check if IP is blocked
-        $blockKey = 'blocked:' . $key;
+        $blockKey = 'blocked_' . $key; // Fixed: use underscore instead of colon
         if ($this->cache->get($blockKey)) {
             return $this->buildResponse($request, true);
         }
@@ -59,23 +74,26 @@ class ThrottleFilter implements FilterInterface
 
         // Increment attempts
         $this->cache->save($key, $attempts + 1, $this->decayMinutes * 60);
+
+        return null;
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
         // If login was successful, clear the throttle
-        if ($response->getStatusCode() === 200) {
+        if ($response->getStatusCode() === 200 || $response->getStatusCode() === 302) {
             $session = session();
-            if ($session->get('logged_in')) {
+            if ($session->get('logged_in') || $session->get('user_id')) {
                 $key = $this->resolveRequestSignature($request);
                 $this->cache->delete($key);
-                $this->cache->delete('blocked:' . $key);
+                $this->cache->delete('blocked_' . $key); // Fixed: use underscore
             }
         }
     }
 
     /**
      * Generate unique signature for the request
+     * Fixed: Remove all reserved characters from cache key
      */
     protected function resolveRequestSignature(RequestInterface $request): string
     {
@@ -87,11 +105,16 @@ class ThrottleFilter implements FilterInterface
         if ($request->getMethod() === 'post') {
             $email = $request->getPost('email') ?? $request->getPost('username');
             if ($email) {
-                $identifier = ':' . md5($email);
+                $identifier = '_' . md5($email); // Fixed: use underscore instead of colon
             }
         }
 
-        return 'throttle:' . md5($ip . ':' . $route . $identifier);
+        // Fixed: Remove all reserved characters and use only safe characters
+        // Original: 'throttle:' . md5($ip . ':' . $route . $identifier)
+        // Fixed: Use underscores and create clean cache key
+        $safeKey = 'throttle_' . md5($ip . '_' . $route . $identifier);
+
+        return $safeKey;
     }
 
     /**
@@ -100,25 +123,58 @@ class ThrottleFilter implements FilterInterface
     protected function buildResponse(RequestInterface $request, bool $blocked = false)
     {
         $message = $blocked
-            ? 'Terlalu banyak percobaan. Silakan coba lagi dalam ' . $this->blockDuration . ' menit.'
+            ? 'Terlalu banyak percobaan login. Silakan coba lagi dalam ' . $this->blockDuration . ' menit.'
             : 'Terlalu banyak permintaan. Silakan coba lagi nanti.';
 
-        if ($request->isAJAX()) {
+        // Check if this is an AJAX request
+        if ($request->isAJAX() || $request->hasHeader('X-Requested-With')) {
             return Services::response()
                 ->setJSON([
                     'status' => false,
+                    'error' => true,
                     'message' => $message,
                     'retry_after' => $blocked ? $this->blockDuration * 60 : $this->decayMinutes * 60
                 ])
                 ->setStatusCode(429);
         }
 
-        return Services::response()
-            ->setStatusCode(429)
-            ->setBody(view('errors/html/error_429', [
+        // For regular requests, show error page or redirect
+        $response = Services::response();
+        $response->setStatusCode(429);
+
+        // Try to load custom error view, fallback to simple message
+        try {
+            $body = view('errors/html/error_429', [
                 'message' => $message,
                 'retry_after' => $blocked ? $this->blockDuration : $this->decayMinutes
-            ]));
+            ]);
+        } catch (\Exception $e) {
+            // Fallback if view doesn't exist
+            $body = '<!DOCTYPE html>
+<html>
+<head>
+    <title>Terlalu Banyak Permintaan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f5f5f5; }
+        .container { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #e74c3c; margin-bottom: 20px; }
+        p { color: #666; line-height: 1.6; }
+        .btn { display: inline-block; margin-top: 20px; padding: 10px 20px; background: #3498db; color: white; text-decoration: none; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>429 - Terlalu Banyak Permintaan</h1>
+        <p>' . $message . '</p>
+        <a href="/" class="btn">Kembali ke Beranda</a>
+    </div>
+</body>
+</html>';
+        }
+
+        $response->setBody($body);
+        return $response;
     }
 
     /**
@@ -128,21 +184,25 @@ class ThrottleFilter implements FilterInterface
     {
         log_message('warning', 'IP blocked due to too many attempts: ' . $request->getIPAddress() . ' on route: ' . $request->getUri()->getPath());
 
-        // Optional: Log to database
+        // Optional: Log to database if table exists
         try {
             $db = \Config\Database::connect();
-            $db->table('activity_logs')->insert([
-                'user_id' => null,
-                'activity_type' => 'throttle_blocked',
-                'activity_details' => json_encode([
-                    'ip' => $request->getIPAddress(),
-                    'route' => $request->getUri()->getPath(),
-                    'user_agent' => $request->getUserAgent()->getAgentString(),
-                    'blocked_until' => date('Y-m-d H:i:s', time() + ($this->blockDuration * 60))
-                ]),
-                'ip_address' => $request->getIPAddress(),
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
+
+            // Check if table exists before inserting
+            if ($db->tableExists('activity_logs')) {
+                $db->table('activity_logs')->insert([
+                    'user_id' => null,
+                    'activity_type' => 'throttle_blocked',
+                    'activity_details' => json_encode([
+                        'ip' => $request->getIPAddress(),
+                        'route' => $request->getUri()->getPath(),
+                        'user_agent' => $request->getUserAgent()->getAgentString(),
+                        'blocked_until' => date('Y-m-d H:i:s', time() + ($this->blockDuration * 60))
+                    ]),
+                    'ip_address' => $request->getIPAddress(),
+                    'created_at' => date('Y-m-d H:i:s')
+                ]);
+            }
         } catch (\Exception $e) {
             log_message('error', 'Failed to log throttle blocking: ' . $e->getMessage());
         }

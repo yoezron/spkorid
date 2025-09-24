@@ -23,3 +23,212 @@ in APPPATH\Models\MemberModel.php on line 147.
  8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
  9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
 10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-24 05:21:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-24 05:21:36 --> TypeError: explode(): Argument #2 ($string) must be of type string, array given
+[Method: GET, Route: login]
+in APPPATH\Filters\ThrottleFilter.php on line 26.
+ 1 APPPATH\Filters\ThrottleFilter.php(26): explode(',', [...])
+ 2 SYSTEMPATH\Filters\Filters.php(241): App\Filters\ThrottleFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), [...])
+ 3 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 4 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('login', 'before')
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-24 05:22:50 --> TypeError: explode(): Argument #2 ($string) must be of type string, array given
+[Method: GET, Route: register]
+in APPPATH\Filters\ThrottleFilter.php on line 26.
+ 1 APPPATH\Filters\ThrottleFilter.php(26): explode(',', [...])
+ 2 SYSTEMPATH\Filters\Filters.php(241): App\Filters\ThrottleFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), [...])
+ 3 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 4 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('register', 'before')
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-24 05:22:55 --> TypeError: explode(): Argument #2 ($string) must be of type string, array given
+[Method: GET, Route: register]
+in APPPATH\Filters\ThrottleFilter.php on line 26.
+ 1 APPPATH\Filters\ThrottleFilter.php(26): explode(',', [...])
+ 2 SYSTEMPATH\Filters\Filters.php(241): App\Filters\ThrottleFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), [...])
+ 3 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 4 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('register', 'before')
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-24 05:26:31 --> CodeIgniter\Exceptions\InvalidArgumentException: Cache key contains reserved characters {}()/\@:
+[Method: GET, Route: login]
+in SYSTEMPATH\Cache\Handlers\BaseHandler.php on line 73.
+ 1 SYSTEMPATH\Cache\Handlers\FileHandler.php(87): CodeIgniter\Cache\Handlers\BaseHandler::validateKey('blocked:throttle:56fdfbe0b1ef0220b524253c9bdfc867', '')
+ 2 APPPATH\Filters\ThrottleFilter.php(42): CodeIgniter\Cache\Handlers\FileHandler->get('blocked:throttle:56fdfbe0b1ef0220b524253c9bdfc867')
+ 3 SYSTEMPATH\Filters\Filters.php(241): App\Filters\ThrottleFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), [...])
+ 4 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 5 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('login', 'before')
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-24 05:30:02 --> TypeError: explode(): Argument #2 ($string) must be of type string, array given
+[Method: GET, Route: login]
+in APPPATH\Filters\ThrottleFilter.php on line 26.
+ 1 APPPATH\Filters\ThrottleFilter.php(26): explode(',', [...])
+ 2 SYSTEMPATH\Filters\Filters.php(241): App\Filters\ThrottleFilter->before(Object(CodeIgniter\HTTP\IncomingRequest), [...])
+ 3 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 4 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('login', 'before')
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-24 05:33:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-24 05:33:47 --> ErrorException: Type of App\Controllers\AuthController::$session must be CodeIgniter\Session\Session (as in class App\Controllers\BaseController)
+[Method: GET, Route: login]
+in APPPATH\Controllers\AuthController.php on line 9.
+ 1 [internal function]: CodeIgniter\Debug\Exceptions->shutdownHandler()
+DEBUG - 2025-09-24 05:35:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:35:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:35:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:35:50 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:35:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-24 05:36:06 --> CSRF token verified.
+DEBUG - 2025-09-24 05:36:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-09-24 05:36:06 --> mysqli_sql_exception: Unknown column 'activity_details' in 'field list' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `ac...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `ac...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `ac...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `ac...', Array, false)
+#4 C:\laragon\www\spkorid\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\laragon\www\spkorid\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\laragon\www\spkorid\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, true)
+#7 C:\laragon\www\spkorid\app\Libraries\Authentication.php(469): CodeIgniter\Model->insert(Array)
+#8 C:\laragon\www\spkorid\app\Libraries\Authentication.php(90): App\Libraries\Authentication->logActivity(1, 'login_success')
+#9 C:\laragon\www\spkorid\app\Controllers\AuthController.php(59): App\Libraries\Authentication->attemptLogin('admin@spk.com', 'isman123', false)
+#10 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\AuthController->attemptLogin()
+#11 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\AuthController))
+#12 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#13 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#14 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#15 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#16 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#17 {main}
+ERROR - 2025-09-24 05:36:06 --> Failed to log activity: Unknown column 'activity_details' in 'field list'
+DEBUG - 2025-09-24 05:36:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:47:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:47:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-24 05:47:36 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\MemberModel::getMemberStatistics
+[Method: GET, Route: dashboard]
+in SYSTEMPATH\Model.php on line 927.
+ 1 APPPATH\Controllers\DashboardController.php(62): CodeIgniter\Model->__call('getMemberStatistics', [])
+ 2 APPPATH\Controllers\DashboardController.php(45): App\Controllers\DashboardController->adminDashboard()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\DashboardController->index()
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\DashboardController))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-24 05:47:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:47:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:47:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-24 05:47:42 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\MemberModel::getMemberStatistics
+[Method: GET, Route: dashboard]
+in SYSTEMPATH\Model.php on line 927.
+ 1 APPPATH\Controllers\DashboardController.php(62): CodeIgniter\Model->__call('getMemberStatistics', [])
+ 2 APPPATH\Controllers\DashboardController.php(45): App\Controllers\DashboardController->adminDashboard()
+ 3 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\DashboardController->index()
+ 4 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\DashboardController))
+ 5 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 6 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 7 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 8 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 9 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-24 05:50:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-09-24 05:50:36 --> mysqli_sql_exception: Unknown column 'status' in 'where clause' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\laragon\www\spkorid\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+#5 C:\laragon\www\spkorid\app\Controllers\DashboardController.php(66): CodeIgniter\Model->countAllResults()
+#6 C:\laragon\www\spkorid\app\Controllers\DashboardController.php(41): App\Controllers\DashboardController->adminDashboard()
+#7 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\DashboardController->index()
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\DashboardController))
+#9 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#14 {main}
+CRITICAL - 2025-09-24 05:50:36 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'status' in 'where clause'
+[Method: GET, Route: dashboard]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `payment_history`
+WHERE `status` = :status:', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 3 APPPATH\Controllers\DashboardController.php(66): CodeIgniter\Model->countAllResults()
+ 4 APPPATH\Controllers\DashboardController.php(41): App\Controllers\DashboardController->adminDashboard()
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\DashboardController->index()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\DashboardController))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-24 05:50:36 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'status' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `payment_history`
+WHERE `status` = \'pending\'')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `payment_history`
+WHERE `status` = \'pending\'')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `payment_history`
+WHERE `status` = :status:', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 5 APPPATH\Controllers\DashboardController.php(66): CodeIgniter\Model->countAllResults()
+ 6 APPPATH\Controllers\DashboardController.php(41): App\Controllers\DashboardController->adminDashboard()
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\DashboardController->index()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\DashboardController))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-24 05:50:36 --> [Caused by] mysqli_sql_exception: Unknown column 'status' in 'where clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM `payment_history`
+WHERE `status` = \'pending\'', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM `payment_history`
+WHERE `status` = \'pending\'')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM `payment_history`
+WHERE `status` = \'pending\'')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM `payment_history`
+WHERE `status` = :status:', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(true)
+ 6 APPPATH\Controllers\DashboardController.php(66): CodeIgniter\Model->countAllResults()
+ 7 APPPATH\Controllers\DashboardController.php(41): App\Controllers\DashboardController->adminDashboard()
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\DashboardController->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\DashboardController))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-24 05:52:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:52:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:52:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:53:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-24 05:53:03 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

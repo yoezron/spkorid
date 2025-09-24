@@ -314,14 +314,16 @@ $routes->group('pengurus', ['filter' => 'auth:pengurus'], function ($routes) {
     });
 });
 
+// Bagian yang perlu diubah di app/Config/Routes.php:
+
 // ============================================
 // SUPER ADMIN ROUTES (Role: Super Admin)
 // ============================================
 
 $routes->group('admin', ['filter' => 'auth:super_admin'], function ($routes) {
-    // Dashboard
-    $routes->get('/', 'Admin\DashboardController::index');
-    $routes->get('dashboard', 'Admin\DashboardController::index');
+    // Dashboard - GUNAKAN CONTROLLER EXISTING
+    $routes->get('/', 'DashboardController::index');
+    $routes->get('dashboard', 'DashboardController::index');
 
     // Include all Pengurus routes (Super Admin has access to everything)
     // Member Management (Extended)
@@ -395,12 +397,8 @@ $routes->group('admin', ['filter' => 'auth:super_admin'], function ($routes) {
         $routes->get('restore', 'Admin\SystemController::restore');
         $routes->post('restore-backup', 'Admin\SystemController::restoreBackup');
         $routes->get('logs', 'Admin\SystemController::logs');
-        $routes->get('activity-logs', 'Admin\SystemController::activityLogs');
-        $routes->get('error-logs', 'Admin\SystemController::errorLogs');
-        $routes->get('clear-cache', 'Admin\SystemController::clearCache');
-        $routes->get('maintenance', 'Admin\SystemController::maintenance');
-        $routes->post('toggle-maintenance', 'Admin\SystemController::toggleMaintenance');
-        $routes->get('phpinfo', 'Admin\SystemController::phpinfo');
+        $routes->get('logs/view/(:segment)', 'Admin\SystemController::viewLog/$1');
+        $routes->post('logs/clear', 'Admin\SystemController::clearLogs');
     });
 
     // Reference Data Management
@@ -425,9 +423,15 @@ $routes->group('admin', ['filter' => 'auth:super_admin'], function ($routes) {
 
         // Wilayah
         $routes->get('wilayah', 'Admin\ReferenceController::wilayah');
-        $routes->post('wilayah/store', 'Admin\ReferenceController::storeWilayah');
-        $routes->post('wilayah/update/(:num)', 'Admin\ReferenceController::updateWilayah/$1');
-        $routes->post('wilayah/delete/(:num)', 'Admin\ReferenceController::deleteWilayah/$1');
+        $routes->get('provinsi', 'Admin\ReferenceController::provinsi');
+        $routes->post('provinsi/store', 'Admin\ReferenceController::storeProvinsi');
+        $routes->post('provinsi/update/(:num)', 'Admin\ReferenceController::updateProvinsi/$1');
+        $routes->post('provinsi/delete/(:num)', 'Admin\ReferenceController::deleteProvinsi/$1');
+
+        $routes->get('kota', 'Admin\ReferenceController::kota');
+        $routes->post('kota/store', 'Admin\ReferenceController::storeKota');
+        $routes->post('kota/update/(:num)', 'Admin\ReferenceController::updateKota/$1');
+        $routes->post('kota/delete/(:num)', 'Admin\ReferenceController::deleteKota/$1');
 
         // Jenis PT
         $routes->get('jenis-pt', 'Admin\ReferenceController::jenisPT');

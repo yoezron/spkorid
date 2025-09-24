@@ -10,13 +10,13 @@ class AuthController extends BaseController
 {
     protected $auth;
     protected $emailService;
-    protected $session;
+    // Hapus $session karena sudah ada di BaseController dengan type hinting yang benar
 
     public function __construct()
     {
         $this->auth = new Authentication();
         $this->emailService = new EmailService();
-        $this->session = \Config\Services::session();
+        // Tidak perlu inisialisasi session lagi karena sudah di BaseController
     }
 
     /**
@@ -60,7 +60,7 @@ class AuthController extends BaseController
 
         if ($result['success']) {
             // Login successful
-            session()->setFlashdata('success', $result['message']);
+            $this->session->setFlashdata('success', $result['message']);
             return redirect()->to($result['redirect']);
         } else {
             // Login failed
@@ -72,7 +72,7 @@ class AuthController extends BaseController
 
             if (isset($result['unverified']) && $result['unverified']) {
                 // Store user_id for resend verification
-                session()->setFlashdata('unverified_user_id', $result['user_id']);
+                $this->session->setFlashdata('unverified_user_id', $result['user_id']);
                 return redirect()->to('/verify-reminder')
                     ->with('warning', $result['message']);
             }
@@ -89,12 +89,12 @@ class AuthController extends BaseController
     public function logout()
     {
         $this->auth->logout();
-        session()->setFlashdata('success', 'Anda telah berhasil logout.');
+        $this->session->setFlashdata('success', 'Anda telah berhasil logout.');
         return redirect()->to('/login');
     }
 
     /**
-     * Display forgot password page
+     * Display forgot password form
      */
     public function forgotPassword()
     {
@@ -104,7 +104,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * Send password reset link
+     * Send reset password email
      */
     public function sendResetLink()
     {
@@ -120,24 +120,13 @@ class AuthController extends BaseController
 
         $email = $this->request->getPost('email');
 
-        // Generate reset token
-        $result = $this->auth->generateResetToken($email);
+        // Send reset link using Authentication library
+        $result = $this->auth->sendPasswordResetLink($email);
 
-        if ($result['success'] && isset($result['user'])) {
-            // Send reset email
-            $emailSent = $this->emailService->sendPasswordResetEmail(
-                $result['user'],
-                $result['token']
-            );
-
-            if ($emailSent) {
-                session()->setFlashdata('success', 'Link reset password telah dikirim ke email Anda.');
-            } else {
-                session()->setFlashdata('error', 'Gagal mengirim email. Silakan coba lagi.');
-            }
+        if ($result['success']) {
+            $this->session->setFlashdata('success', $result['message']);
         } else {
-            // Always show success message for security (don't reveal if email exists)
-            session()->setFlashdata('success', 'Jika email terdaftar, link reset password akan dikirim.');
+            $this->session->setFlashdata('error', $result['message']);
         }
 
         return redirect()->to('/forgot-password');
@@ -184,10 +173,10 @@ class AuthController extends BaseController
         $result = $this->auth->resetPasswordWithToken($token, $newPassword);
 
         if ($result['success']) {
-            session()->setFlashdata('success', $result['message']);
+            $this->session->setFlashdata('success', $result['message']);
             return redirect()->to('/login');
         } else {
-            session()->setFlashdata('error', $result['message']);
+            $this->session->setFlashdata('error', $result['message']);
             return redirect()->back();
         }
     }
@@ -198,7 +187,7 @@ class AuthController extends BaseController
     public function verifyEmail($token)
     {
         if (empty($token)) {
-            session()->setFlashdata('error', 'Token verifikasi tidak valid.');
+            $this->session->setFlashdata('error', 'Token verifikasi tidak valid.');
             return redirect()->to('/login');
         }
 
@@ -206,10 +195,10 @@ class AuthController extends BaseController
         $result = $this->auth->verifyEmailToken($token);
 
         if ($result['success']) {
-            session()->setFlashdata('success', $result['message']);
+            $this->session->setFlashdata('success', $result['message']);
             return redirect()->to('/login');
         } else {
-            session()->setFlashdata('error', $result['message']);
+            $this->session->setFlashdata('error', $result['message']);
             return redirect()->to('/register');
         }
     }
@@ -219,7 +208,7 @@ class AuthController extends BaseController
      */
     public function verifyReminder()
     {
-        $unverifiedUserId = session()->getFlashdata('unverified_user_id');
+        $unverifiedUserId = $this->session->getFlashdata('unverified_user_id');
 
         return view('auth/verify_reminder', [
             'title' => 'Verifikasi Email - Serikat Pekerja Kampus',
@@ -235,7 +224,7 @@ class AuthController extends BaseController
         $userId = $this->request->getPost('user_id');
 
         if (!$userId) {
-            session()->setFlashdata('error', 'User ID tidak valid.');
+            $this->session->setFlashdata('error', 'User ID tidak valid.');
             return redirect()->to('/login');
         }
 
@@ -244,7 +233,7 @@ class AuthController extends BaseController
         $user = $userModel->find($userId);
 
         if (!$user || $user['is_verified']) {
-            session()->setFlashdata('error', 'User tidak ditemukan atau sudah terverifikasi.');
+            $this->session->setFlashdata('error', 'User tidak ditemukan atau sudah terverifikasi.');
             return redirect()->to('/login');
         }
 
@@ -266,9 +255,9 @@ class AuthController extends BaseController
         );
 
         if ($emailSent) {
-            session()->setFlashdata('success', 'Email verifikasi telah dikirim ulang. Silakan cek inbox Anda.');
+            $this->session->setFlashdata('success', 'Email verifikasi telah dikirim ulang. Silakan cek inbox Anda.');
         } else {
-            session()->setFlashdata('error', 'Gagal mengirim email verifikasi. Silakan coba lagi.');
+            $this->session->setFlashdata('error', 'Gagal mengirim email verifikasi. Silakan coba lagi.');
         }
 
         return redirect()->to('/verify-reminder');

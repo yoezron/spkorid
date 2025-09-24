@@ -41,7 +41,7 @@ class Filters extends BaseConfig
     public array $globals = [
         'before' => [
             // 'honeypot',
-            'csrf' => ['except' => ['api/*']],
+            'csrf' => ['except' => ['api/*', 'ajax/*']],
             'invalidchars',
         ],
         'after' => [
@@ -104,11 +104,13 @@ class Filters extends BaseConfig
                 'forum/create',
             ]
         ],
+        // Fixed throttle configuration - parameters separated by comma
         'throttle:5,1,15' => [
             'before' => [
                 'login',
                 'register',
                 'forgot-password',
+                'reset-password',
             ]
         ],
         'throttle:30,1' => [
@@ -123,6 +125,8 @@ class Filters extends BaseConfig
                 'register',
                 'forgot-password',
                 'reset-password/*',
+                'verify-email/*',
+                'resend-verification',
             ]
         ]
     ];
