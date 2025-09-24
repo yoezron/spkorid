@@ -1,9 +1,4 @@
 <?php
-
-// ============================================
-// FILTER CONFIGURATION
-// ============================================
-
 // app/Config/Filters.php
 namespace Config;
 
@@ -17,9 +12,13 @@ use CodeIgniter\Filters\SecureHeaders;
 class Filters extends BaseConfig
 {
     /**
-     * Configures aliases for Filter classes
+     * Configures aliases for Filter classes to
+     * make reading things nicer and simpler.
+     *
+     * @var array<string, class-string|list<class-string>> [filter_name => classname]
+     *                                                      or [filter_name => [classname1, classname2, ...]]
      */
-    public $aliases = [
+    public array $aliases = [
         'csrf'          => CSRF::class,
         'toolbar'       => DebugToolbar::class,
         'honeypot'      => Honeypot::class,
@@ -27,84 +26,103 @@ class Filters extends BaseConfig
         'secureheaders' => SecureHeaders::class,
         // Custom filters
         'auth'          => \App\Filters\AuthFilter::class,
-        'noauth'        => \App\Filters\NoAuthFilter::class,
-        'api_auth'      => \App\Filters\ApiAuthFilter::class,
-        'permission'    => \App\Filters\PermissionFilter::class,
-        'maintenance'   => \App\Filters\MaintenanceFilter::class,
+        'role'          => \App\Filters\RoleFilter::class,
         'throttle'      => \App\Filters\ThrottleFilter::class,
-        'cors'          => \App\Filters\CorsFilter::class,
-        'xss'           => \App\Filters\XssFilter::class,
-        'activity_log'  => \App\Filters\ActivityLogFilter::class,
+        'verified'      => \App\Filters\VerifiedFilter::class,
+        'noauth'        => \App\Filters\NoAuthFilter::class,
     ];
 
     /**
-     * List of filters to run before every request
+     * List of filter aliases that are always
+     * applied before and after every request.
+     *
+     * @var array<string, array<string, array<string, string>>>|array<string, list<string>>
      */
-    public $globals = [
+    public array $globals = [
         'before' => [
-            'maintenance',
-            'honeypot',
+            // 'honeypot',
             'csrf' => ['except' => ['api/*']],
-            'xss' => ['except' => ['api/*']],
             'invalidchars',
         ],
         'after' => [
             'toolbar',
             'secureheaders',
-            'activity_log',
         ],
     ];
 
     /**
-     * List of filters for specific HTTP methods
+     * List of filter aliases that works on a
+     * particular HTTP method (GET, POST, etc.).
+     *
+     * Example:
+     * 'post' => ['foo', 'bar']
+     *
+     * If you use this, you should disable auto-routing because auto-routing
+     * permits any HTTP method to access a controller. Accessing the controller
+     * with a method you don't expect could bypass the filter.
+     *
+     * @var array<string, list<string>>
      */
-    public $methods = [
-        'post' => ['throttle:30,1'], // 30 requests per minute for POST
-        'put'  => ['throttle:30,1'],
-        'delete' => ['throttle:30,1'],
-    ];
+    public array $methods = [];
 
     /**
-     * List of filters for specific routes
+     * List of filter aliases that should run on any
+     * before or after URI patterns.
+     *
+     * Example:
+     * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
+     *
+     * @var array<string, array<string, list<string>>>
      */
-    public $filters = [
-        'api/*' => [
-            'before' => ['cors', 'api_auth'],
-            'after' => ['cors']
-        ],
-        'admin/*' => [
-            'before' => ['auth:super_admin'],
-            'after' => []
-        ],
-        'pengurus/*' => [
-            'before' => ['auth:super_admin,pengurus'],
-            'after' => []
-        ],
-        'member/*' => [
-            'before' => ['auth'],
-            'after' => []
-        ],
-    ];
-
-    public $aliases = [
-        'auth'     => \App\Filters\AuthFilter::class,
-        'role'     => \App\Filters\RoleFilter::class,
-        'throttle' => \App\Filters\ThrottleFilter::class,
-        'verified' => \App\Filters\VerifiedFilter::class,
-    ];
-
-    public $filters = [
+    public array $filters = [
         'auth' => [
             'before' => [
                 'admin/*',
                 'member/*',
-                'pengurus/*'
+                'pengurus/*',
+                'dashboard',
+                'profile/*',
+                'forum/create',
+                'forum/reply/*',
+                'survey/respond/*',
             ]
         ],
-        'throttle' => [
+        'role:super_admin' => [
             'before' => [
-                'auth/login',
-                'auth/register'
+                'admin/*',
+            ]
+        ],
+        'role:super_admin,pengurus' => [
+            'before' => [
+                'pengurus/*',
+            ]
+        ],
+        'verified' => [
+            'before' => [
+                'member/surveys/*',
+                'member/card',
+                'forum/create',
+            ]
+        ],
+        'throttle:5,1,15' => [
+            'before' => [
+                'login',
+                'register',
+                'forgot-password',
+            ]
+        ],
+        'throttle:30,1' => [
+            'before' => [
+                'api/*',
+                'ajax/*',
+            ]
+        ],
+        'noauth' => [
+            'before' => [
+                'login',
+                'register',
+                'forgot-password',
+                'reset-password/*',
             ]
         ]
     ];

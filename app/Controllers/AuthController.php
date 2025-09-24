@@ -20,6 +20,7 @@ class AuthController extends BaseController
 
     public function __construct()
     {
+        $this->auth = new \App\Libraries\Authentication();
         $this->userModel = new UserModel();
         $this->memberModel = new MemberModel();
         $this->activityLog = new ActivityLogModel();
@@ -233,5 +234,20 @@ class AuthController extends BaseController
 
         $emailService->setMessage($message);
         $emailService->send();
+    }
+
+    public function attemptLogin()
+    {
+        $email = $this->request->getPost('email');
+        $password = $this->request->getPost('password');
+        $remember = $this->request->getPost('remember') ? true : false;
+
+        $result = $this->auth->attemptLogin($email, $password, $remember);
+
+        if ($result['success']) {
+            return redirect()->to($result['redirect']);
+        }
+
+        return redirect()->back()->with('error', $result['message']);
     }
 }

@@ -1,6 +1,5 @@
-// app/Models/MemberModel.php
 <?php
-
+// app/Models/MemberModel.php
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -11,9 +10,9 @@ class MemberModel extends Model
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType = 'array';
-    protected $useSoftDeletes = true;
+    protected $useSoftDeletes = false;
     protected $protectFields = true;
-
+    
     protected $allowedFields = [
         'nomor_anggota',
         'nama_lengkap',
@@ -36,345 +35,287 @@ class MemberModel extends Model
         'media_sosial',
         'foto_path',
         'bukti_pembayaran_path',
-        'card_path',
         'status_keanggotaan',
         'tanggal_bergabung',
+        'tanggal_verifikasi',
         'verified_by',
-        'verified_at',
-        'suspended_at',
-        'suspended_reason'
+        'catatan_verifikasi',
+        'tanggal_suspend',
+        'alasan_suspend',
+        'tanggal_terminate',
+        'alasan_terminate'
     ];
-
+    
     protected $useTimestamps = true;
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
-    protected $deletedField = 'deleted_at';
-
-    protected $validationRules = [
-        'nama_lengkap' => 'required|min_length[3]|max_length[100]',
-        'email' => 'required|valid_email|is_unique[members.email,id,{id}]',
-        'jenis_kelamin' => 'required|in_list[L,P]',
-        'alamat_lengkap' => 'required|min_length[10]',
-        'nomor_whatsapp' => 'required|regex_match[/^(\+62|62|0)8[1-9][0-9]{6,11}$/]',
-        'status_kepegawaian_id' => 'required|numeric',
-        'pemberi_gaji_id' => 'required|numeric',
-        'range_gaji_id' => 'required|numeric',
-        'gaji_pokok' => 'required|numeric',
-        'provinsi_id' => 'required|numeric',
-        'kota_id' => 'required|numeric',
-        'jenis_pt_id' => 'required|numeric',
-        'kampus_id' => 'required|numeric',
-        'prodi_id' => 'required|numeric'
-    ];
-
-    protected $validationMessages = [
-        'nama_lengkap' => [
-            'required' => 'Nama lengkap wajib diisi',
-            'min_length' => 'Nama lengkap minimal 3 karakter',
-            'max_length' => 'Nama lengkap maksimal 100 karakter'
-        ],
-        'email' => [
-            'required' => 'Email wajib diisi',
-            'valid_email' => 'Format email tidak valid',
-            'is_unique' => 'Email sudah terdaftar'
-        ]
-    ];
-
-    protected $beforeInsert = ['generateNomorAnggota'];
-    protected $afterInsert = ['createInitialPayment'];
-
-    /**
-     * Generate nomor anggota before insert
-     */
-    protected function generateNomorAnggota(array $data)
-    {
-        if (!isset($data['data']['nomor_anggota'])) {
-            helper('text');
-            $year = date('Y');
-            $month = date('m');
-
-            $lastMember = $this->select('nomor_anggota')
-                ->like('nomor_anggota', "SPK/{$year}/{$month}/", 'after')
-                ->orderBy('id', 'DESC')
-                ->first();
-
-            if ($lastMember && $lastMember['nomor_anggota']) {
-                $parts = explode('/', $lastMember['nomor_anggota']);
-                $lastSequence = isset($parts[3]) ? intval($parts[3]) : 0;
-                $nextSequence = $lastSequence + 1;
-            } else {
-                $nextSequence = 1;
-            }
-
-            $data['data']['nomor_anggota'] = sprintf('SPK/%04d/%02d/%05d', $year, $month, $nextSequence);
-        }
-
-        return $data;
-    }
-
-    /**
-     * Create initial payment record after member insert
-     */
-    protected function createInitialPayment(array $data)
-    {
-        if ($data['result']) {
-            $paymentModel = new PaymentHistoryModel();
-
-            $paymentData = [
-                'member_id' => $data['id'],
-                'nomor_transaksi' => 'TRX-' . date('YmdHis') . '-' . $data['id'],
-                'jenis_pembayaran' => 'iuran_pertama',
-                'periode_bulan' => date('n'),
-                'periode_tahun' => date('Y'),
-                'jumlah' => 100000, // Get from settings
-                'metode_pembayaran' => 'transfer',
-                'bukti_pembayaran' => $data['data']['bukti_pembayaran_path'] ?? null,
-                'tanggal_pembayaran' => date('Y-m-d H:i:s'),
-                'status_pembayaran' => 'pending'
-            ];
-
-            $paymentModel->insert($paymentData);
-        }
-
-        return $data;
-    }
-
+    
     /**
      * Get member with all related data
      */
-    public function getMemberWithDetails($id)
+    public function getMemberComplete($id)
     {
         return $this->select('members.*, 
-                             sk.nama as status_kepegawaian,
-                             pg.nama as pemberi_gaji,
-                             rg.range as range_gaji,
-                             prov.nama as provinsi,
-                             kota.nama as kota,
-                             jpt.nama as jenis_pt,
-                             kampus.nama as nama_kampus,
-                             prodi.nama as nama_prodi,
-                             users.username, users.email as user_email,
-                             users.last_login, users.is_active as user_active')
-            ->join('ref_status_kepegawaian sk', 'sk.id = members.status_kepegawaian_id', 'left')
-            ->join('ref_pemberi_gaji pg', 'pg.id = members.pemberi_gaji_id', 'left')
-            ->join('ref_range_gaji rg', 'rg.id = members.range_gaji_id', 'left')
-            ->join('ref_provinsi prov', 'prov.id = members.provinsi_id', 'left')
-            ->join('ref_kota kota', 'kota.id = members.kota_id', 'left')
-            ->join('ref_jenis_pt jpt', 'jpt.id = members.jenis_pt_id', 'left')
-            ->join('ref_kampus kampus', 'kampus.id = members.kampus_id', 'left')
-            ->join('ref_prodi prodi', 'prodi.id = members.prodi_id', 'left')
-            ->join('users', 'users.member_id = members.id', 'left')
-            ->where('members.id', $id)
-            ->first();
+                             ref_status_kepegawaian.nama_status as status_kepegawaian,
+                             ref_pemberi_gaji.nama_pemberi as pemberi_gaji,
+                             ref_range_gaji.range_gaji,
+                             ref_provinsi.nama_provinsi,
+                             ref_kota.nama_kota,
+                             ref_jenis_pt.nama_jenis as jenis_pt,
+                             ref_kampus.nama_kampus,
+                             ref_prodi.nama_prodi,
+                             users.email as user_email,
+                             users.is_active as user_active,
+                             users.last_login')
+                    ->join('ref_status_kepegawaian', 'ref_status_kepegawaian.id = members.status_kepegawaian_id', 'left')
+                    ->join('ref_pemberi_gaji', 'ref_pemberi_gaji.id = members.pemberi_gaji_id', 'left')
+                    ->join('ref_range_gaji', 'ref_range_gaji.id = members.range_gaji_id', 'left')
+                    ->join('ref_provinsi', 'ref_provinsi.id = members.provinsi_id', 'left')
+                    ->join('ref_kota', 'ref_kota.id = members.kota_id', 'left')
+                    ->join('ref_jenis_pt', 'ref_jenis_pt.id = members.jenis_pt_id', 'left')
+                    ->join('ref_kampus', 'ref_kampus.id = members.kampus_id', 'left')
+                    ->join('ref_prodi', 'ref_prodi.id = members.prodi_id', 'left')
+                    ->join('users', 'users.member_id = members.id', 'left')
+                    ->where('members.id', $id)
+                    ->first();
     }
-
-    /**
-     * Get active members with pagination
-     */
-    public function getActiveMembers($limit = 10, $offset = 0)
-    {
-        return $this->select('members.*, kampus.nama as nama_kampus')
-            ->join('ref_kampus kampus', 'kampus.id = members.kampus_id', 'left')
-            ->where('status_keanggotaan', 'active')
-            ->orderBy('created_at', 'DESC')
-            ->paginate($limit);
-    }
-
+    
     /**
      * Get pending members for verification
      */
     public function getPendingMembers()
     {
-        return $this->select('members.*, kampus.nama as nama_kampus')
-            ->join('ref_kampus kampus', 'kampus.id = members.kampus_id', 'left')
-            ->where('status_keanggotaan', 'pending')
-            ->orderBy('created_at', 'ASC')
-            ->findAll();
+        return $this->select('members.*, users.email as user_email')
+                    ->join('users', 'users.member_id = members.id', 'left')
+                    ->where('members.status_keanggotaan', 'pending')
+                    ->orderBy('members.created_at', 'ASC')
+                    ->findAll();
     }
-
+    
     /**
-     * Verify member
+     * Get active members
      */
-    public function verifyMember($id, $verifiedBy, $notes = '')
+    public function getActiveMembers($limit = null, $offset = null)
     {
-        $data = [
-            'status_keanggotaan' => 'active',
-            'verified_by' => $verifiedBy,
-            'verified_at' => date('Y-m-d H:i:s'),
-            'tanggal_bergabung' => date('Y-m-d')
-        ];
-
-        $result = $this->update($id, $data);
-
-        if ($result) {
-            // Update user status
-            $userModel = new UserModel();
-            $user = $userModel->where('member_id', $id)->first();
-
-            if ($user) {
-                $userModel->update($user['id'], [
-                    'is_active' => 1,
-                    'is_verified' => 1
-                ]);
-            }
-
-            // Update payment status if exists
-            $paymentModel = new PaymentHistoryModel();
-            $payment = $paymentModel->where('member_id', $id)
-                ->where('jenis_pembayaran', 'iuran_pertama')
-                ->where('status_pembayaran', 'pending')
-                ->first();
-
-            if ($payment) {
-                $paymentModel->update($payment['id'], [
-                    'status_pembayaran' => 'verified',
-                    'verified_by' => $verifiedBy,
-                    'verified_at' => date('Y-m-d H:i:s'),
-                    'catatan' => $notes
-                ]);
-            }
+        $builder = $this->select('members.*, 
+                                 ref_kampus.nama_kampus,
+                                 ref_prodi.nama_prodi,
+                                 users.last_login')
+                        ->join('ref_kampus', 'ref_kampus.id = members.kampus_id', 'left')
+                        ->join('ref_prodi', 'ref_prodi.id = members.prodi_id', 'left')
+                        ->join('users', 'users.member_id = members.id', 'left')
+                        ->where('members.status_keanggotaan', 'active');
+        
+        if ($limit !== null && $offset !== null) {
+            $builder->limit($limit, $offset);
         }
-
-        return $result;
+        
+        return $builder->findAll();
     }
-
+    
     /**
-     * Get member statistics
+     * Export members to array for Excel/CSV
      */
-    public function getMemberStatistics()
+    public function exportMembers($filters = [])
     {
-        $stats = [];
-
-        // Total members by status
-        $stats['total_active'] = $this->where('status_keanggotaan', 'active')->countAllResults(false);
-        $stats['total_pending'] = $this->where('status_keanggotaan', 'pending')->countAllResults(false);
-        $stats['total_suspended'] = $this->where('status_keanggotaan', 'suspended')->countAllResults(false);
-        $stats['total_inactive'] = $this->where('status_keanggotaan', 'inactive')->countAllResults(false);
-
-        // Members by month (last 12 months)
-        $stats['monthly_data'] = [];
-        $stats['monthly_labels'] = [];
-
-        for ($i = 11; $i >= 0; $i--) {
-            $date = date('Y-m', strtotime("-{$i} months"));
-            $stats['monthly_labels'][] = date('M Y', strtotime("-{$i} months"));
-
-            $count = $this->where('DATE_FORMAT(created_at, "%Y-%m")', $date)
-                ->where('status_keanggotaan', 'active')
-                ->countAllResults(false);
-
-            $stats['monthly_data'][] = $count;
+        $builder = $this->select('
+            members.nomor_anggota,
+            members.nama_lengkap,
+            members.email,
+            members.jenis_kelamin,
+            members.nomor_whatsapp,
+            ref_status_kepegawaian.nama_status as status_kepegawaian,
+            ref_pemberi_gaji.nama_pemberi as pemberi_gaji,
+            ref_kampus.nama_kampus,
+            ref_prodi.nama_prodi,
+            members.nidn_nip,
+            members.status_keanggotaan,
+            members.tanggal_bergabung
+        ')
+        ->join('ref_status_kepegawaian', 'ref_status_kepegawaian.id = members.status_kepegawaian_id', 'left')
+        ->join('ref_pemberi_gaji', 'ref_pemberi_gaji.id = members.pemberi_gaji_id', 'left')
+        ->join('ref_kampus', 'ref_kampus.id = members.kampus_id', 'left')
+        ->join('ref_prodi', 'ref_prodi.id = members.prodi_id', 'left');
+        
+        if (!empty($filters['status'])) {
+            $builder->where('members.status_keanggotaan', $filters['status']);
         }
-
-        // Members by status kepegawaian
-        $statusKepegawaian = $this->select('sk.nama, COUNT(members.id) as total')
-            ->join('ref_status_kepegawaian sk', 'sk.id = members.status_kepegawaian_id')
-            ->where('members.status_keanggotaan', 'active')
-            ->groupBy('sk.id')
-            ->findAll();
-
-        $stats['status_labels'] = array_column($statusKepegawaian, 'nama');
-        $stats['status_data'] = array_column($statusKepegawaian, 'total');
-
-        // Members by kampus (top 10)
-        $stats['top_kampus'] = $this->select('kampus.nama, COUNT(members.id) as total')
-            ->join('ref_kampus kampus', 'kampus.id = members.kampus_id')
-            ->where('members.status_keanggotaan', 'active')
-            ->groupBy('kampus.id')
-            ->orderBy('total', 'DESC')
-            ->limit(10)
-            ->findAll();
-
-        return $stats;
+        
+        return $builder->orderBy('members.nama_lengkap', 'ASC')->findAll();
     }
-
+}
+    }
+    
     /**
      * Search members
      */
     public function searchMembers($keyword, $filters = [])
     {
-        $builder = $this->table($this->table);
-
-        if ($keyword) {
+        $builder = $this->select('members.*, 
+                                 ref_kampus.nama_kampus,
+                                 ref_prodi.nama_prodi')
+                        ->join('ref_kampus', 'ref_kampus.id = members.kampus_id', 'left')
+                        ->join('ref_prodi', 'ref_prodi.id = members.prodi_id', 'left');
+        
+        // Apply keyword search
+        if (!empty($keyword)) {
             $builder->groupStart()
-                ->like('nama_lengkap', $keyword)
-                ->orLike('email', $keyword)
-                ->orLike('nomor_anggota', $keyword)
-                ->orLike('nidn_nip', $keyword)
-                ->groupEnd();
+                    ->like('members.nama_lengkap', $keyword)
+                    ->orLike('members.nomor_anggota', $keyword)
+                    ->orLike('members.email', $keyword)
+                    ->orLike('members.nidn_nip', $keyword)
+                    ->groupEnd();
         }
-
+        
+        // Apply filters
         if (!empty($filters['status'])) {
-            $builder->where('status_keanggotaan', $filters['status']);
+            $builder->where('members.status_keanggotaan', $filters['status']);
         }
-
+        
         if (!empty($filters['kampus_id'])) {
-            $builder->where('kampus_id', $filters['kampus_id']);
+            $builder->where('members.kampus_id', $filters['kampus_id']);
         }
-
+        
+        if (!empty($filters['provinsi_id'])) {
+            $builder->where('members.provinsi_id', $filters['provinsi_id']);
+        }
+        
         if (!empty($filters['status_kepegawaian_id'])) {
-            $builder->where('status_kepegawaian_id', $filters['status_kepegawaian_id']);
+            $builder->where('members.status_kepegawaian_id', $filters['status_kepegawaian_id']);
         }
-
-        if (!empty($filters['date_from'])) {
-            $builder->where('created_at >=', $filters['date_from']);
-        }
-
-        if (!empty($filters['date_to'])) {
-            $builder->where('created_at <=', $filters['date_to']);
-        }
-
-        return $builder->paginate(20);
+        
+        return $builder->orderBy('members.nama_lengkap', 'ASC')->findAll();
     }
-
+    
     /**
-     * Export members to CSV
+     * Generate member number
      */
-    public function exportToCSV($filters = [])
+    public function generateNomorAnggota()
     {
-        $members = $this->searchMembers('', $filters);
-
-        $csvData = [];
-        $csvData[] = [
-            'Nomor Anggota',
-            'Nama Lengkap',
-            'Email',
-            'Jenis Kelamin',
-            'No. WhatsApp',
-            'NIDN/NIP',
-            'Status Kepegawaian',
-            'Kampus',
-            'Program Studi',
-            'Status',
-            'Tanggal Bergabung'
-        ];
-
-        foreach ($members as $member) {
-            $csvData[] = [
-                $member['nomor_anggota'],
-                $member['nama_lengkap'],
-                $member['email'],
-                $member['jenis_kelamin'] == 'L' ? 'Laki-laki' : 'Perempuan',
-                $member['nomor_whatsapp'],
-                $member['nidn_nip'],
-                $member['status_kepegawaian'] ?? '-',
-                $member['nama_kampus'] ?? '-',
-                $member['nama_prodi'] ?? '-',
-                $member['status_keanggotaan'],
-                $member['tanggal_bergabung'] ?? '-'
-            ];
+        $year = date('Y');
+        $month = date('m');
+        
+        // Get last member number for current year
+        $lastMember = $this->select('nomor_anggota')
+                          ->like('nomor_anggota', "SPK{$year}", 'after')
+                          ->orderBy('id', 'DESC')
+                          ->first();
+        
+        if ($lastMember && preg_match('/SPK' . $year . '(\d{5})/', $lastMember['nomor_anggota'], $matches)) {
+            $lastNumber = intval($matches[1]);
+            $newNumber = str_pad($lastNumber + 1, 5, '0', STR_PAD_LEFT);
+        } else {
+            $newNumber = '00001';
         }
-
-        return $csvData;
+        
+        return "SPK{$year}{$newNumber}";
     }
-
-    public function getMemberComplete($id)
+    
+    /**
+     * Update member status
+     */
+    public function updateStatus($memberId, $status, $notes = null, $updatedBy = null)
     {
-        return $this->select('members.*, 
-                         ref_status_kepegawaian.nama_status,
-                         ref_kampus.nama_kampus,
-                         // ... other joins')
-            ->join('ref_status_kepegawaian', '...')
-            ->find($id);
+        $data = ['status_keanggotaan' => $status];
+        
+        switch ($status) {
+            case 'active':
+                $data['tanggal_verifikasi'] = date('Y-m-d H:i:s');
+                $data['verified_by'] = $updatedBy;
+                $data['catatan_verifikasi'] = $notes;
+                break;
+                
+            case 'suspended':
+                $data['tanggal_suspend'] = date('Y-m-d H:i:s');
+                $data['alasan_suspend'] = $notes;
+                break;
+                
+            case 'terminated':
+                $data['tanggal_terminate'] = date('Y-m-d H:i:s');
+                $data['alasan_terminate'] = $notes;
+                break;
+        }
+        
+        return $this->update($memberId, $data);
     }
-}
+    
+    /**
+     * Get member statistics
+     */
+    public function getStatistics()
+    {
+        $stats = [
+            'total' => $this->countAll(),
+            'active' => $this->where('status_keanggotaan', 'active')->countAllResults(),
+            'pending' => $this->where('status_keanggotaan', 'pending')->countAllResults(),
+            'suspended' => $this->where('status_keanggotaan', 'suspended')->countAllResults(),
+            'terminated' => $this->where('status_keanggotaan', 'terminated')->countAllResults()
+        ];
+        
+        // Get by gender
+        $stats['by_gender'] = $this->select('jenis_kelamin, COUNT(*) as total')
+                                   ->where('status_keanggotaan', 'active')
+                                   ->groupBy('jenis_kelamin')
+                                   ->findAll();
+        
+        // Get by kampus (top 10)
+        $stats['by_kampus'] = $this->select('ref_kampus.nama_kampus, COUNT(*) as total')
+                                   ->join('ref_kampus', 'ref_kampus.id = members.kampus_id', 'left')
+                                   ->where('members.status_keanggotaan', 'active')
+                                   ->groupBy('members.kampus_id')
+                                   ->orderBy('total', 'DESC')
+                                   ->limit(10)
+                                   ->findAll();
+        
+        // Get by provinsi
+        $stats['by_provinsi'] = $this->select('ref_provinsi.nama_provinsi, COUNT(*) as total')
+                                     ->join('ref_provinsi', 'ref_provinsi.id = members.provinsi_id', 'left')
+                                     ->where('members.status_keanggotaan', 'active')
+                                     ->groupBy('members.provinsi_id')
+                                     ->orderBy('total', 'DESC')
+                                     ->findAll();
+        
+        // Get recent members
+        $stats['recent'] = $this->where('status_keanggotaan', 'active')
+                                ->orderBy('tanggal_bergabung', 'DESC')
+                                ->limit(5)
+                                ->findAll();
+        
+        return $stats;
+    }
+    
+    /**
+     * Check if email exists
+     */
+    public function emailExists($email, $excludeId = null)
+    {
+        $builder = $this->where('email', $email);
+        
+        if ($excludeId) {
+            $builder->where('id !=', $excludeId);
+        }
+        
+        return $builder->countAllResults() > 0;
+    }
+    
+    /**
+     * Get members for bulk email
+     */
+    public function getMembersForEmail($filters = [])
+    {
+        $builder = $this->select('id, nama_lengkap, email')
+                        ->where('status_keanggotaan', 'active');
+        
+        if (!empty($filters['kampus_ids'])) {
+            $builder->whereIn('kampus_id', $filters['kampus_ids']);
+        }
+        
+        if (!empty($filters['provinsi_ids'])) {
+            $builder->whereIn('provinsi_id', $filters['provinsi_ids']);
+        }
+        
+        if (!empty($filters['status_kepegawaian_ids'])) {
+            $builder->whereIn('status_kepegawaian_id', $filters['status_kepegawaian_ids']);
+        }
+        
+        return $builder->findAll();
