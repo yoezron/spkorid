@@ -1539,3 +1539,1099 @@ DEBUG - 2025-09-25 14:11:25 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2025-09-25 14:11:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-09-25 14:11:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-09-25 14:11:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:17:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:18:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:27:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:27:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 14:28:31 --> CSRF token verified.
+DEBUG - 2025-09-25 14:28:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:28:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:28:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 14:29:07 --> CSRF token verified.
+DEBUG - 2025-09-25 14:29:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:29:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:29:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 14:29:23 --> ErrorException: Undefined array key "nama_kampus"
+[Method: GET, Route: member/card]
+in APPPATH\Views\member\member_card.php on line 34.
+ 1 APPPATH\Views\member\member_card.php(34): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "nama_kampus"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\member_card.php', 34)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\member_card.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/member_card', [], true)
+ 5 APPPATH\Controllers\MemberController.php(257): view('member/member_card', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MemberController->memberCard()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MemberController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 14:29:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:29:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 14:30:07 --> CSRF token verified.
+DEBUG - 2025-09-25 14:30:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:30:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:30:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:34:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:34:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:34:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:34:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 14:34:55 --> ErrorException: Undefined array key "nama_kampus"
+[Method: GET, Route: member/card]
+in APPPATH\Views\member\member_card.php on line 34.
+ 1 APPPATH\Views\member\member_card.php(34): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "nama_kampus"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\member_card.php', 34)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\member_card.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/member_card', [], true)
+ 5 APPPATH\Controllers\MemberController.php(257): view('member/member_card', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MemberController->memberCard()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MemberController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 14:39:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:39:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:39:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:39:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:39:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:44:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:44:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:45:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:46:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:47:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:47:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:47:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:47:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:47:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:47:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:47:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 14:48:44 --> CSRF token verified.
+DEBUG - 2025-09-25 14:48:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:50:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 14:53:20 --> CSRF token verified.
+DEBUG - 2025-09-25 14:53:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:58:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 14:58:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:03:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 15:03:25 --> CSRF token verified.
+DEBUG - 2025-09-25 15:03:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:03:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:05:43 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: member/profile/upload-photo]
+in SYSTEMPATH\Security\Security.php on line 262.
+ 1 SYSTEMPATH\Security\Security.php(262): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH\Filters\CSRF.php(52): CodeIgniter\Security\Security->verify(Object(CodeIgniter\HTTP\IncomingRequest))
+ 3 SYSTEMPATH\Filters\Filters.php(241): CodeIgniter\Filters\CSRF->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 4 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 5 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('member/profile/upload-photo', 'before')
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:05:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:06:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:06:12 --> CodeIgniter\Security\Exceptions\SecurityException: The action you requested is not allowed.
+[Method: POST, Route: member/profile/upload-photo]
+in SYSTEMPATH\Security\Security.php on line 262.
+ 1 SYSTEMPATH\Security\Security.php(262): CodeIgniter\Security\Exceptions\SecurityException::forDisallowedAction()
+ 2 SYSTEMPATH\Filters\CSRF.php(52): CodeIgniter\Security\Security->verify(Object(CodeIgniter\HTTP\IncomingRequest))
+ 3 SYSTEMPATH\Filters\Filters.php(241): CodeIgniter\Filters\CSRF->before(Object(CodeIgniter\HTTP\IncomingRequest), null)
+ 4 SYSTEMPATH\Filters\Filters.php(221): CodeIgniter\Filters\Filters->runBefore([...])
+ 5 SYSTEMPATH\CodeIgniter.php(479): CodeIgniter\Filters\Filters->run('member/profile/upload-photo', 'before')
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:06:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:06:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:06:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 15:06:57 --> CSRF token verified.
+DEBUG - 2025-09-25 15:06:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:06:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:08:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:08:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:09:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:09:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:09:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:10:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:10:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:10:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:10:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:10:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:11:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:11:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:11:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:11:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:12:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:12:36 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "forum/index.php"
+[Method: GET, Route: member/forum]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('forum/index.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('forum/index', [], true)
+ 3 APPPATH\Controllers\ForumController.php(40): view('forum/index', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:16:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:16:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:17:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:17:00 --> ErrorException: Undefined variable $pager
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 56.
+ 1 APPPATH\Views\member\forum\index.php(56): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $pager', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 56)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(33): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:19:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:19:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:19:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-09-25 15:19:13 --> mysqli_sql_exception: Unknown column 'nama_kategori' in 'order clause' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *\nFROM `...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *\nFROM `...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *\nFROM `...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *\nFROM `...', Array, false)
+#4 C:\laragon\www\spkorid\system\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+#5 C:\laragon\www\spkorid\system\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+#6 C:\laragon\www\spkorid\system\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+#7 C:\laragon\www\spkorid\app\Controllers\ForumController.php(30): CodeIgniter\BaseModel->paginate(10)
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\ForumController->index()
+#9 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+#10 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#15 {main}
+CRITICAL - 2025-09-25 15:19:13 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'nama_kategori' in 'order clause'
+[Method: GET, Route: member/forum]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `forum_categories`
+ORDER BY `nama_kategori` ASC
+ LIMIT 10', [], false)
+ 2 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 3 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 4 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 5 APPPATH\Controllers\ForumController.php(30): CodeIgniter\BaseModel->paginate(10)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 15:19:13 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'nama_kategori' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `forum_categories`
+ORDER BY `nama_kategori` ASC
+ LIMIT 10')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `forum_categories`
+ORDER BY `nama_kategori` ASC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `forum_categories`
+ORDER BY `nama_kategori` ASC
+ LIMIT 10', [], false)
+ 4 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 5 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 6 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 7 APPPATH\Controllers\ForumController.php(30): CodeIgniter\BaseModel->paginate(10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 15:19:13 --> [Caused by] mysqli_sql_exception: Unknown column 'nama_kategori' in 'order clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT *
+FROM `forum_categories`
+ORDER BY `nama_kategori` ASC
+ LIMIT 10', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT *
+FROM `forum_categories`
+ORDER BY `nama_kategori` ASC
+ LIMIT 10')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT *
+FROM `forum_categories`
+ORDER BY `nama_kategori` ASC
+ LIMIT 10')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1649): CodeIgniter\Database\BaseConnection->query('SELECT *
+FROM `forum_categories`
+ORDER BY `nama_kategori` ASC
+ LIMIT 10', [], false)
+ 5 SYSTEMPATH\Model.php(286): CodeIgniter\Database\BaseBuilder->get()
+ 6 SYSTEMPATH\BaseModel.php(677): CodeIgniter\Model->doFindAll(10, 0)
+ 7 SYSTEMPATH\BaseModel.php(1281): CodeIgniter\BaseModel->findAll(10, 0)
+ 8 APPPATH\Controllers\ForumController.php(30): CodeIgniter\BaseModel->paginate(10)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:20:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:20:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:21:19 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:22:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:22:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:22:14 --> ArgumentCountError: Too few arguments to function App\Controllers\ForumController::createThread(), 0 passed in C:\laragon\www\spkorid\system\CodeIgniter.php on line 933 and exactly 1 expected
+[Method: GET, Route: member/forum/create]
+in APPPATH\Controllers\ForumController.php on line 80.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->createThread()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 7 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:30:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:31:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:31:02 --> ArgumentCountError: Too few arguments to function App\Controllers\ForumController::createThread(), 0 passed in C:\laragon\www\spkorid\system\CodeIgniter.php on line 933 and exactly 1 expected
+[Method: GET, Route: member/forum/create]
+in APPPATH\Controllers\ForumController.php on line 80.
+ 1 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->createThread()
+ 2 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 3 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 4 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 5 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 6 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 7 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:31:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:34:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:34:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:34:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:34:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:34:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:34:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:34:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:35:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:35:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:36:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:36:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:36:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:36:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:43:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:43:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:44:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:44:24 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:44:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:44:28 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:44:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:44:30 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:44:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:44:31 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:44:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:44:32 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:48:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:48:28 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:48:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:48:31 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:48:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:48:32 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:48:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:48:32 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:48:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:48:33 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:48:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:48:33 --> ErrorException: Undefined array key "thread_count"
+[Method: GET, Route: member/forum]
+in APPPATH\Views\member\forum\index.php on line 75.
+ 1 APPPATH\Views\member\forum\index.php(75): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined array key "thread_count"', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php', 75)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\forum\\index.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/forum/index', [], true)
+ 5 APPPATH\Controllers\ForumController.php(34): view('member/forum/index', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:54:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-09-25 15:54:01 --> mysqli_sql_exception: Unknown column 'forum_threads.kategori_id' in 'on clause' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\laragon\www\spkorid\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\laragon\www\spkorid\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\laragon\www\spkorid\app\Controllers\ForumController.php(33): CodeIgniter\BaseModel->paginate(10)
+#7 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\ForumController->index()
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+#9 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#10 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#11 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#12 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#13 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#14 {main}
+CRITICAL - 2025-09-25 15:54:01 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'forum_threads.kategori_id' in 'on clause'
+[Method: GET, Route: member/forum]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_categories`.*, COUNT(forum_threads.id) as thread_count
+FROM `forum_categories`
+LEFT JOIN `forum_threads` ON `forum_threads`.`kategori_id` = `forum_categories`.`id`
+GROUP BY `forum_categories`.`id`
+) CI_count_all_results', [], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Controllers\ForumController.php(33): CodeIgniter\BaseModel->paginate(10)
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 15:54:01 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'forum_threads.kategori_id' in 'on clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_categories`.*, COUNT(forum_threads.id) as thread_count
+FROM `forum_categories`
+LEFT JOIN `forum_threads` ON `forum_threads`.`kategori_id` = `forum_categories`.`id`
+GROUP BY `forum_categories`.`id`
+) CI_count_all_results')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_categories`.*, COUNT(forum_threads.id) as thread_count
+FROM `forum_categories`
+LEFT JOIN `forum_threads` ON `forum_threads`.`kategori_id` = `forum_categories`.`id`
+GROUP BY `forum_categories`.`id`
+) CI_count_all_results')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_categories`.*, COUNT(forum_threads.id) as thread_count
+FROM `forum_categories`
+LEFT JOIN `forum_threads` ON `forum_threads`.`kategori_id` = `forum_categories`.`id`
+GROUP BY `forum_categories`.`id`
+) CI_count_all_results', [], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Controllers\ForumController.php(33): CodeIgniter\BaseModel->paginate(10)
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 15:54:01 --> [Caused by] mysqli_sql_exception: Unknown column 'forum_threads.kategori_id' in 'on clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_categories`.*, COUNT(forum_threads.id) as thread_count
+FROM `forum_categories`
+LEFT JOIN `forum_threads` ON `forum_threads`.`kategori_id` = `forum_categories`.`id`
+GROUP BY `forum_categories`.`id`
+) CI_count_all_results', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_categories`.*, COUNT(forum_threads.id) as thread_count
+FROM `forum_categories`
+LEFT JOIN `forum_threads` ON `forum_threads`.`kategori_id` = `forum_categories`.`id`
+GROUP BY `forum_categories`.`id`
+) CI_count_all_results')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_categories`.*, COUNT(forum_threads.id) as thread_count
+FROM `forum_categories`
+LEFT JOIN `forum_threads` ON `forum_threads`.`kategori_id` = `forum_categories`.`id`
+GROUP BY `forum_categories`.`id`
+) CI_count_all_results')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_categories`.*, COUNT(forum_threads.id) as thread_count
+FROM `forum_categories`
+LEFT JOIN `forum_threads` ON `forum_threads`.`kategori_id` = `forum_categories`.`id`
+GROUP BY `forum_categories`.`id`
+) CI_count_all_results', [], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Controllers\ForumController.php(33): CodeIgniter\BaseModel->paginate(10)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->index()
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 15:57:42 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 15:57:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 15:58:06 --> CSRF token verified.
+DEBUG - 2025-09-25 15:58:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 15:58:06 --> CodeIgniter\Validation\Exceptions\ValidationException: "exist" is not a valid rule.
+[Method: POST, Route: member/forum/store]
+in SYSTEMPATH\Validation\Validation.php on line 345.
+ 1 SYSTEMPATH\Validation\Validation.php(345): CodeIgniter\Validation\Exceptions\ValidationException::forRuleNotFound('exist')
+ 2 SYSTEMPATH\Validation\Validation.php(201): CodeIgniter\Validation\Validation->processRules('kategori_id', 'kategori_id', '1', [...], [...], 'kategori_id')
+ 3 SYSTEMPATH\Controller.php(138): CodeIgniter\Validation\Validation->run()
+ 4 APPPATH\Controllers\ForumController.php(120): CodeIgniter\Controller->validate([...])
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 16:01:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 16:01:04 --> CSRF token verified.
+DEBUG - 2025-09-25 16:01:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:01:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:05:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 16:05:59 --> CSRF token verified.
+DEBUG - 2025-09-25 16:05:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 16:05:59 --> CodeIgniter\Exceptions\InvalidArgumentException: The field must be in the format "table.field" or "dbGroup.table.field".
+[Method: POST, Route: member/forum/store]
+in SYSTEMPATH\Validation\Rules.php on line 205.
+ 1 SYSTEMPATH\Validation\Rules.php(122): CodeIgniter\Validation\Rules->prepareUniqueQuery('1', 'forum_categories', [...])
+ 2 SYSTEMPATH\Validation\StrictRules\Rules.php(148): CodeIgniter\Validation\Rules->is_not_unique('1', 'forum_categories,id', [...])
+ 3 SYSTEMPATH\Validation\Validation.php(336): CodeIgniter\Validation\StrictRules\Rules->is_not_unique('1', 'forum_categories,id', [...], null, 'category_id')
+ 4 SYSTEMPATH\Validation\Validation.php(201): CodeIgniter\Validation\Validation->processRules('category_id', 'category_id', '1', [...], [...], 'category_id')
+ 5 SYSTEMPATH\Controller.php(138): CodeIgniter\Validation\Validation->run()
+ 6 APPPATH\Controllers\ForumController.php(112): CodeIgniter\Controller->validate([...])
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 16:08:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 16:08:56 --> CSRF token verified.
+DEBUG - 2025-09-25 16:08:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-09-25 16:08:56 --> mysqli_sql_exception: Unknown column 'member_id' in 'field list' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `fo...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `fo...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `fo...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `fo...', Array, false)
+#4 C:\laragon\www\spkorid\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\laragon\www\spkorid\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\laragon\www\spkorid\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, false)
+#7 C:\laragon\www\spkorid\system\BaseModel.php(751): CodeIgniter\Model->insert(Array, false)
+#8 C:\laragon\www\spkorid\app\Controllers\ForumController.php(124): CodeIgniter\BaseModel->save(Array)
+#9 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+#10 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+#11 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#16 {main}
+CRITICAL - 2025-09-25 16:08:56 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'member_id' in 'field list'
+[Method: POST, Route: member/forum/store]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `member_id`, `slug`, `created_at`, `updated_at`) VALUES (:title:, :content:, :category_id:, :member_id:, :slug:, :created_at:, :updated_at:)', [...], false)
+ 2 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(838): CodeIgniter\Model->doInsert([...])
+ 4 SYSTEMPATH\Model.php(797): CodeIgniter\BaseModel->insert([...], false)
+ 5 SYSTEMPATH\BaseModel.php(751): CodeIgniter\Model->insert([...], false)
+ 6 APPPATH\Controllers\ForumController.php(124): CodeIgniter\BaseModel->save([...])
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 16:08:56 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'member_id' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `member_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'3\', \'uu-ketenagakerjaan-1758816536\', \'2025-09-25 16:08:56\', \'2025-09-25 16:08:56\')')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `member_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'3\', \'uu-ketenagakerjaan-1758816536\', \'2025-09-25 16:08:56\', \'2025-09-25 16:08:56\')')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `member_id`, `slug`, `created_at`, `updated_at`) VALUES (:title:, :content:, :category_id:, :member_id:, :slug:, :created_at:, :updated_at:)', [...], false)
+ 4 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(838): CodeIgniter\Model->doInsert([...])
+ 6 SYSTEMPATH\Model.php(797): CodeIgniter\BaseModel->insert([...], false)
+ 7 SYSTEMPATH\BaseModel.php(751): CodeIgniter\Model->insert([...], false)
+ 8 APPPATH\Controllers\ForumController.php(124): CodeIgniter\BaseModel->save([...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 16:08:56 --> [Caused by] mysqli_sql_exception: Unknown column 'member_id' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `member_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'3\', \'uu-ketenagakerjaan-1758816536\', \'2025-09-25 16:08:56\', \'2025-09-25 16:08:56\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `member_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'3\', \'uu-ketenagakerjaan-1758816536\', \'2025-09-25 16:08:56\', \'2025-09-25 16:08:56\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `member_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'3\', \'uu-ketenagakerjaan-1758816536\', \'2025-09-25 16:08:56\', \'2025-09-25 16:08:56\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `member_id`, `slug`, `created_at`, `updated_at`) VALUES (:title:, :content:, :category_id:, :member_id:, :slug:, :created_at:, :updated_at:)', [...], false)
+ 5 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(838): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(797): CodeIgniter\BaseModel->insert([...], false)
+ 8 SYSTEMPATH\BaseModel.php(751): CodeIgniter\Model->insert([...], false)
+ 9 APPPATH\Controllers\ForumController.php(124): CodeIgniter\BaseModel->save([...])
+10 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+11 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+12 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 16:15:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 16:15:09 --> CSRF token verified.
+DEBUG - 2025-09-25 16:15:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-09-25 16:15:09 --> mysqli_sql_exception: Unknown column 'slug' in 'field list' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `fo...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `fo...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `fo...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `fo...', Array, false)
+#4 C:\laragon\www\spkorid\system\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+#5 C:\laragon\www\spkorid\system\BaseModel.php(838): CodeIgniter\Model->doInsert(Array)
+#6 C:\laragon\www\spkorid\system\Model.php(797): CodeIgniter\BaseModel->insert(Array, false)
+#7 C:\laragon\www\spkorid\system\BaseModel.php(751): CodeIgniter\Model->insert(Array, false)
+#8 C:\laragon\www\spkorid\app\Controllers\ForumController.php(124): CodeIgniter\BaseModel->save(Array)
+#9 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+#10 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+#11 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#12 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#13 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#14 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#15 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#16 {main}
+CRITICAL - 2025-09-25 16:15:09 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'slug' in 'field list'
+[Method: POST, Route: member/forum/store]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `slug`, `created_at`, `updated_at`) VALUES (:title:, :content:, :category_id:, :slug:, :created_at:, :updated_at:)', [...], false)
+ 2 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 3 SYSTEMPATH\BaseModel.php(838): CodeIgniter\Model->doInsert([...])
+ 4 SYSTEMPATH\Model.php(797): CodeIgniter\BaseModel->insert([...], false)
+ 5 SYSTEMPATH\BaseModel.php(751): CodeIgniter\Model->insert([...], false)
+ 6 APPPATH\Controllers\ForumController.php(124): CodeIgniter\BaseModel->save([...])
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 16:15:09 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'slug' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'uu-ketenagakerjaan-1758816909\', \'2025-09-25 16:15:09\', \'2025-09-25 16:15:09\')')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'uu-ketenagakerjaan-1758816909\', \'2025-09-25 16:15:09\', \'2025-09-25 16:15:09\')')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `slug`, `created_at`, `updated_at`) VALUES (:title:, :content:, :category_id:, :slug:, :created_at:, :updated_at:)', [...], false)
+ 4 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 5 SYSTEMPATH\BaseModel.php(838): CodeIgniter\Model->doInsert([...])
+ 6 SYSTEMPATH\Model.php(797): CodeIgniter\BaseModel->insert([...], false)
+ 7 SYSTEMPATH\BaseModel.php(751): CodeIgniter\Model->insert([...], false)
+ 8 APPPATH\Controllers\ForumController.php(124): CodeIgniter\BaseModel->save([...])
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 16:15:09 --> [Caused by] mysqli_sql_exception: Unknown column 'slug' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'uu-ketenagakerjaan-1758816909\', \'2025-09-25 16:15:09\', \'2025-09-25 16:15:09\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'uu-ketenagakerjaan-1758816909\', \'2025-09-25 16:15:09\', \'2025-09-25 16:15:09\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `slug`, `created_at`, `updated_at`) VALUES (\'UU Ketenagakerjaan\', \'Topik sayyaa ada lah bla bla blaaa\', \'1\', \'uu-ketenagakerjaan-1758816909\', \'2025-09-25 16:15:09\', \'2025-09-25 16:15:09\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `forum_threads` (`title`, `content`, `category_id`, `slug`, `created_at`, `updated_at`) VALUES (:title:, :content:, :category_id:, :slug:, :created_at:, :updated_at:)', [...], false)
+ 5 SYSTEMPATH\Model.php(394): CodeIgniter\Database\BaseBuilder->insert()
+ 6 SYSTEMPATH\BaseModel.php(838): CodeIgniter\Model->doInsert([...])
+ 7 SYSTEMPATH\Model.php(797): CodeIgniter\BaseModel->insert([...], false)
+ 8 SYSTEMPATH\BaseModel.php(751): CodeIgniter\Model->insert([...], false)
+ 9 APPPATH\Controllers\ForumController.php(124): CodeIgniter\BaseModel->save([...])
+10 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->storeThread()
+11 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+12 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+13 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+14 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+15 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+16 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+INFO - 2025-09-25 16:18:58 --> CSRF token verified.
+DEBUG - 2025-09-25 16:18:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:21:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-09-25 16:21:56 --> mysqli_sql_exception: Unknown column 'forum_threads.member_id' in 'on clause' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\laragon\www\spkorid\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\laragon\www\spkorid\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\laragon\www\spkorid\app\Models\ForumThreadModel.php(34): CodeIgniter\BaseModel->paginate(15)
+#7 C:\laragon\www\spkorid\app\Controllers\ForumController.php(53): App\Models\ForumThreadModel->getThreadsByCategory(1)
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\ForumController->category('diskusi-umum')
+#9 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+#10 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#15 {main}
+CRITICAL - 2025-09-25 16:21:56 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'forum_threads.member_id' in 'on clause'
+[Method: GET, Route: member/forum/category/diskusi-umum]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `members`.`nama_lengkap` as `author_name`, COUNT(forum_replies.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `members` ON `members`.`id` = `forum_threads`.`member_id`
+LEFT JOIN `forum_replies` ON `forum_replies`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = :forum_threads.category_id:
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\ForumThreadModel.php(34): CodeIgniter\BaseModel->paginate(15)
+ 5 APPPATH\Controllers\ForumController.php(53): App\Models\ForumThreadModel->getThreadsByCategory(1)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->category('diskusi-umum')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 16:21:56 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'forum_threads.member_id' in 'on clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `members`.`nama_lengkap` as `author_name`, COUNT(forum_replies.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `members` ON `members`.`id` = `forum_threads`.`member_id`
+LEFT JOIN `forum_replies` ON `forum_replies`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `members`.`nama_lengkap` as `author_name`, COUNT(forum_replies.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `members` ON `members`.`id` = `forum_threads`.`member_id`
+LEFT JOIN `forum_replies` ON `forum_replies`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `members`.`nama_lengkap` as `author_name`, COUNT(forum_replies.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `members` ON `members`.`id` = `forum_threads`.`member_id`
+LEFT JOIN `forum_replies` ON `forum_replies`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = :forum_threads.category_id:
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\ForumThreadModel.php(34): CodeIgniter\BaseModel->paginate(15)
+ 7 APPPATH\Controllers\ForumController.php(53): App\Models\ForumThreadModel->getThreadsByCategory(1)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->category('diskusi-umum')
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 16:21:56 --> [Caused by] mysqli_sql_exception: Unknown column 'forum_threads.member_id' in 'on clause'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `members`.`nama_lengkap` as `author_name`, COUNT(forum_replies.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `members` ON `members`.`id` = `forum_threads`.`member_id`
+LEFT JOIN `forum_replies` ON `forum_replies`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `members`.`nama_lengkap` as `author_name`, COUNT(forum_replies.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `members` ON `members`.`id` = `forum_threads`.`member_id`
+LEFT JOIN `forum_replies` ON `forum_replies`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `members`.`nama_lengkap` as `author_name`, COUNT(forum_replies.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `members` ON `members`.`id` = `forum_threads`.`member_id`
+LEFT JOIN `forum_replies` ON `forum_replies`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `members`.`nama_lengkap` as `author_name`, COUNT(forum_replies.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `members` ON `members`.`id` = `forum_threads`.`member_id`
+LEFT JOIN `forum_replies` ON `forum_replies`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = :forum_threads.category_id:
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\ForumThreadModel.php(34): CodeIgniter\BaseModel->paginate(15)
+ 8 APPPATH\Controllers\ForumController.php(53): App\Models\ForumThreadModel->getThreadsByCategory(1)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->category('diskusi-umum')
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 16:26:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-09-25 16:26:10 --> mysqli_sql_exception: Duplicate column name 'reply_count' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*)...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*)...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*)...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*)...', Array, false)
+#4 C:\laragon\www\spkorid\system\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+#5 C:\laragon\www\spkorid\system\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+#6 C:\laragon\www\spkorid\app\Models\ForumThreadModel.php(37): CodeIgniter\BaseModel->paginate(15)
+#7 C:\laragon\www\spkorid\app\Controllers\ForumController.php(53): App\Models\ForumThreadModel->getThreadsByCategory(1)
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\ForumController->category('diskusi-umum')
+#9 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+#10 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#11 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#12 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#13 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#14 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#15 {main}
+CRITICAL - 2025-09-25 16:26:10 --> CodeIgniter\Database\Exceptions\DatabaseException: Duplicate column name 'reply_count'
+[Method: GET, Route: member/forum/category/diskusi-umum]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `m`.`nama_lengkap` as `author_name`, COUNT(fr.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `users` `u` ON `u`.`id` = `forum_threads`.`user_id`
+LEFT JOIN `members` `m` ON `m`.`id` = `u`.`member_id`
+LEFT JOIN `forum_replies` `fr` ON `fr`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = :forum_threads.category_id:
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results', [...], false)
+ 2 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 3 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 4 APPPATH\Models\ForumThreadModel.php(37): CodeIgniter\BaseModel->paginate(15)
+ 5 APPPATH\Controllers\ForumController.php(53): App\Models\ForumThreadModel->getThreadsByCategory(1)
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->category('diskusi-umum')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 16:26:10 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Duplicate column name 'reply_count'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `m`.`nama_lengkap` as `author_name`, COUNT(fr.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `users` `u` ON `u`.`id` = `forum_threads`.`user_id`
+LEFT JOIN `members` `m` ON `m`.`id` = `u`.`member_id`
+LEFT JOIN `forum_replies` `fr` ON `fr`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `m`.`nama_lengkap` as `author_name`, COUNT(fr.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `users` `u` ON `u`.`id` = `forum_threads`.`user_id`
+LEFT JOIN `members` `m` ON `m`.`id` = `u`.`member_id`
+LEFT JOIN `forum_replies` `fr` ON `fr`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `m`.`nama_lengkap` as `author_name`, COUNT(fr.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `users` `u` ON `u`.`id` = `forum_threads`.`user_id`
+LEFT JOIN `members` `m` ON `m`.`id` = `u`.`member_id`
+LEFT JOIN `forum_replies` `fr` ON `fr`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = :forum_threads.category_id:
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results', [...], false)
+ 4 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 5 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 6 APPPATH\Models\ForumThreadModel.php(37): CodeIgniter\BaseModel->paginate(15)
+ 7 APPPATH\Controllers\ForumController.php(53): App\Models\ForumThreadModel->getThreadsByCategory(1)
+ 8 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->category('diskusi-umum')
+ 9 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+10 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+11 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+12 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+13 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+14 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-25 16:26:10 --> [Caused by] mysqli_sql_exception: Duplicate column name 'reply_count'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `m`.`nama_lengkap` as `author_name`, COUNT(fr.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `users` `u` ON `u`.`id` = `forum_threads`.`user_id`
+LEFT JOIN `members` `m` ON `m`.`id` = `u`.`member_id`
+LEFT JOIN `forum_replies` `fr` ON `fr`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `m`.`nama_lengkap` as `author_name`, COUNT(fr.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `users` `u` ON `u`.`id` = `forum_threads`.`user_id`
+LEFT JOIN `members` `m` ON `m`.`id` = `u`.`member_id`
+LEFT JOIN `forum_replies` `fr` ON `fr`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `m`.`nama_lengkap` as `author_name`, COUNT(fr.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `users` `u` ON `u`.`id` = `forum_threads`.`user_id`
+LEFT JOIN `members` `m` ON `m`.`id` = `u`.`member_id`
+LEFT JOIN `forum_replies` `fr` ON `fr`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = 1
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(1733): CodeIgniter\Database\BaseConnection->query('SELECT COUNT(*) AS `numrows`
+FROM (
+SELECT `forum_threads`.*, `m`.`nama_lengkap` as `author_name`, COUNT(fr.id) as reply_count
+FROM `forum_threads`
+LEFT JOIN `users` `u` ON `u`.`id` = `forum_threads`.`user_id`
+LEFT JOIN `members` `m` ON `m`.`id` = `u`.`member_id`
+LEFT JOIN `forum_replies` `fr` ON `fr`.`thread_id` = `forum_threads`.`id`
+WHERE `forum_threads`.`category_id` = :forum_threads.category_id:
+GROUP BY `forum_threads`.`id`
+) CI_count_all_results', [...], false)
+ 5 SYSTEMPATH\Model.php(675): CodeIgniter\Database\BaseBuilder->countAllResults(false)
+ 6 SYSTEMPATH\BaseModel.php(1277): CodeIgniter\Model->countAllResults(false)
+ 7 APPPATH\Models\ForumThreadModel.php(37): CodeIgniter\BaseModel->paginate(15)
+ 8 APPPATH\Controllers\ForumController.php(53): App\Models\ForumThreadModel->getThreadsByCategory(1)
+ 9 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->category('diskusi-umum')
+10 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+11 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+12 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+13 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+14 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+15 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 16:27:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:28:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:28:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:28:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-25 16:28:08 --> CodeIgniter\Exceptions\BadMethodCallException: Call to undefined method App\Models\ForumReplyModel::getRepliesByThread
+[Method: GET, Route: member/forum/thread/1]
+in SYSTEMPATH\Model.php on line 927.
+ 1 APPPATH\Controllers\ForumController.php(75): CodeIgniter\Model->__call('getRepliesByThread', [...])
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\ForumController->thread('1')
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\ForumController))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+ 8 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-25 16:28:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:28:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:28:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:28:32 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:28:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:28:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:28:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:33:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:33:13 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:33:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-25 16:33:35 --> CSRF token verified.
+DEBUG - 2025-09-25 16:33:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:33:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:37:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:39:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:39:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:39:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:39:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:39:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:39:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:39:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:39:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:39:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:40:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:40:29 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:41:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:41:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:42:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:42:14 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:42:17 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:42:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:42:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:42:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:42:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:42:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:42:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:43:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:43:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:43:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-25 16:43:43 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

@@ -91,4 +91,64 @@ class PaymentController extends BaseController
         return redirect()->to('/member/payment/history')
             ->with('success', 'Pembayaran berhasil disubmit dan menunggu verifikasi');
     }
+
+    /**
+     * Process payment proof upload from profile page
+     */
+    public function uploadProof()
+    {
+        $rules = [
+            'amount' => 'required|numeric',
+            'payment_date' => 'required|valid_date',
+            'metode_pembayaran' => 'required|string|max_length[100]',
+            'payment_proof' => [
+                'rules' => 'uploaded[payment_proof]|max_size[payment_proof,5120]|ext_in[payment_proof,png,jpg,jpeg,pdf]',
+                'errors' => [
+                    'uploaded' => 'Anda harus mengunggah bukti pembayaran.',
+                    'max_size' => 'Ukuran file maksimal adalah 5MB.',
+                    'ext_in' => 'Format file yang diizinkan hanya PNG, JPG, JPEG, atau PDF.',
+                ]
+            ]
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $memberId = session()->get('member_id');
+        if (!$memberId) {
+            return redirect()->to('/login')->with('error', 'Sesi Anda telah berakhir. Silakan login kembali.');
+        }
+
+        // Handle file upload
+        $bukti = $this->request->getFile('payment_proof');
+        if ($bukti->isValid() && !$bukti->hasMoved()) {
+            $buktiName = $bukti->getRandomName();
+            $bukti->move(FCPATH . 'uploads/payments', $buktiName);
+
+            // Extract month and year from payment date
+            $paymentDate = $this->request->getPost('payment_date');
+            $dateObject = new \DateTime($paymentDate);
+
+            $paymentData = [
+                'member_id' => $memberId,
+                'nomor_transaksi' => 'TRX-' . date('YmdHis') . '-' . $memberId,
+                'jenis_pembayaran' => $this->request->getPost('payment_type') ?? 'Iuran Rutin',
+                'periode_bulan' => $dateObject->format('n'),
+                'periode_tahun' => $dateObject->format('Y'),
+                'jumlah' => $this->request->getPost('amount'),
+                'metode_pembayaran' => $this->request->getPost('metode_pembayaran'),
+                'bukti_pembayaran_path' => 'uploads/payments/' . $buktiName,
+                'tanggal_pembayaran' => $paymentDate,
+                'status_pembayaran' => 'pending',
+                'catatan' => $this->request->getPost('notes')
+            ];
+
+            if ($this->paymentModel->insert($paymentData)) {
+                return redirect()->to('member/profile')->with('success', 'Bukti pembayaran berhasil diunggah dan sedang menunggu verifikasi.');
+            }
+        }
+
+        return redirect()->back()->withInput()->with('error', 'Gagal mengunggah bukti pembayaran. Silakan coba lagi.');
+    }
 }

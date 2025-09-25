@@ -69,14 +69,23 @@ class MemberController extends BaseController
             return redirect()->to('/dashboard')->with('error', 'Profil tidak ditemukan');
         }
 
+        // --- PENYESUAIAN DIMULAI DI SINI ---
+        // Mengambil data referensi untuk dropdown di form
+        // Pastikan Anda sudah membuat Model untuk tabel-tabel referensi
+        // seperti RefStatusKepegawaianModel, RefKampusModel, dll.
+        $refStatusKepegawaianModel = new RefStatusKepegawaianModel();
+        $refKampusModel = new RefKampusModel();
+
         $data = [
             'title' => 'Edit Profil - SPK',
             'member' => $member,
             'user' => $user,
-            'status_kepegawaian' => (new RefStatusKepegawaianModel())->getActiveStatus(),
-            'kampus_list' => (new RefKampusModel())->where('is_active', 1)->findAll(),
-            'prodi_list' => (new RefProdiModel())->where('kampus_id', $member['kampus_id'])->findAll()
+            'status_kepegawaian' => $refStatusKepegawaianModel->findAll(),
+            'kampus' => $refKampusModel->findAll(),
+            // Anda bisa tambahkan data referensi lain di sini jika diperlukan
+            // 'prodi' => (new RefProdiModel())->findAll(),
         ];
+        // --- PENYESUAIAN SELESAI ---
 
         return view('member/edit_profile', $data);
     }
@@ -88,45 +97,73 @@ class MemberController extends BaseController
     {
         $memberId = session()->get('member_id');
 
+        // --- PENYESUAIAN DIMULAI DI SINI ---
+        // Melengkapi rules validasi sesuai form baru
         $rules = [
-            'nama_lengkap' => 'required|min_length[3]',
-            'nomor_whatsapp' => 'required',
-            'alamat_lengkap' => 'required|min_length[10]',
-            'bidang_keahlian' => 'required'
+            'nama_lengkap'        => 'required|min_length[3]|max_length[200]',
+            'jenis_kelamin'       => 'required|in_list[Laki-laki,Perempuan]',
+            'nomor_whatsapp'      => 'required|max_length[20]',
+            'alamat_lengkap'      => 'required',
+            'tempat_lahir'        => 'permit_empty|max_length[100]',
+            'tanggal_lahir'       => 'permit_empty|valid_date',
+            'nidn_nip'            => 'permit_empty|max_length[50]',
+            'jabatan_fungsional'  => 'permit_empty|max_length[100]',
+            'golongan_pangkat'    => 'permit_empty|max_length[50]',
+            'pendidikan_terakhir' => 'permit_empty|in_list[S1,S2,S3,Profesi]',
+            'foto_profil'         => 'if_exist|uploaded[foto_profil]|max_size[foto_profil,2048]|is_image[foto_profil]|mime_in[foto_profil,image/jpg,image/jpeg,image/png]',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $updateData = [
-            'nama_lengkap' => $this->request->getPost('nama_lengkap'),
-            'nomor_whatsapp' => $this->request->getPost('nomor_whatsapp'),
-            'alamat_lengkap' => $this->request->getPost('alamat_lengkap'),
-            'bidang_keahlian' => $this->request->getPost('bidang_keahlian'),
-            'media_sosial' => $this->request->getPost('media_sosial')
+        // Menyiapkan data untuk disimpan
+        $dataToSave = [
+            'nama_lengkap'        => $this->request->getPost('nama_lengkap'),
+            'jenis_kelamin'       => $this->request->getPost('jenis_kelamin'),
+            'nomor_whatsapp'      => $this->request->getPost('nomor_whatsapp'),
+            'alamat_lengkap'      => $this->request->getPost('alamat_lengkap'),
+            'tempat_lahir'        => $this->request->getPost('tempat_lahir'),
+            'tanggal_lahir'       => $this->request->getPost('tanggal_lahir') ?: null,
+            'media_sosial'        => $this->request->getPost('media_sosial'),
+            'nidn_nip'            => $this->request->getPost('nidn_nip'),
+            'jabatan_fungsional'  => $this->request->getPost('jabatan_fungsional'),
+            'golongan_pangkat'    => $this->request->getPost('golongan_pangkat'),
+            'status_kepegawaian_id' => $this->request->getPost('status_kepegawaian_id') ?: null,
+            'pendidikan_terakhir' => $this->request->getPost('pendidikan_terakhir'),
+            'kampus_id'           => $this->request->getPost('kampus_id') ?: null,
+            'bidang_keahlian'     => $this->request->getPost('bidang_keahlian'),
+            'motivasi_berserikat' => $this->request->getPost('motivasi_berserikat'),
         ];
 
-        $foto = $this->request->getFile('foto');
-        if ($foto && $foto->isValid()) {
-            $newName = $foto->getRandomName();
-            $foto->move(ROOTPATH . 'public/uploads/photos', $newName);
-            $updateData['foto_path'] = 'uploads/photos/' . $newName;
-
-            $member = $this->memberModel->find($memberId);
-            if ($member['foto_path'] && file_exists(ROOTPATH . 'public/' . $member['foto_path'])) {
-                unlink(ROOTPATH . 'public/' . $member['foto_path']);
+        // Proses upload foto profil baru
+        $foto = $this->request->getFile('foto_profil');
+        if ($foto && $foto->isValid() && !$foto->hasMoved()) {
+            // Hapus foto lama jika ada
+            $oldMemberData = $this->memberModel->find($memberId);
+            if (!empty($oldMemberData['foto_path']) && file_exists(FCPATH . $oldMemberData['foto_path'])) {
+                unlink(FCPATH . $oldMemberData['foto_path']);
             }
+
+            // Simpan foto baru
+            $newName = $foto->getRandomName();
+            $foto->move('uploads/photos', $newName);
+            $dataToSave['foto_path'] = 'uploads/photos/' . $newName;
         }
 
-        $this->memberModel->update($memberId, $updateData);
+        // Lakukan update data
+        if ($this->memberModel->update($memberId, $dataToSave)) {
+            // Update data di session jika perlu
+            session()->set('nama_lengkap', $dataToSave['nama_lengkap']);
+            if (isset($dataToSave['foto_path'])) {
+                session()->set('foto_path', $dataToSave['foto_path']);
+            }
 
-        session()->set('nama_lengkap', $updateData['nama_lengkap']);
-        if (isset($updateData['foto_path'])) {
-            session()->set('foto_path', $updateData['foto_path']);
+            return redirect()->to('member/profile')->with('success', 'Profil Anda berhasil diperbarui.');
+        } else {
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui profil. Silakan coba lagi.');
         }
-
-        return redirect()->to('/member/profile')->with('success', 'Profil berhasil diperbarui');
+        // --- PENYESUAIAN SELESAI ---
     }
 
 
@@ -206,7 +243,10 @@ class MemberController extends BaseController
     public function memberCard()
     {
         $memberId = session()->get('member_id');
-        $member = $this->memberModel->find($memberId);
+        // --- PERBAIKAN DIMULAI DI SINI ---
+        // Menggunakan getMemberWithDetails() untuk mendapatkan nama_kampus dan data join lainnya
+        $member = $this->memberModel->getMemberWithDetails($memberId);
+        // --- PERBAIKAN SELESAI ---
 
         if (!$member || $member['status_keanggotaan'] !== 'active') {
             return redirect()->to('/member/profile')->with('error', 'Kartu anggota tidak tersedia');
@@ -228,6 +268,7 @@ class MemberController extends BaseController
         $memberId = $id ?? session()->get('member_id');
         return $this->downloadCard($memberId);
     }
+
 
     /**
      * Upload photo
@@ -254,8 +295,8 @@ class MemberController extends BaseController
 
             // Delete old photo if exists
             $member = $this->memberModel->find($memberId);
-            if ($member['foto_path'] && file_exists(ROOTPATH . 'public/' . $member['foto_path'])) {
-                unlink(ROOTPATH . 'public/' . $member['foto_path']);
+            if ($member['foto_path'] && file_exists(FCPATH . $member['foto_path'])) {
+                unlink(FCPATH . $member['foto_path']);
             }
 
             $this->memberModel->update($memberId, [

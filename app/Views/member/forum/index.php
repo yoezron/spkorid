@@ -10,12 +10,14 @@ Forum Diskusi
     <div class="col">
         <div class="page-description d-flex align-items-center">
             <h1 class="flex-grow-1">Forum Diskusi</h1>
-            <a href="<?= base_url('member/forum/create-thread') ?>" class="btn btn-primary">
+            <a href="<?= base_url('member/forum/create') ?>" class="btn btn-primary">
                 <i class="material-icons-outlined">add</i>Buat Thread Baru
             </a>
         </div>
     </div>
 </div>
+
+<?= $this->include('partials/flash_messages') ?>
 
 <div class="row">
     <div class="col-lg-8">

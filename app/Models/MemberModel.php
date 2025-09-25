@@ -13,11 +13,15 @@ class MemberModel extends Model
     protected $useSoftDeletes = false;
     protected $protectFields = true;
 
+    // --- PENYESUAIAN DIMULAI DI SINI ---
+    // Melengkapi allowedFields sesuai dengan skema database dan form
     protected $allowedFields = [
         'nomor_anggota',
         'nama_lengkap',
         'email',
         'jenis_kelamin',
+        'tempat_lahir',
+        'tanggal_lahir',
         'alamat_lengkap',
         'nomor_whatsapp',
         'status_kepegawaian_id',
@@ -27,6 +31,9 @@ class MemberModel extends Model
         'provinsi_id',
         'kota_id',
         'nidn_nip',
+        'pendidikan_terakhir',
+        'jabatan_fungsional',
+        'golongan_pangkat',
         'jenis_pt_id',
         'kampus_id',
         'prodi_id',
@@ -40,11 +47,13 @@ class MemberModel extends Model
         'tanggal_verifikasi',
         'verified_by',
         'catatan_verifikasi',
+        // Menambahkan field yang mungkin belum ada
         'tanggal_suspend',
         'alasan_suspend',
         'tanggal_terminate',
         'alasan_terminate'
     ];
+    // --- PENYESUAIAN SELESAI ---
 
     protected $useTimestamps = true;
     protected $createdField = 'created_at';

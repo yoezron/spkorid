@@ -78,13 +78,15 @@ $routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:me
     $routes->get('informasi', 'MemberController::informasi');
     $routes->get('informasi/view/(:num)', 'MemberController::viewInformasi/$1');
 
-    // Forum Diskusi - Gunakan ForumController existing atau tambah method
-    $routes->get('forum', 'ForumController::index');
-    $routes->get('forum/thread/(:num)', 'ForumController::viewThread/$1');
-    $routes->get('forum/create', 'ForumController::createThread');
-    $routes->post('forum/store', 'ForumController::storeThread');
-    $routes->post('forum/comment/(:num)', 'ForumController::addComment/$1');
-    $routes->post('forum/comment/delete/(:num)', 'ForumController::deleteComment/$1');
+    // Forum Routes (Grouped for organization)
+    $routes->group('forum', function ($routes) {
+        $routes->get('/', 'ForumController::index');
+        $routes->get('category/(:segment)', 'ForumController::category/$1'); // <-- Aturan untuk slug
+        $routes->get('thread/(:num)', 'ForumController::thread/$1');
+        $routes->get('create', 'ForumController::createThread');
+        $routes->post('store', 'ForumController::storeThread');
+        $routes->post('reply/(:num)', 'ForumController::storeReply/$1');
+    });
 
     // Survei Anggota - Gunakan SurveyController existing atau tambah method
     $routes->get('survey', 'SurveyController::index');
@@ -95,7 +97,7 @@ $routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:me
     // Payment History - Gunakan PaymentController existing atau tambah method
     $routes->get('payment', 'PaymentController::index');
     $routes->get('payment/history', 'PaymentController::history');
-    $routes->post('payment/upload', 'PaymentController::uploadProof');
+    $routes->post('payment/uploadProof', 'PaymentController::uploadProof');
 
     // Blog/Tulisan Anggota - Gunakan BlogController existing
     $routes->get('my-posts', 'BlogController::myPosts');

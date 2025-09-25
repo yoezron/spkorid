@@ -6,36 +6,30 @@ use CodeIgniter\Model;
 
 class ForumCategoryModel extends Model
 {
-    protected $table = 'forum_categories';
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['name', 'description', 'slug', 'order_priority', 'is_active'];
+    protected $table            = 'forum_categories';
+    protected $primaryKey       = 'id';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
+    protected $useSoftDeletes   = false;
+    protected $protectFields    = true;
+    protected $allowedFields    = ['name', 'slug', 'description'];
+
+    // Dates
     protected $useTimestamps = true;
-    protected $createdField = 'created_at';
-    protected $updatedField = 'updated_at';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
 
-    protected $beforeInsert = ['generateSlug'];
-    protected $beforeUpdate = ['generateSlug'];
-
-    protected function generateSlug(array $data)
+    /**
+     * Mengambil data kategori beserta statistik jumlah thread.
+     *
+     * @return \CodeIgniter\Database\BaseBuilder
+     */
+    public function getCategoriesWithStats()
     {
-        if (isset($data['data']['name']) && !isset($data['data']['slug'])) {
-            $data['data']['slug'] = url_title($data['data']['name'], '-', true);
-        }
-        return $data;
-    }
-
-    // Get active categories with thread count
-    public function getCategoriesWithCount()
-    {
-        $db = \Config\Database::connect();
-
-        return $db->table('forum_categories fc')
-            ->select('fc.*, COUNT(ft.id) as thread_count')
-            ->join('forum_threads ft', 'ft.category_id = fc.id', 'left')
-            ->where('fc.is_active', 1)
-            ->groupBy('fc.id')
-            ->orderBy('fc.order_priority', 'ASC')
-            ->get()
-            ->getResultArray();
+        // PERBAIKAN: Mengganti 'kategori_id' menjadi 'category_id' yang benar
+        return $this->select('forum_categories.*, COUNT(forum_threads.id) as thread_count')
+            ->join('forum_threads', 'forum_threads.category_id = forum_categories.id', 'left')
+            ->groupBy('forum_categories.id')
+            ->orderBy('forum_categories.name', 'ASC');
     }
 }

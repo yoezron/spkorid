@@ -1,41 +1,115 @@
-<div class="header-container">
-    <header class="header navbar navbar-expand-sm">
-        <a href="javascript:void(0);" class="sidebarCollapse" data-placement="bottom">
-            <i class="las la-bars"></i>
-        </a>
-        <div class="nav-logo align-self-center">
-            <a class="navbar-brand" href="<?= base_url('dashboard') ?>">
-                <img alt="logo" src="<?= base_url('assets/images/neptune.png') ?>">
-                <span class="navbar-brand-name">SPK</span>
-            </a>
-        </div>
-        <ul class="navbar-item flex-row nav-dropdowns ml-auto">
-            <li class="nav-item dropdown user-profile-dropdown">
-                <a href="javascript:void(0);" class="nav-link dropdown-toggle user" id="userProfileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img src="<?= base_url(session()->get('foto_path') ?? 'assets/images/avatars/avatar.png') ?>" alt="avatar">
-                </a>
-                <div class="dropdown-menu position-absolute" aria-labelledby="userProfileDropdown">
-                    <div class="user-profile-section">
-                        <div class="media mx-auto">
-                            <img src="<?= base_url(session()->get('foto_path') ?? 'assets/images/avatars/avatar.png') ?>" class="img-fluid mr-2" alt="avatar">
-                            <div class="media-body">
-                                <h5><?= esc(session()->get('nama_lengkap')) ?></h5>
-                                <p><?= esc(ucwords(str_replace('_', ' ', session()->get('role_name')))) ?></p>
+<?php
+// Ambil data user dari session untuk digunakan di navbar
+$nama_lengkap = session()->get('nama_lengkap') ?? 'Anggota';
+$email = session()->get('email') ?? 'email@example.com';
+$foto_path = session()->get('foto_path') ?? 'assets/images/avatars/avatar.png';
+?>
+
+<div class="app-header">
+    <nav class="navbar navbar-light navbar-expand-lg">
+        <div class="container-fluid">
+            <div class="navbar-nav" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link hide-sidebar-toggle-button" href="#"><i class="material-icons">first_page</i></a>
+                    </li>
+                    <li class="nav-item hidden-on-mobile">
+                        <a class="nav-link" href="<?= base_url('dashboard') ?>">Dashboard</a>
+                    </li>
+                    <li class="nav-item hidden-on-mobile">
+                        <a class="nav-link" href="<?= base_url('member/profile') ?>">Profil Saya</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="d-flex">
+                <ul class="navbar-nav">
+
+                    <!-- Tombol Search -->
+                    <li class="nav-item">
+                        <a class="nav-link toggle-search" href="#"><i class="material-icons">search</i></a>
+                    </li>
+
+                    <!-- Dropdown Notifikasi -->
+                    <li class="nav-item hidden-on-mobile">
+                        <a class="nav-link nav-notifications-toggle" id="notificationsDropDown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="material-icons-outlined">notifications</i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end notifications-dropdown" aria-labelledby="notificationsDropDown">
+                            <h6 class="dropdown-header">Notifikasi</h6>
+                            <div class="notifications-dropdown-list">
+                                <!-- Contoh Notifikasi 1 -->
+                                <a href="#">
+                                    <div class="notifications-dropdown-item">
+                                        <div class="notifications-dropdown-item-image">
+                                            <span class="notifications-badge bg-info text-white">
+                                                <i class="material-icons-outlined">campaign</i>
+                                            </span>
+                                        </div>
+                                        <div class="notifications-dropdown-item-text">
+                                            <p class="bold-text">Selamat datang di Sistem Keanggotaan!</p>
+                                            <small>Baru saja</small>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Contoh Notifikasi 2 -->
+                                <a href="#">
+                                    <div class="notifications-dropdown-item">
+                                        <div class="notifications-dropdown-item-image">
+                                            <span class="notifications-badge bg-danger text-white">
+                                                <i class="material-icons-outlined">bolt</i>
+                                            </span>
+                                        </div>
+                                        <div class="notifications-dropdown-item-text">
+                                            <p class="bold-text">Pembaruan sistem akan segera dilakukan.</p>
+                                            <small>15 menit yang lalu</small>
+                                        </div>
+                                    </div>
+                                </a>
+                                <!-- Contoh Notifikasi 3 -->
+                                <a href="#">
+                                    <div class="notifications-dropdown-item">
+                                        <div class="notifications-dropdown-item-image">
+                                            <span class="notifications-badge bg-success text-white">
+                                                <i class="material-icons-outlined">payment</i>
+                                            </span>
+                                        </div>
+                                        <div class="notifications-dropdown-item-text">
+                                            <p>Iuran bulan ini telah terverifikasi.</p>
+                                            <small>2 jam yang lalu</small>
+                                        </div>
+                                    </div>
+                                </a>
                             </div>
                         </div>
-                    </div>
-                    <div class="dropdown-item">
-                        <a href="<?= base_url('member/profile') ?>">
-                            <i class="las la-user"></i> <span>Profil Saya</span>
+                    </li>
+
+                    <!-- Dropdown Profil Pengguna -->
+                    <li class="nav-item">
+                        <a class="nav-link" id="profileDropDown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="<?= base_url($foto_path) ?>" alt="profile image" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
                         </a>
-                    </div>
-                    <div class="dropdown-item">
-                        <a href="<?= base_url('logout') ?>">
-                            <i class="las la-sign-out-alt"></i> <span>Logout</span>
-                        </a>
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </header>
+                        <div class="dropdown-menu dropdown-menu-end profile-dropdown" aria-labelledby="profileDropDown">
+                            <div class="dropdown-header">
+                                <h6><?= esc($nama_lengkap) ?></h6>
+                                <span><?= esc($email) ?></span>
+                            </div>
+                            <a class="dropdown-item" href="<?= base_url('member/profile') ?>">
+                                <i class="material-icons-outlined">person_outline</i> Profil
+                            </a>
+                            <a class="dropdown-item" href="<?= base_url('member/profile/edit') ?>">
+                                <i class="material-icons-outlined">edit</i> Edit Profil
+                            </a>
+                            <a class="dropdown-item" href="<?= base_url('member/change-password') ?>">
+                                <i class="material-icons-outlined">lock</i> Ubah Password
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-danger" href="<?= base_url('logout') ?>">
+                                <i class="material-icons-outlined">logout</i> Keluar
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </div>

@@ -1,10 +1,5 @@
 <?php
 
-// ============================================
-// FORUM CONTROLLERS
-// ============================================
-
-// app/Controllers/ForumController.php
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
@@ -20,175 +15,148 @@ class ForumController extends BaseController
 
     public function __construct()
     {
+        // Pastikan Anda sudah membuat ketiga model ini
         $this->categoryModel = new ForumCategoryModel();
         $this->threadModel = new ForumThreadModel();
         $this->replyModel = new ForumReplyModel();
     }
 
     /**
-     * Forum index - show categories
+     * Menampilkan halaman utama forum (daftar kategori beserta statistik).
      */
     public function index()
     {
         $data = [
-            'title' => 'Forum Diskusi - SPK',
-            'categories' => $this->categoryModel->getCategoriesWithCount(),
-            'recent_threads' => $this->threadModel->getThreads(null, 10),
-            'popular_threads' => $this->threadModel->getPopularThreads(5)
+            'title'      => 'Forum Diskusi Anggota',
+            'categories' => $this->categoryModel->getCategoriesWithStats()->paginate(10),
+            'pager'      => $this->categoryModel->pager,
         ];
 
-        return view('forum/index', $data);
+        return view('member/forum/index', $data);
     }
 
     /**
-     * View category threads
+     * Menampilkan daftar thread dalam satu kategori berdasarkan SLUG.
+     * @param string $slug
      */
     public function category($slug)
     {
         $category = $this->categoryModel->where('slug', $slug)->first();
 
         if (!$category) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Kategori tidak ditemukan');
+            return redirect()->to('member/forum')->with('error', 'Kategori forum tidak ditemukan.');
         }
 
         $data = [
-            'title' => $category['name'] . ' - Forum SPK',
+            'title'    => 'Forum: ' . esc($category['name']),
             'category' => $category,
-            'threads' => $this->threadModel->getThreads($category['id']),
-            'pager' => $this->threadModel->pager
+            'threads'  => $this->threadModel->getThreadsByCategory($category['id']),
+            'pager'    => $this->threadModel->pager,
         ];
 
-        return view('forum/category', $data);
+        return view('member/forum/category', $data);
     }
 
     /**
-     * View thread
+     * Menampilkan satu thread diskusi beserta balasannya.
+     * @param int $threadId
      */
-    public function thread($id)
+    public function thread($threadId)
     {
-        $thread = $this->threadModel->getThreadWithDetails($id);
+        $thread = $this->threadModel->getThreadWithDetails($threadId);
 
         if (!$thread) {
-            throw new \CodeIgniter\Exceptions\PageNotFoundException('Thread tidak ditemukan');
+            return redirect()->to('member/forum')->with('error', 'Diskusi tidak ditemukan.');
         }
 
         $data = [
-            'title' => $thread['title'] . ' - Forum SPK',
-            'thread' => $thread,
-            'replies' => $this->replyModel->getThreadReplies($id)
+            'title'   => esc($thread['title']),
+            'thread'  => $thread,
+            'replies' => $this->replyModel->getRepliesByThread($threadId), // Asumsikan method ini ada
+            'pager'   => $this->replyModel->pager
         ];
 
-        return view('forum/thread', $data);
+        return view('member/forum/thread', $data);
     }
 
     /**
-     * Create new thread
+     * Menampilkan form untuk membuat thread baru.
      */
     public function createThread()
     {
-        $data = [
-            'title' => 'Buat Thread Baru - Forum SPK',
-            'categories' => $this->categoryModel->where('is_active', 1)->findAll()
-        ];
+        $categories = $this->categoryModel->orderBy('name', 'ASC')->findAll();
 
-        return view('forum/create_thread', $data);
+        if (empty($categories)) {
+            return redirect()->to('member/forum')->with('error', 'Belum ada kategori forum yang tersedia. Tidak dapat membuat diskusi baru.');
+        }
+
+        $data = [
+            'title'      => 'Buat Diskusi Baru',
+            'categories' => $categories
+        ];
+        return view('member/forum/create_thread', $data);
     }
 
     /**
-     * Store new thread
+     * Menyimpan thread baru ke database.
      */
     public function storeThread()
     {
         $rules = [
-            'category_id' => 'required|numeric',
-            'title' => 'required|min_length[5]|max_length[255]',
-            'content' => 'required|min_length[20]'
+            'judul'       => 'required|min_length[5]|max_length[255]',
+            'isi'         => 'required|min_length[10]',
+            'category_id' => 'required|is_natural_no_zero|is_not_unique[forum_categories.id]'
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $threadData = [
+        $data = [
+            'title'       => $this->request->getPost('judul'),
+            'content'     => $this->request->getPost('isi'),
             'category_id' => $this->request->getPost('category_id'),
-            'user_id' => session()->get('user_id'),
-            'title' => $this->request->getPost('title'),
-            'content' => $this->request->getPost('content')
+            // PERBAIKAN: Menggunakan 'user_id' sesuai skema database
+            'user_id'     => session()->get('user_id'),
+            'slug'        => url_title($this->request->getPost('judul'), '-', true) . '-' . time()
         ];
 
-        $threadId = $this->threadModel->insert($threadData);
+        $this->threadModel->save($data);
 
-        return redirect()->to('/forum/thread/' . $threadId)->with('success', 'Thread berhasil dibuat');
+        $category = $this->categoryModel->find($data['category_id']);
+        $slug = $category['slug'] ?? '';
+
+        return redirect()->to('member/forum/category/' . $slug)->with('success', 'Diskusi baru berhasil dipublikasikan.');
     }
 
     /**
-     * Reply to thread
+     * Menyimpan balasan baru pada sebuah thread.
      */
-    public function reply($threadId)
+    public function storeReply($threadId)
     {
-        $thread = $this->threadModel->find($threadId);
-
-        if (!$thread || $thread['is_locked']) {
-            return redirect()->back()->with('error', 'Thread tidak dapat dibalas');
+        if (!$this->threadModel->find($threadId)) {
+            return redirect()->back()->with('error', 'Diskusi tidak ditemukan.');
         }
 
         $rules = [
-            'content' => 'required|min_length[10]'
+            'content' => 'required|min_length[5]',
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->back()->with('errors', $this->validator->getErrors());
+            return redirect()->back()->withInput()->with('error', $this->validator->getError('content'));
         }
-
-        $replyData = [
-            'thread_id' => $threadId,
-            'user_id' => session()->get('user_id'),
-            'content' => $this->request->getPost('content'),
-            'reply_to_id' => $this->request->getPost('reply_to_id') ?? null
-        ];
-
-        $this->replyModel->addReply($replyData);
-
-        return redirect()->to('/forum/thread/' . $threadId . '#latest')
-            ->with('success', 'Balasan berhasil ditambahkan');
-    }
-
-    /**
-     * Edit reply
-     */
-    public function editReply($id)
-    {
-        $reply = $this->replyModel->find($id);
-
-        // Check ownership
-        if ($reply['user_id'] != session()->get('user_id')) {
-            return redirect()->back()->with('error', 'Anda tidak dapat mengedit balasan ini');
-        }
-
-        $content = $this->request->getPost('content');
-
-        $this->replyModel->update($id, [
-            'content' => $content,
-            'is_edited' => 1,
-            'edited_at' => date('Y-m-d H:i:s')
-        ]);
-
-        return redirect()->back()->with('success', 'Balasan berhasil diperbarui');
-    }
-
-    /**
-     * Search forum
-     */
-    public function search()
-    {
-        $keyword = $this->request->getGet('q');
 
         $data = [
-            'title' => 'Pencarian Forum: ' . $keyword,
-            'threads' => $this->threadModel->searchThreads($keyword),
-            'keyword' => $keyword
+            'content'   => $this->request->getPost('content'),
+            'thread_id' => $threadId,
+            // PERBAIKAN: Menggunakan 'user_id' sesuai skema database
+            'user_id'   => session()->get('user_id'),
         ];
 
-        return view('forum/search', $data);
+        $this->replyModel->save($data);
+
+        $this->threadModel->update($threadId, ['updated_at' => date('Y-m-d H:i:s')]);
+
+        return redirect()->to('member/forum/thread/' . $threadId)->with('success', 'Balasan berhasil dikirim.');
     }
 }
