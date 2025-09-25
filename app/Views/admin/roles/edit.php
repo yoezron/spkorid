@@ -37,11 +37,11 @@ Edit Role
                 </div>
 
                 <div class="mb-3">
-                    <label for="description" class="form-label">Deskripsi</label>
-                    <textarea class="form-control <?= (validation_show_error('description')) ? 'is-invalid' : '' ?>" id="description" name="description" rows="3" required><?= old('description', $role['description']) ?></textarea>
-                    <?php if (validation_show_error('description')): ?>
+                    <label for="role_description" class="form-label">Deskripsi</label>
+                    <textarea class="form-control <?= (validation_show_error('role_description')) ? 'is-invalid' : '' ?>" id="role_description" name="role_description" rows="3" required><?= old('role_description', $role['role_description']) ?></textarea>
+                    <?php if (validation_show_error('role_description')): ?>
                         <div class="invalid-feedback">
-                            <?= validation_show_error('description') ?>
+                            <?= validation_show_error('role_description') ?>
                         </div>
                     <?php endif; ?>
                 </div>

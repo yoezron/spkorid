@@ -52,7 +52,7 @@ Hak Akses Role: <?= esc($role['role_name']) ?>
                                             </td>
                                             <td class="text-center">
                                                 <div class="form-check d-inline-block">
-                                                    <input class="form-check-input" type="checkbox" name="permissions[<?= $submenu['id'] ?>][can_create]" value="1" <?= isset($current_permissions['can_create']) && $current_permissions['can_create'] ? 'checked' : '' ?>>
+                                                    <input class="form-check-input" type="checkbox" name="permissions[<?= $submenu['id'] ?>][can_add]" value="1" <?= isset($current_permissions['can_add']) && $current_permissions['can_add'] ? 'checked' : '' ?>>
                                                 </div>
                                             </td>
                                             <td class="text-center">

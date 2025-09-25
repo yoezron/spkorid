@@ -136,7 +136,7 @@ $routes->group('admin', ['filter' => 'auth:super_admin', 'namespace' => 'App\Con
         $routes->post('store', 'RoleController::store');
         $routes->get('edit/(:num)', 'RoleController::edit/$1');
         $routes->put('update/(:num)', 'RoleController::update/$1');
-        $routes->post('delete/(:num)', 'RoleController::delete/$1');
+        $routes->delete('delete/(:num)', 'RoleController::delete/$1');
         $routes->get('permissions/(:num)', 'RoleController::permissions/$1');
         $routes->post('update-permissions/(:num)', 'RoleController::updatePermissions/$1');
     });

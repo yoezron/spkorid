@@ -130,11 +130,19 @@ class RoleController extends BaseController
             return redirect()->back()->with('error', 'Role tidak ditemukan.');
         }
 
+        $role_permissions = $this->roleModel->getRoleWithPermissions($id)['permissions'];
+
+        // Format ulang array permissions agar key-nya adalah menu_id
+        $formatted_permissions = [];
+        foreach ($role_permissions as $permission) {
+            $formatted_permissions[$permission['menu_id']] = $permission;
+        }
+
         $data = [
-            'title'            => 'Hak Akses Role: ' . $role['role_name'],
-            'role'             => $role,
-            'role_permissions' => $this->roleModel->getRoleWithPermissions($id)['permissions'],
-            'all_menus'        => $this->menuModel->buildMenuTree(null), // Mengambil semua menu
+            'title'       => 'Hak Akses Role: ' . $role['role_name'],
+            'role'        => $role,
+            'permissions' => $formatted_permissions, // Kirim data yang sudah diformat
+            'menus'       => $this->menuModel->buildMenuTree(null),
         ];
 
         return view('admin/roles/permissions', $data);
