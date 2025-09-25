@@ -215,12 +215,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'au
     // Menu Management
     $routes->get('menus', 'MenuController::index');
     $routes->get('menus/create', 'MenuController::create');
+    $routes->get('menus/create/(:num)', 'MenuController::create/$1');
     $routes->post('menus/store', 'MenuController::store');
     $routes->get('menus/edit/(:num)', 'MenuController::edit/$1');
     $routes->post('menus/update/(:num)', 'MenuController::update/$1');
     $routes->delete('menus/delete/(:num)', 'MenuController::delete/$1');
     $routes->post('menus/reorder', 'MenuController::reorder');
     $routes->post('menus/toggle/(:num)', 'MenuController::toggle/$1');
+    $routes->post('menus/delete/(:num)', 'MenuController::delete/$1');
 
     // Sub Menu Management
     $routes->get('submenus', 'SubMenuController::index');
