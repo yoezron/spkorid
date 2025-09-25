@@ -110,11 +110,77 @@ Detail Anggota: <?= esc($member['nama_lengkap']) ?>
     </div>
 </div>
 
-<div class="modal fade" id="verifyModal" tabindex="-1">
-</div>
-<div class="modal fade" id="suspendModal" tabindex="-1">
-</div>
-<div class="modal fade" id="reactivateModal" tabindex="-1">
+<!-- Verify Modal -->
+<div class="modal fade" id="verifyModal" tabindex="-1" aria-labelledby="verifyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="verifyModalLabel">Verifikasi Anggota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin memverifikasi anggota <strong><?= esc($member['nama_lengkap']) ?></strong>?</p>
+                <p class="text-muted">Anggota akan diaktifkan dan dapat mengakses semua fitur.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <form action="<?= base_url('admin/members/verify/' . $member['id']) ?>" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-success">Ya, Verifikasi</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
+<!-- Suspend Modal -->
+<div class="modal fade" id="suspendModal" tabindex="-1" aria-labelledby="suspendModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="suspendModalLabel">Suspend Anggota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin men-suspend anggota <strong><?= esc($member['nama_lengkap']) ?></strong>?</p>
+                <div class="mb-3">
+                    <label for="suspend_reason" class="form-label">Alasan Suspend:</label>
+                    <textarea class="form-control" id="suspend_reason" name="suspend_reason" rows="3" placeholder="Masukkan alasan suspend..."></textarea>
+                </div>
+                <p class="text-warning"><small>Anggota tidak akan bisa mengakses sistem sampai diaktifkan kembali.</small></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <form action="<?= base_url('admin/members/suspend/' . $member['id']) ?>" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="reason" id="suspend_reason_hidden">
+                    <button type="submit" class="btn btn-warning" onclick="document.getElementById('suspend_reason_hidden').value = document.getElementById('suspend_reason').value;">Ya, Suspend</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reactivate Modal -->
+<div class="modal fade" id="reactivateModal" tabindex="-1" aria-labelledby="reactivateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reactivateModalLabel">Aktifkan Kembali Anggota</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Apakah Anda yakin ingin mengaktifkan kembali anggota <strong><?= esc($member['nama_lengkap']) ?></strong>?</p>
+                <p class="text-info">Anggota akan dapat mengakses sistem kembali.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                <form action="<?= base_url('admin/members/activate/' . $member['id']) ?>" method="post" class="d-inline">
+                    <?= csrf_field() ?>
+                    <button type="submit" class="btn btn-info">Ya, Aktifkan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <?= $this->endSection() ?>

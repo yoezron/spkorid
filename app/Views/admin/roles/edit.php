@@ -23,7 +23,7 @@ Edit Role
             <div class="card-body">
                 <?= $this->include('partials/flash_messages') ?>
 
-                <?= form_open('admin/roles/update/' . $role['id']) ?>
+                <?= form_open('admin/roles/' . $role['id']) ?>
                 <input type="hidden" name="_method" value="PUT">
 
                 <div class="mb-3">

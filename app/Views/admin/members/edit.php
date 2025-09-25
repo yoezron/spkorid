@@ -24,7 +24,6 @@ Edit Anggota
                 <?= $this->include('partials/flash_messages') ?>
 
                 <?= form_open('admin/members/update/' . $member['id']) ?>
-                <input type="hidden" name="_method" value="PUT">
 
                 <div class="row">
                     <div class="col-md-6">
@@ -46,7 +45,7 @@ Edit Anggota
 
                         <div class="mb-3">
                             <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
-                            <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" value="<?= old('nomor_telepon', $member['nomor_telepon'] ?? '') ?>">
+                            <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" value="<?= esc($member['nomor_whatsapp'] ?? 'N/A') ?>">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -78,7 +77,7 @@ Edit Anggota
                     <div class="col-12">
                         <div class="mb-3">
                             <label for="alamat" class="form-label">Alamat</label>
-                            <textarea class="form-control" id="alamat" name="alamat" rows="3"><?= old('alamat', $member['alamat'] ?? '') ?></textarea>
+                            <textarea class="form-control" id="alamat" name="alamat" rows="3"><?= esc($member['alamat_lengkap'] ?? 'N/A') ?></textarea>
                         </div>
                     </div>
                 </div>
