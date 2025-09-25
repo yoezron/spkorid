@@ -393,11 +393,9 @@ if (!function_exists('require_role')) {
 
             switch ($roleId) {
                 case 1: // Super Admin
-                    // Asumsi admin diarahkan ke dashboard karena mungkin tidak punya profil 'publik'
-                    return base_url('admin/dashboard');
+                    return base_url('admin/profile');
                 case 2: // Pengurus
-                    // Asumsi pengurus diarahkan ke dashboard juga
-                    return base_url('pengurus/dashboard');
+                    return base_url('pengurus/profile');
                 case 3: // Anggota
                 default:
                     return base_url('member/profile');

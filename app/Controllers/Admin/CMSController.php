@@ -141,4 +141,16 @@ class CMSController extends BaseController
 
         return redirect()->back()->with('success', 'Status publikasi berhasil diubah');
     }
+
+    // Method publish (tambahkan di CMSController jika belum ada)
+    public function publish($id)
+    {
+        return $this->togglePublish($id);
+    }
+
+    // Method unpublish (tambahkan di CMSController jika belum ada)
+    public function unpublish($id)
+    {
+        return $this->togglePublish($id);
+    }
 }

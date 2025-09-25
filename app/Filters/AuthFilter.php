@@ -27,28 +27,33 @@ class AuthFilter implements FilterInterface
 
         // Check role permissions if arguments provided
         if ($arguments !== null) {
-            $allowedRoles = is_array($arguments) ? $arguments : [$arguments];
             $userRole = $session->get('role_id');
 
-            // Map role names to IDs
-            $roleMap = [
+            // SUPER ADMIN BYPASS - Super Admin bisa akses semua area
+            if ($userRole == 1) {
+                return; // Allow access
+            }
+
+            $allowedRoles = is_array($arguments) ? $arguments : [$arguments];
+
+            // Role hierarchy
+            $roleHierarchy = [
                 'super_admin' => 1,
                 'pengurus' => 2,
                 'member' => 3
             ];
 
-            $allowedRoleIds = array_map(function ($role) use ($roleMap) {
-                return $roleMap[$role] ?? $role;
-            }, $allowedRoles);
-
-            if (!in_array($userRole, $allowedRoleIds)) {
-                if ($request->isAjax()) {
-                    return response()->setJSON([
-                        'status' => false,
-                        'message' => 'Unauthorized access'
-                    ])->setStatusCode(403);
+            // Get minimum required role
+            $minRequiredRole = 3; // Default member
+            foreach ($allowedRoles as $role) {
+                $roleId = $roleHierarchy[$role] ?? $role;
+                if ($roleId < $minRequiredRole) {
+                    $minRequiredRole = $roleId;
                 }
+            }
 
+            // Check if user role is equal or higher (lower number = higher privilege)
+            if ($userRole > $minRequiredRole) {
                 throw new \CodeIgniter\Exceptions\PageNotFoundException('Halaman tidak ditemukan');
             }
         }

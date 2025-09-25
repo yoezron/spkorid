@@ -49,63 +49,63 @@ $routes->get('dashboard', 'DashboardController::index', ['filter' => 'auth']);
 // ============================================
 // MEMBER ROUTES (ROLE: ANGGOTA)
 // ============================================
-$routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:member'], function ($routes) {
+$routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:member, super_admin'], function ($routes) {
     // Dashboard
-    $routes->get('/', 'Member\DashboardController::index');
-    $routes->get('dashboard', 'Member\DashboardController::index');
+    $routes->get('/', 'DashboardController::index');
+    $routes->get('dashboard', 'DashboardController::index');
 
-    // Profile Management
-    $routes->get('profile', 'Member\ProfileController::index');
-    $routes->get('profile/edit', 'Member\ProfileController::edit');
-    $routes->post('profile/update', 'Member\ProfileController::update');
-    $routes->post('profile/upload-photo', 'Member\ProfileController::uploadPhoto');
+    // Profile Management - UBAH KE MemberController
+    $routes->get('profile', 'MemberController::profile');
+    $routes->get('profile/edit', 'MemberController::editProfile');
+    $routes->post('profile/update', 'MemberController::updateProfile');
+    $routes->post('profile/upload-photo', 'MemberController::uploadPhoto');
 
-    // Kartu Anggota
-    $routes->get('card', 'Member\MemberCardController::index');
-    $routes->get('card/download/(:segment)', 'Member\MemberCardController::download/$1');
-    $routes->get('card/print/(:segment)', 'Member\MemberCardController::print/$1');
+    // Kartu Anggota - UBAH KE MemberController
+    $routes->get('card', 'MemberController::memberCard');
+    $routes->get('card/download/(:segment)', 'MemberController::downloadCard/$1');
+    $routes->get('card/print/(:segment)', 'MemberController::printCard/$1');
 
-    // Change Password
-    $routes->get('change-password', 'Member\ProfileController::changePassword');
-    $routes->post('change-password', 'Member\ProfileController::updatePassword');
+    // Change Password - UBAH KE MemberController
+    $routes->get('change-password', 'MemberController::changePassword');
+    $routes->post('change-password', 'MemberController::updatePassword');
 
-    // AD/ART & Documents
-    $routes->get('ad-art', 'Member\DocumentController::adArt');
-    $routes->get('manifesto', 'Member\DocumentController::manifesto');
-    $routes->get('sejarah', 'Member\DocumentController::sejarah');
+    // AD/ART & Documents - Buat DocumentController atau tambah method di MemberController
+    $routes->get('ad-art', 'MemberController::adArt');
+    $routes->get('manifesto', 'MemberController::manifesto');
+    $routes->get('sejarah', 'MemberController::sejarah');
 
-    // Informasi Serikat
-    $routes->get('informasi', 'Member\InformationController::index');
-    $routes->get('informasi/view/(:num)', 'Member\InformationController::view/$1');
+    // Informasi Serikat - Buat InformationController atau tambah method
+    $routes->get('informasi', 'MemberController::informasi');
+    $routes->get('informasi/view/(:num)', 'MemberController::viewInformasi/$1');
 
-    // Forum Diskusi
-    $routes->get('forum', 'Member\ForumController::index');
-    $routes->get('forum/thread/(:num)', 'Member\ForumController::viewThread/$1');
-    $routes->get('forum/create', 'Member\ForumController::createThread');
-    $routes->post('forum/store', 'Member\ForumController::storeThread');
-    $routes->post('forum/comment/(:num)', 'Member\ForumController::addComment/$1');
-    $routes->post('forum/comment/delete/(:num)', 'Member\ForumController::deleteComment/$1');
+    // Forum Diskusi - Gunakan ForumController existing atau tambah method
+    $routes->get('forum', 'ForumController::index');
+    $routes->get('forum/thread/(:num)', 'ForumController::viewThread/$1');
+    $routes->get('forum/create', 'ForumController::createThread');
+    $routes->post('forum/store', 'ForumController::storeThread');
+    $routes->post('forum/comment/(:num)', 'ForumController::addComment/$1');
+    $routes->post('forum/comment/delete/(:num)', 'ForumController::deleteComment/$1');
 
-    // Survei Anggota
-    $routes->get('survey', 'Member\SurveyController::index');
-    $routes->get('survey/(:num)', 'Member\SurveyController::view/$1');
-    $routes->post('survey/submit/(:num)', 'Member\SurveyController::submit/$1');
-    $routes->get('survey/history', 'Member\SurveyController::history');
+    // Survei Anggota - Gunakan SurveyController existing atau tambah method
+    $routes->get('survey', 'SurveyController::index');
+    $routes->get('survey/(:num)', 'SurveyController::view/$1');
+    $routes->post('survey/submit/(:num)', 'SurveyController::submit/$1');
+    $routes->get('survey/history', 'SurveyController::history');
 
-    // Payment History
-    $routes->get('payment', 'Member\PaymentController::index');
-    $routes->get('payment/history', 'Member\PaymentController::history');
-    $routes->post('payment/upload', 'Member\PaymentController::uploadProof');
+    // Payment History - Gunakan PaymentController existing atau tambah method
+    $routes->get('payment', 'PaymentController::index');
+    $routes->get('payment/history', 'PaymentController::history');
+    $routes->post('payment/upload', 'PaymentController::uploadProof');
 
-    // Blog/Tulisan Anggota
-    $routes->get('my-posts', 'Member\BlogController::myPosts');
-    $routes->get('my-posts/view/(:num)', 'Member\BlogController::viewPost/$1');
+    // Blog/Tulisan Anggota - Gunakan BlogController existing
+    $routes->get('my-posts', 'BlogController::myPosts');
+    $routes->get('my-posts/view/(:num)', 'BlogController::viewPost/$1');
 });
 
 // ============================================
 // PENGURUS ROUTES (ROLE: PENGURUS)
 // ============================================
-$routes->group('pengurus', ['namespace' => 'App\Controllers\Pengurus', 'filter' => 'auth:pengurus'], function ($routes) {
+$routes->group('pengurus', ['namespace' => 'App\Controllers\Pengurus', 'filter' => 'auth:pengurus, super_admin'], function ($routes) {
     // Dashboard
     $routes->get('/', 'DashboardController::index');
     $routes->get('dashboard', 'DashboardController::index');
@@ -185,6 +185,13 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'au
     $routes->get('dashboard/stats', 'DashboardController::statistics');
     $routes->get('dashboard/export', 'DashboardController::exportStats');
 
+    // Profile Management untuk Admin
+    $routes->get('profile', 'ProfileController::index');
+    $routes->get('profile/edit', 'ProfileController::edit');
+    $routes->post('profile/update', 'ProfileController::update');
+    $routes->get('change-password', 'ProfileController::changePassword');
+    $routes->post('change-password', 'ProfileController::updatePassword');
+
     // Role Management
     $routes->get('roles', 'RoleController::index');
     $routes->get('roles/create', 'RoleController::create');
@@ -235,14 +242,14 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'au
     $routes->get('submenus/by-menu/(:num)', 'SubMenuController::getByMenu/$1');
 
     // Content Management (Landing Page)
-    $routes->get('content', 'ContentController::index');
-    $routes->get('content/create', 'ContentController::create');
-    $routes->post('content/store', 'ContentController::store');
-    $routes->get('content/edit/(:num)', 'ContentController::edit/$1');
-    $routes->post('content/update/(:num)', 'ContentController::update/$1');
-    $routes->delete('content/delete/(:num)', 'ContentController::delete/$1');
-    $routes->post('content/publish/(:num)', 'ContentController::publish/$1');
-    $routes->post('content/unpublish/(:num)', 'ContentController::unpublish/$1');
+    $routes->get('content', 'CMSController::index');
+    $routes->get('content/create', 'CMSController::create');
+    $routes->post('content/store', 'CMSController::store');
+    $routes->get('content/edit/(:num)', 'CMSController::edit/$1');
+    $routes->post('content/update/(:num)', 'CMSController::update/$1');
+    $routes->delete('content/delete/(:num)', 'CMSController::delete/$1');
+    $routes->post('content/publish/(:num)', 'CMSController::publish/$1');
+    $routes->post('content/unpublish/(:num)', 'CMSController::unpublish/$1');
 
     // Master Data Tables Management
     $routes->group('master', function ($routes) {

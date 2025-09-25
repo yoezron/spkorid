@@ -129,6 +129,35 @@ class MemberController extends BaseController
         return redirect()->to('/member/profile')->with('success', 'Profil berhasil diperbarui');
     }
 
+
+    /**
+     * Download member card as PDF
+     */
+    public function downloadCard()
+    {
+        $memberId = session()->get('member_id');
+        $member = $this->memberModel->getMemberWithDetails($memberId);
+
+        if (!$member || $member['status_keanggotaan'] !== 'active') {
+            return redirect()->to('/dashboard')->with('error', 'Kartu anggota tidak tersedia.');
+        }
+
+        $html = view('member/member_card_pdf', ['member' => $member]);
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A8', 'landscape');
+        $dompdf->render();
+
+        $dompdf->stream('Kartu_Anggota_' . $member['nomor_anggota'] . '.pdf', ['Attachment' => 1]);
+    }
+
+    // Tambahkan method-method ini di MemberController.php
+
     /**
      * Change password form
      */
@@ -161,7 +190,7 @@ class MemberController extends BaseController
         $user = $this->userModel->find($userId);
 
         if (!password_verify($this->request->getPost('current_password'), $user['password'])) {
-            return redirect()->back()->with('error', 'Password saat ini salah');
+            return redirect()->back()->with('error', 'Password lama tidak sesuai');
         }
 
         $this->userModel->update($userId, [
@@ -177,10 +206,10 @@ class MemberController extends BaseController
     public function memberCard()
     {
         $memberId = session()->get('member_id');
-        $member = $this->memberModel->getMemberWithDetails($memberId);
+        $member = $this->memberModel->find($memberId);
 
         if (!$member || $member['status_keanggotaan'] !== 'active') {
-            return redirect()->to('/dashboard')->with('error', 'Kartu anggota tidak tersedia');
+            return redirect()->to('/member/profile')->with('error', 'Kartu anggota tidak tersedia');
         }
 
         $data = [
@@ -192,28 +221,141 @@ class MemberController extends BaseController
     }
 
     /**
-     * Download member card as PDF
+     * Print member card
      */
-    public function downloadCard()
+    public function printCard($id = null)
+    {
+        $memberId = $id ?? session()->get('member_id');
+        return $this->downloadCard($memberId);
+    }
+
+    /**
+     * Upload photo
+     */
+    public function uploadPhoto()
     {
         $memberId = session()->get('member_id');
-        $member = $this->memberModel->getMemberWithDetails($memberId);
 
-        if (!$member || $member['status_keanggotaan'] !== 'active') {
-            return redirect()->to('/dashboard')->with('error', 'Kartu anggota tidak tersedia.');
+        $rules = [
+            'photo' => 'uploaded[photo]|max_size[photo,2048]|is_image[photo]'
+        ];
+
+        if (!$this->validate($rules)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => $this->validator->getErrors()
+            ]);
         }
 
-        $html = view('member/member_card_pdf', ['member' => $member]);
+        $file = $this->request->getFile('photo');
+        if ($file->isValid() && !$file->hasMoved()) {
+            $newName = $file->getRandomName();
+            $file->move('uploads/photos', $newName);
 
-        $options = new Options();
-        $options->set('isHtml5ParserEnabled', true);
-        $options->set('isRemoteEnabled', true);
+            // Delete old photo if exists
+            $member = $this->memberModel->find($memberId);
+            if ($member['foto_path'] && file_exists(ROOTPATH . 'public/' . $member['foto_path'])) {
+                unlink(ROOTPATH . 'public/' . $member['foto_path']);
+            }
 
-        $dompdf = new Dompdf($options);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A8', 'landscape');
-        $dompdf->render();
+            $this->memberModel->update($memberId, [
+                'foto_path' => 'uploads/photos/' . $newName
+            ]);
 
-        $dompdf->stream('Kartu_Anggota_' . $member['nomor_anggota'] . '.pdf', ['Attachment' => 1]);
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Foto berhasil diupload',
+                'photo_url' => base_url('uploads/photos/' . $newName)
+            ]);
+        }
+
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Gagal upload foto'
+        ]);
+    }
+
+    /**
+     * AD/ART Document
+     */
+    public function adArt()
+    {
+        $data = [
+            'title' => 'AD/ART - SPK',
+            'content' => $this->getCMSContent('ad-art')
+        ];
+
+        return view('member/documents/ad_art', $data);
+    }
+
+    /**
+     * Manifesto
+     */
+    public function manifesto()
+    {
+        $data = [
+            'title' => 'Manifesto Serikat - SPK',
+            'content' => $this->getCMSContent('manifesto')
+        ];
+
+        return view('member/documents/manifesto', $data);
+    }
+
+    /**
+     * Sejarah SPK
+     */
+    public function sejarah()
+    {
+        $data = [
+            'title' => 'Sejarah SPK',
+            'content' => $this->getCMSContent('sejarah')
+        ];
+
+        return view('member/documents/sejarah', $data);
+    }
+
+    /**
+     * Informasi Serikat
+     */
+    public function informasi()
+    {
+        $informasiModel = new \App\Models\InformasiSerikatModel();
+
+        $data = [
+            'title' => 'Informasi Serikat - SPK',
+            'informasi' => $informasiModel->getPublished('all', 20)
+        ];
+
+        return view('member/informasi/index', $data);
+    }
+
+    /**
+     * View detail informasi
+     */
+    public function viewInformasi($id)
+    {
+        $informasiModel = new \App\Models\InformasiSerikatModel();
+        $info = $informasiModel->find($id);
+
+        if (!$info) {
+            return redirect()->to('/member/informasi')->with('error', 'Informasi tidak ditemukan');
+        }
+
+        $data = [
+            'title' => $info['judul'] . ' - SPK',
+            'info' => $info
+        ];
+
+        return view('member/informasi/detail', $data);
+    }
+
+    /**
+     * Helper method to get CMS content
+     */
+    private function getCMSContent($slug)
+    {
+        $cmsModel = new \App\Models\CMSPageModel();
+        $page = $cmsModel->getPageBySlug($slug);
+        return $page ? $page['page_content'] : '';
     }
 }
