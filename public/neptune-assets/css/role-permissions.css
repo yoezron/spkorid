@@ -1,0 +1,293 @@
+/**
+ * Role Permissions Management CSS
+ * Styling untuk halaman pengaturan hak akses role
+ */
+
+/* Permission Tables */
+.permission-table {
+  margin-bottom: 0;
+}
+
+.permission-table thead th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  font-size: 0.875rem;
+  vertical-align: middle;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.permission-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.permission-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.permission-table tbody tr.bg-light {
+  background-color: #e9ecef !important;
+}
+
+.permission-table tbody tr.bg-light:hover {
+  background-color: #dee2e6 !important;
+}
+
+/* Checkbox Styling */
+.form-check-input {
+  width: 1.2em;
+  height: 1.2em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.form-check-input:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-check-input:checked {
+  background-color: #198754;
+  border-color: #198754;
+}
+
+.form-check-input:checked:hover {
+  background-color: #157347;
+  border-color: #157347;
+}
+
+/* Permission Cards */
+.permission-card {
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  transition: box-shadow 0.15s ease-in-out;
+}
+
+.permission-card:hover {
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.15);
+}
+
+.permission-card .card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-bottom: none;
+}
+
+.permission-card .card-header .card-title {
+  color: white;
+  font-weight: 600;
+}
+
+/* Menu Icons */
+.menu-icon {
+  font-size: 1.25rem;
+  vertical-align: middle;
+  color: #6c757d;
+}
+
+/* Bulk Action Buttons */
+.bulk-actions {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.bulk-actions .btn {
+  margin-right: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Toast Notifications */
+.toast {
+  min-width: 300px;
+}
+
+.toast .toast-body {
+  display: flex;
+  align-items: center;
+}
+
+/* Permission Status Indicators */
+.permission-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.permission-status.has-view {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.permission-status.has-full {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.permission-status.no-access {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+/* Loading States */
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 0.125rem solid #f3f3f3;
+  border-top: 0.125rem solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Menu Tree Indentation */
+.menu-submenu {
+  position: relative;
+}
+
+.menu-submenu::before {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #dee2e6;
+}
+
+.menu-submenu .menu-item {
+  padding-left: 2rem;
+  position: relative;
+}
+
+.menu-submenu .menu-item::before {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  width: 1rem;
+  height: 2px;
+  background-color: #dee2e6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .permission-table {
+    font-size: 0.875rem;
+  }
+
+  .permission-table th,
+  .permission-table td {
+    padding: 0.5rem 0.25rem;
+  }
+
+  .bulk-actions {
+    text-align: center;
+  }
+
+  .bulk-actions .btn {
+    margin-bottom: 0.5rem;
+    display: block;
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .card-body .row .col-md-6 {
+    margin-bottom: 1rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .permission-table thead th {
+    background-color: #343a40;
+    color: #fff;
+  }
+
+  .permission-table tbody tr:hover {
+    background-color: #495057;
+  }
+
+  .bulk-actions {
+    background-color: #343a40;
+    border-color: #495057;
+  }
+
+  .menu-submenu::before,
+  .menu-submenu .menu-item::before {
+    background-color: #495057;
+  }
+}
+
+/* Animation for checkbox changes */
+@keyframes checkboxCheck {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.form-check-input:checked {
+  animation: checkboxCheck 0.3s ease;
+}
+
+/* Success states */
+.permission-updated {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Error states */
+.permission-error {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}

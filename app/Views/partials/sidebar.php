@@ -110,15 +110,13 @@ $currentUrl = current_url();
             </li>
 
             <li>
-                <a href="<?= base_url('profile') ?>">
-                    <i class="material-icons-two-tone">account_circle</i>
+                <a href="<?= get_profile_url() ?>"> <i class="material-icons-two-tone">account_circle</i>
                     Profil Saya
                 </a>
             </li>
 
             <li>
-                <a href="<?= base_url('change-password') ?>">
-                    <i class="material-icons-two-tone">lock</i>
+                <a href="<?= get_change_password_url() ?>"> <i class="material-icons-two-tone">lock</i>
                     Ubah Password
                 </a>
             </li>

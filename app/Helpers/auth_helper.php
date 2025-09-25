@@ -350,4 +350,78 @@ if (!function_exists('require_role')) {
 
         return true;
     }
+
+    /**
+     * ===================================================================
+     * FUNGSI-FUNGSI BARU DAN YANG DIPERBAIKI
+     * ===================================================================
+     */
+
+    if (!function_exists('get_user_menus')) {
+        /**
+         * Get menus accessible by current user
+         */
+        function get_user_menus()
+        {
+            if (!is_logged_in()) {
+                return [];
+            }
+
+            $db = \Config\Database::connect();
+            $roleId = role_id();
+
+            // Build query to get menus with access rights
+            $builder = $db->table('menus m')
+                ->select('m.*, rma.can_view')
+                ->join('role_menu_access rma', 'rma.menu_id = m.id AND rma.role_id = ' . $db->escape($roleId), 'left')
+                ->where('m.is_active', 1)
+                ->where('(rma.can_view = 1 OR ' . $db->escape($roleId) . ' = 1)') // Super admin can see all
+                ->orderBy('m.menu_order', 'ASC'); // <-- PERBAIKAN: dari order_priority menjadi menu_order
+
+            return $builder->get()->getResultArray();
+        }
+    }
+
+
+    if (!function_exists('get_profile_url')) {
+        /**
+         * Get the correct profile URL based on user role.
+         */
+        function get_profile_url(): string
+        {
+            $roleId = role_id();
+
+            switch ($roleId) {
+                case 1: // Super Admin
+                    // Asumsi admin diarahkan ke dashboard karena mungkin tidak punya profil 'publik'
+                    return base_url('admin/dashboard');
+                case 2: // Pengurus
+                    // Asumsi pengurus diarahkan ke dashboard juga
+                    return base_url('pengurus/dashboard');
+                case 3: // Anggota
+                default:
+                    return base_url('member/profile');
+            }
+        }
+    }
+
+    if (!function_exists('get_change_password_url')) {
+        /**
+         * Get the correct change password URL based on user role.
+         */
+        function get_change_password_url(): string
+        {
+            $roleId = role_id();
+
+            switch ($roleId) {
+                case 1:
+                    return base_url('admin/change-password');
+                case 2:
+                    return base_url('pengurus/change-password');
+                case 3:
+                default:
+                    return base_url('member/change-password');
+            }
+        }
+    }
 }

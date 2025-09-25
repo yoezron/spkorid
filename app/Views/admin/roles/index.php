@@ -8,7 +8,7 @@ Manajemen Role
 
 <div class="row">
     <div class="col">
-        <div class="page-description d-flex align-items-center">
+        <div class="page-role_description d-flex align-items-center">
             <h1 class="flex-grow-1">Manajemen Role</h1>
             <a href="<?= base_url('admin/roles/create') ?>" class="btn btn-primary">
                 <i class="material-icons-outlined">add</i>Tambah Role Baru
@@ -40,7 +40,7 @@ Manajemen Role
                                     <tr>
                                         <td><?= $i++ ?></td>
                                         <td><?= esc($role['role_name']) ?></td>
-                                        <td><?= esc($role['description']) ?></td>
+                                        <td><?= esc($role['role_description']) ?></td>
                                         <td class="text-center">
                                             <span class="badge badge-primary"><?= $role['user_count'] ?></span>
                                         </td>

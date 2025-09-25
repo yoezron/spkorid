@@ -1,5 +1,5 @@
-// app/Database/Migrations/2024-01-01-000005_CreatePaymentHistoryTable.php
 <?php
+// app/Database/Migrations/2024-01-01-000005_CreatePaymentHistoryTable.php
 
 namespace App\Database\Migrations;
 

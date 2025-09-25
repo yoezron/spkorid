@@ -19,7 +19,7 @@ Profil Saya
         <div class="card">
             <div class="card-body">
                 <div class="text-center">
-                    <img src="<?= base_url('uploads/avatars/' . ($user['avatar'] ?? 'default.png')) ?>" class="img-fluid rounded-circle" alt="avatar" style="width: 150px; height: 150px; object-fit: cover;">
+                    <img src="<?= base_url($member['foto_path'] ?? 'assets/images/avatars/avatar.png') ?>" class="img-fluid rounded-circle" alt="avatar" style="width: 150px; height: 150px; object-fit: cover;">
                     <h5 class="card-title mt-3"><?= esc($member['nama_lengkap']) ?></h5>
                     <p class="card-text text-muted"><?= esc($user['email']) ?></p>
                 </div>

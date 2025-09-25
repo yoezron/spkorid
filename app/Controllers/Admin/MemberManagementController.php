@@ -18,6 +18,7 @@ class MemberManagementController extends BaseController
     protected $userModel;
     protected $paymentModel;
     protected $activityLog;
+    protected $db; // <-- ADD THIS LINE
 
     public function __construct()
     {
@@ -25,6 +26,7 @@ class MemberManagementController extends BaseController
         $this->userModel = new UserModel();
         $this->paymentModel = new PaymentHistoryModel();
         $this->activityLog = new ActivityLogModel();
+        $this->db = \Config\Database::connect(); // <-- AND ADD THIS LINE
     }
 
     /**
@@ -35,7 +37,7 @@ class MemberManagementController extends BaseController
         $data = [
             'title' => 'Daftar Anggota - SPK',
             'members' => $this->memberModel->getActiveMembers(),
-            'statistics' => $this->memberModel->getMemberStatistics()
+            'statistics' => $this->memberModel->getStatistics()
         ];
 
         return view('admin/members/index', $data);
@@ -74,6 +76,74 @@ class MemberManagementController extends BaseController
 
         return view('admin/members/view', $data);
     }
+
+    /**
+     * Show the form for creating a new member.
+     */
+    public function create()
+    {
+        $data = [
+            'title' => 'Tambah Anggota Baru',
+        ];
+        return view('admin/members/create', $data);
+    }
+
+    /**
+     * Store a newly created member in storage.
+     */
+    public function store()
+    {
+        $rules = [
+            'nama_lengkap' => 'required|min_length[3]',
+            'email' => 'required|valid_email|is_unique[members.email]',
+            'password' => 'required|min_length[8]',
+            'status_keanggotaan' => 'required|in_list[pending,active,suspended]',
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        // Generate member number if empty
+        $nomorAnggota = $this->request->getPost('nomor_anggota');
+        if (empty($nomorAnggota)) {
+            $nomorAnggota = $this->memberModel->generateNomorAnggota();
+        }
+
+        // Start transaction
+        $this->db->transStart();
+
+        // Insert Member
+        $memberId = $this->memberModel->insert([
+            'nama_lengkap' => $this->request->getPost('nama_lengkap'),
+            'email' => $this->request->getPost('email'),
+            'nomor_anggota' => $nomorAnggota,
+            'nomor_whatsapp' => $this->request->getPost('nomor_telepon'),
+            'status_keanggotaan' => $this->request->getPost('status_keanggotaan'),
+            'tanggal_bergabung' => date('Y-m-d'),
+        ]);
+
+        // Insert User
+        $this->userModel->insert([
+            'member_id' => $memberId,
+            'email' => $this->request->getPost('email'),
+            'username' => $this->request->getPost('email'), // Or generate a unique username
+            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role_id' => 3, // Default to member role
+            'is_active' => 1,
+            'is_verified' => 1,
+            'email_verified_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        $this->db->transComplete();
+
+        if ($this->db->transStatus() === false) {
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan data anggota.');
+        }
+
+        return redirect()->to('admin/members')->with('success', 'Anggota baru berhasil ditambahkan.');
+    }
+
 
     /**
      * Verify member
@@ -359,7 +429,6 @@ class MemberManagementController extends BaseController
 
     /**
      * Memproses pembaruan data anggota.
-     * (TAMBAHKAN METHOD INI)
      */
     public function update($id)
     {

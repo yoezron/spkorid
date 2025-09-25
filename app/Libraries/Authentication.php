@@ -210,7 +210,7 @@ class Authentication
     {
         switch ($roleId) {
             case 1: // Super Admin
-                return base_url('admin/dashboard');
+                return base_url('dashboard');
             case 2: // Pengurus
                 return base_url('pengurus/dashboard');
             case 3: // Member
@@ -224,6 +224,7 @@ class Authentication
      */
     protected function setRememberMeCookie(int $userId): void
     {
+        helper('cookie'); // Load cookie helper
         $token = bin2hex(random_bytes(32));
         $expire = time() + (30 * 24 * 60 * 60); // 30 days
 
@@ -249,6 +250,7 @@ class Authentication
      */
     public function checkRememberMe(): bool
     {
+        helper('cookie'); // Load cookie helper
         $cookie = get_cookie('remember_me');
 
         if (!$cookie) {
@@ -300,6 +302,7 @@ class Authentication
         $this->session->destroy();
 
         // Delete remember me cookie
+        helper('cookie'); // Load cookie helper
         delete_cookie('remember_me');
     }
 

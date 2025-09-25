@@ -1,5 +1,4 @@
 <?php
-
 // ============================================
 // MEMBER CONTROLLERS
 // ============================================
@@ -14,14 +13,8 @@ use App\Models\PaymentHistoryModel;
 use App\Models\RefStatusKepegawaianModel;
 use App\Models\RefKampusModel;
 use App\Models\RefProdiModel;
-
-// Import TCPDF class
-use \TCPDF;
-
-// Ensure TCPDF is loaded if not using Composer autoload
-if (!class_exists('\TCPDF')) {
-    require_once(ROOTPATH . 'vendor/tecnickcom/tcpdf/tcpdf.php');
-}
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class MemberController extends BaseController
 {
@@ -42,15 +35,19 @@ class MemberController extends BaseController
     public function profile()
     {
         $memberId = session()->get('member_id');
-        $member = $this->memberModel->getMemberWithDetails($memberId);
+        $userId = session()->get('user_id');
 
-        if (!$member) {
+        $member = $this->memberModel->getMemberWithDetails($memberId);
+        $user = $this->userModel->find($userId);
+
+        if (!$member || !$user) {
             return redirect()->to('/dashboard')->with('error', 'Profil tidak ditemukan');
         }
 
         $data = [
             'title' => 'Profil Saya - SPK',
             'member' => $member,
+            'user' => $user,
             'payment_history' => $this->paymentModel->getMemberPayments($memberId)
         ];
 
@@ -63,7 +60,10 @@ class MemberController extends BaseController
     public function editProfile()
     {
         $memberId = session()->get('member_id');
+        $userId = session()->get('user_id');
+
         $member = $this->memberModel->find($memberId);
+        $user = $this->userModel->find($userId);
 
         if (!$member) {
             return redirect()->to('/dashboard')->with('error', 'Profil tidak ditemukan');
@@ -72,6 +72,7 @@ class MemberController extends BaseController
         $data = [
             'title' => 'Edit Profil - SPK',
             'member' => $member,
+            'user' => $user,
             'status_kepegawaian' => (new RefStatusKepegawaianModel())->getActiveStatus(),
             'kampus_list' => (new RefKampusModel())->where('is_active', 1)->findAll(),
             'prodi_list' => (new RefProdiModel())->where('kampus_id', $member['kampus_id'])->findAll()
@@ -106,14 +107,12 @@ class MemberController extends BaseController
             'media_sosial' => $this->request->getPost('media_sosial')
         ];
 
-        // Handle photo upload if exists
         $foto = $this->request->getFile('foto');
         if ($foto && $foto->isValid()) {
             $newName = $foto->getRandomName();
             $foto->move(ROOTPATH . 'public/uploads/photos', $newName);
             $updateData['foto_path'] = 'uploads/photos/' . $newName;
 
-            // Delete old photo
             $member = $this->memberModel->find($memberId);
             if ($member['foto_path'] && file_exists(ROOTPATH . 'public/' . $member['foto_path'])) {
                 unlink(ROOTPATH . 'public/' . $member['foto_path']);
@@ -121,6 +120,11 @@ class MemberController extends BaseController
         }
 
         $this->memberModel->update($memberId, $updateData);
+
+        session()->set('nama_lengkap', $updateData['nama_lengkap']);
+        if (isset($updateData['foto_path'])) {
+            session()->set('foto_path', $updateData['foto_path']);
+        }
 
         return redirect()->to('/member/profile')->with('success', 'Profil berhasil diperbarui');
     }
@@ -156,12 +160,10 @@ class MemberController extends BaseController
 
         $user = $this->userModel->find($userId);
 
-        // Verify current password
         if (!password_verify($this->request->getPost('current_password'), $user['password'])) {
             return redirect()->back()->with('error', 'Password saat ini salah');
         }
 
-        // Update password
         $this->userModel->update($userId, [
             'password' => password_hash($this->request->getPost('new_password'), PASSWORD_DEFAULT)
         ]);
@@ -198,33 +200,20 @@ class MemberController extends BaseController
         $member = $this->memberModel->getMemberWithDetails($memberId);
 
         if (!$member || $member['status_keanggotaan'] !== 'active') {
-            return redirect()->to('/dashboard')->with('error', 'Kartu anggota tidak tersedia');
+            return redirect()->to('/dashboard')->with('error', 'Kartu anggota tidak tersedia.');
         }
 
-        // Generate PDF (using TCPDF or DomPDF)
-        // Ensure TCPDF is loaded before instantiation
-        if (!class_exists('\TCPDF')) {
-            require_once(ROOTPATH . 'vendor/tecnickcom/tcpdf/tcpdf.php');
-        }
-        $pdf = new \TCPDF('L', 'mm', 'CR80', true, 'UTF-8', false);
-
-        // Set document information
-        $pdf->SetCreator('SPK Indonesia');
-        $pdf->SetAuthor('SPK Indonesia');
-        $pdf->SetTitle('Kartu Anggota SPK');
-
-        // Remove default header/footer
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
-
-        // Add a page
-        $pdf->AddPage();
-
-        // Generate card content
         $html = view('member/member_card_pdf', ['member' => $member]);
-        $pdf->writeHTML($html, true, false, true, false, '');
 
-        // Output PDF
-        $pdf->Output('Kartu_Anggota_' . $member['nomor_anggota'] . '.pdf', 'D');
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A8', 'landscape');
+        $dompdf->render();
+
+        $dompdf->stream('Kartu_Anggota_' . $member['nomor_anggota'] . '.pdf', ['Attachment' => 1]);
     }
 }

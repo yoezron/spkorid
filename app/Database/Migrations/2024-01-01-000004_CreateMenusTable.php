@@ -1,5 +1,5 @@
-// app/Database/Migrations/2024-01-01-000004_CreateMenusTable.php
 <?php
+// app/Database/Migrations/2024-01-01-000004_CreateMenusTable.php
 
 namespace App\Database\Migrations;
 

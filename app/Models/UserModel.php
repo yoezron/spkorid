@@ -31,7 +31,9 @@ class UserModel extends Model
         'reset_token_expires',
         'last_login',
         'login_attempts',
-        'locked_until'
+        'locked_until',
+        'remember_token',      // <-- TAMBAHKAN BARIS INI
+        'remember_expires'     // <-- TAMBAHKAN BARIS INI
     ];
 
     protected $useTimestamps = true;

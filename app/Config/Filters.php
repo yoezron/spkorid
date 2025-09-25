@@ -78,7 +78,7 @@ class Filters extends BaseConfig
         'auth' => [
             'before' => [
                 'admin/*',
-                'member/*',
+                'member/*', // Tetap
                 'pengurus/*',
                 'dashboard',
                 'profile/*',

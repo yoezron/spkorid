@@ -1,6 +1,6 @@
-<IfModule authz_core_module>
-	Require all denied
-</IfModule>
-<IfModule !authz_core_module>
-	Deny from all
-</IfModule>
+# Protect this file
+<Files .htaccess> Order Allow,Deny Deny from all </Files>
+
+# Turn on URL rewriting RewriteEngine On # Suppress the "is not followed by a"/"followed by a" symlink warnings Options +FollowSymLinks # Options -MultiViews # Set the document root to the public folder RewriteBase / # Redirect trailing
+slashes if not a folder RewriteCond %{REQUEST_FILENAME} !-d RewriteCond %{REQUEST_URI} (.+)/$ RewriteRule ^ %1 [L,R=301] # Handle Front Controller RewriteCond %{REQUEST_FILENAME} !-f RewriteCond %{REQUEST_FILENAME} !-d RewriteRule
+^([\s\S]*)$ index.php/$1 [L,QSA] # Handle Authorization Header RewriteCond %{HTTP:Authorization} . RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

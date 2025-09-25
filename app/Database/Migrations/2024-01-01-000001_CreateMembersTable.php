@@ -1,5 +1,5 @@
-// app/Database/Migrations/2024-01-01-000001_CreateMembersTable.php
 <?php
+// app/Database/Migrations/2024-01-01-000001_CreateMembersTable.php
 
 namespace App\Database\Migrations;
 

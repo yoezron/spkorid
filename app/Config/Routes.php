@@ -9,165 +9,82 @@ use CodeIgniter\Router\RouteCollection;
  */
 
 // ============================================
-// PUBLIC ROUTES
+// PUBLIC & AUTH ROUTES
 // ============================================
 $routes->get('/', 'Home::index');
-$routes->get('about', 'Home::about');
-$routes->get('contact', 'Home::contact');
-
-// AUTHENTICATION (for guests)
-$routes->group('', ['filter' => 'noauth'], function ($routes) {
-    $routes->get('login', 'AuthController::login', ['as' => 'login']);
-    $routes->post('login', 'AuthController::attemptLogin');
-    $routes->get('register', 'RegistrationController::index', ['as' => 'register']);
-    $routes->post('register', 'RegistrationController::register');
-    // Password Reset routes are assumed to be in AuthController based on its methods
-    $routes->get('forgot-password', 'AuthController::forgotPassword');
-    $routes->post('forgot-password', 'AuthController::sendResetLink');
-    $routes->get('reset-password/(:segment)', 'AuthController::resetPassword/$1');
-    $routes->post('reset-password', 'AuthController::updatePassword');
-});
-
-// LOGOUT (for authenticated users)
+$routes->get('login', 'AuthController::login', ['as' => 'login', 'filter' => 'noauth']);
+$routes->post('login', 'AuthController::attemptLogin', ['filter' => 'noauth']);
+$routes->get('register', 'RegistrationController::index', ['as' => 'register', 'filter' => 'noauth']);
+$routes->post('register', 'RegistrationController::register', ['filter' => 'noauth']);
 $routes->get('logout', 'AuthController::logout');
+$routes->get('dashboard', 'DashboardController::index', ['filter' => 'auth']);
 
 
 // ============================================
-// AUTHENTICATED ROUTES (All Logged In Users)
+// MEMBER ROUTES (ROLE: ANGGOTA)
 // ============================================
-$routes->group('', ['filter' => 'auth'], function ($routes) {
-    $routes->get('dashboard', 'DashboardController::index');
-    // Note: Profile routes are consolidated into MemberController for members.
-    // For admin/pengurus, profile actions might be in their respective controllers or a shared one.
-    // Assuming a general profile might not exist, redirecting to role-specific dashboards is safer.
-});
-
-
-// ============================================
-// MEMBER ROUTES (Role: Anggota)
-// ============================================
-$routes->group('member', ['filter' => 'auth:anggota', 'namespace' => 'App\Controllers'], function ($routes) {
-    // Corrected to point to DashboardController which handles role-based views
+$routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:member'], function ($routes) {
     $routes->get('/', 'DashboardController::index');
     $routes->get('dashboard', 'DashboardController::index');
 
-    // Corrected: Pointing to actual methods within MemberController
+    // Profile & Password
     $routes->get('profile', 'MemberController::profile');
     $routes->get('profile/edit', 'MemberController::editProfile');
     $routes->post('profile/update', 'MemberController::updateProfile');
+    $routes->get('change-password', 'MemberController::changePassword');
+    $routes->post('change-password', 'MemberController::updatePassword');
+
+    // Member Card
     $routes->get('card', 'MemberController::memberCard');
-    $routes->get('download-card', 'MemberController::downloadCard'); // Menambahkan rute untuk download
-    $routes->get('change-password', 'MemberController::change_password');
-    $routes->post('change-password', 'MemberController::update_password'); // Assumed method name
+    $routes->get('card/download', 'MemberController::downloadCard');
 
-    // Corrected: Pointing to actual controllers
-    $routes->group('payment', function ($routes) {
-        $routes->get('history', 'PaymentController::history');
-        $routes->get('create', 'PaymentController::create');
-        $routes->post('store', 'PaymentController::store');
-        $routes->get('invoice/(:num)', 'PaymentController::invoice/$1');
-    });
-
-    $routes->group('posts', function ($routes) {
-        $routes->get('/', 'BlogController::index'); // Assuming BlogController handles member's post list
-        $routes->get('create', 'BlogController::create');
-        $routes->post('store', 'BlogController::store');
-        $routes->get('edit/(:num)', 'BlogController::edit/$1');
-        $routes->put('update/(:num)', 'BlogController::update/$1');
-        $routes->post('delete/(:num)', 'BlogController::delete/$1');
-    });
-
-    $routes->group('forum', function ($routes) {
-        $routes->get('/', 'ForumController::index');
-        $routes->get('category/(:segment)', 'ForumController::category/$1');
-        $routes->get('thread/(:num)', 'ForumController::thread/$1');
-        $routes->get('create-thread', 'ForumController::createThread');
-        $routes->post('store-thread', 'ForumController::storeThread');
-        $routes->post('reply/(:num)', 'ForumController::reply/$1');
-    });
-
-    $routes->group('surveys', function ($routes) {
-        $routes->get('/', 'SurveyController::index');
-        $routes->get('take/(:num)', 'SurveyController::take/$1');
-        $routes->post('submit/(:num)', 'SurveyController::submit/$1');
-    });
+    // Other member modules...
+    $routes->get('posts', 'BlogController::myPosts');
+    $routes->get('forum', 'ForumController::index');
+    $routes->get('surveys', 'SurveyController::index');
+    $routes->get('payment/history', 'PaymentController::history');
 });
 
 
 // ============================================
-// PENGURUS ROUTES (Role: Pengurus)
+// PENGURUS ROUTES (ROLE: PENGURUS)
 // ============================================
-$routes->group('pengurus', ['filter' => 'auth:pengurus'], function ($routes) {
+$routes->group('pengurus', ['namespace' => 'App\Controllers\Admin', 'filter' => 'auth:pengurus'], function ($routes) {
     $routes->get('/', 'DashboardController::index');
     $routes->get('dashboard', 'DashboardController::index');
 
-    // These routes point to Admin controllers but are filtered for 'pengurus' role
+    // Specific Pengurus tasks
     $routes->get('members/pending', 'MemberManagementController::pending');
-    $routes->get('payments', 'PaymentManagementController::pending');
-    $routes->get('surveys/results', 'SurveyManagementController::results');
-    $routes->get('surveys/create', 'SurveyManagementController::create');
+    $routes->get('payments/pending', 'PaymentManagementController::pending');
+    $routes->get('blog/pending', 'BlogManagementController::pending');
 });
 
 
 // ============================================
-// SUPER ADMIN ROUTES (Role: Super Admin)
+// ADMIN ROUTES (ROLE: SUPER ADMIN)
 // ============================================
-$routes->group('admin', ['filter' => 'auth:super_admin', 'namespace' => 'App\Controllers\Admin'], function ($routes) {
-    $routes->get('/', 'DashboardController::index'); // Mengasumsikan ada DashboardController di namespace Admin
-    $routes->get('dashboard', 'DashboardController::index');
+$routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'auth:super_admin'], function ($routes) {
+    // Admin Dashboard
+    // Menggunakan \App\Controllers\DashboardController karena tidak ada Admin\DashboardController
+    $routes->get('/', '\App\Controllers\DashboardController::index');
+    $routes->get('dashboard', '\App\Controllers\DashboardController::index');
+    $routes->get('members/view/(:num)', 'MemberManagementController::view/$1');
+    $routes->get('members/edit/(:num)', 'MemberManagementController::edit/$1');
 
-    $routes->group('members', function ($routes) {
-        $routes->get('/', 'MemberManagementController::index');
-        $routes->get('pending', 'MemberManagementController::pending');
-        $routes->get('view/(:num)', 'MemberManagementController::view/$1');
-        $routes->post('verify/(:num)', 'MemberManagementController::verify/$1');
-        $routes->post('reject/(:num)', 'MemberManagementController::reject/$1');
-        $routes->get('create', 'MemberManagementController::create');
-        $routes->post('store', 'MemberManagementController::store');
-        $routes->get('edit/(:num)', 'MemberManagementController::edit/$1');
-        $routes->put('update/(:num)', 'MemberManagementController::update/$1');
-    });
+    // Resourceful routes for cleaner CRUD management
+    $routes->resource('members', ['controller' => 'MemberManagementController']);
+    $routes->resource('users', ['controller' => 'UserController']);
+    $routes->resource('roles', ['controller' => 'RoleController']);
+    $routes->resource('menus', ['controller' => 'MenuController']);
 
-    $routes->group('roles', function ($routes) {
-        $routes->get('/', 'RoleController::index');
-        $routes->get('permissions/(:num)', 'RoleController::permissions/$1');
-        $routes->post('update-permissions/(:num)', 'RoleController::updatePermissions/$1');
-        $routes->get('create', 'RoleController::create');
-        $routes->post('store', 'RoleController::store');
-        $routes->get('edit/(:num)', 'RoleController::edit/$1');
-        $routes->put('update/(:num)', 'RoleController::update/$1');
-        $routes->delete('delete/(:num)', 'RoleController::delete/$1');
-        $routes->get('permissions/(:num)', 'RoleController::permissions/$1');
-        $routes->post('update-permissions/(:num)', 'RoleController::updatePermissions/$1');
-    });
+    // Additional specific routes for admin
+    $routes->get('members/pending', 'MemberManagementController::pending');
+    $routes->post('members/verify/(:num)', 'MemberManagementController::verify/$1');
+    $routes->post('members/reject/(:num)', 'MemberManagementController::reject/$1');
 
-    // NOTE: MenuController was not provided. These routes are commented out.
-    // Uncomment and create Admin/MenuController.php when ready.
-    /*
-    $routes->group('menus', function ($routes) {
-        $routes->get('/', 'MenuController::index');
-        // ... other menu routes
-    });
-    */
+    $routes->get('roles/permissions/(:num)', 'RoleController::permissions/$1');
+    $routes->post('roles/update-permissions/(:num)', 'RoleController::updatePermissions/$1');
 
-    $routes->group('users', function ($routes) {
-        $routes->get('/', 'UserController::index');
-        $routes->get('activity/(:num)', 'UserController::viewActivity/$1');
-        $routes->get('create', 'UserController::create');
-        $routes->post('store', 'UserController::store');
-        $routes->get('edit/(:num)', 'UserController::edit/$1');
-        $routes->put('update/(:num)', 'UserController::update/$1');
-        $routes->post('delete/(:num)', 'UserController::delete/$1');
-        $routes->get('activity/(:num)', 'UserController::viewActivity/$1');
-    });
-
-
-    // Rute untuk Content Management
-    $routes->group('content', function ($routes) {
-        $routes->get('/', 'CMSController::index');
-        $routes->get('create', 'CMSController::create');
-        $routes->post('store', 'CMSController::store');
-        $routes->get('edit/(:num)', 'CMSController::edit/$1');
-        $routes->put('update/(:num)', 'CMSController::update/$1');
-    });
+    $routes->get('payments/pending', 'PaymentManagementController::pending');
+    $routes->get('payments/report', 'PaymentManagementController::report');
 });
