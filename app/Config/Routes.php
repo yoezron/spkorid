@@ -78,14 +78,40 @@ $routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:me
     $routes->get('informasi', 'MemberController::informasi');
     $routes->get('informasi/view/(:num)', 'MemberController::viewInformasi/$1');
 
-    // Forum Routes (Grouped for organization)
+    // Forum Routes (Complete)
     $routes->group('forum', function ($routes) {
+        // Main forum page
         $routes->get('/', 'ForumController::index');
-        $routes->get('category/(:segment)', 'ForumController::category/$1'); // <-- Aturan untuk slug
+
+        // Category view
+        $routes->get('category/(:segment)', 'ForumController::category/$1');
+
+        // Thread operations
         $routes->get('thread/(:num)', 'ForumController::thread/$1');
         $routes->get('create', 'ForumController::createThread');
         $routes->post('store', 'ForumController::storeThread');
+        $routes->get('edit-thread/(:num)', 'ForumController::editThread/$1');
+        $routes->post('update-thread/(:num)', 'ForumController::updateThread/$1');
+        $routes->get('delete-thread/(:num)', 'ForumController::deleteThread/$1');
+
+        // Reply operations
         $routes->post('reply/(:num)', 'ForumController::storeReply/$1');
+        $routes->get('edit-reply/(:num)', 'ForumController::editReply/$1');
+        $routes->post('update-reply/(:num)', 'ForumController::updateReply/$1');
+        $routes->get('delete-reply/(:num)', 'ForumController::deleteReply/$1');
+
+        // Solution marking
+        $routes->get('mark-solution/(:num)', 'ForumController::markSolution/$1');
+
+        // Admin actions
+        $routes->get('toggle-pin/(:num)', 'ForumController::togglePin/$1');
+        $routes->get('toggle-lock/(:num)', 'ForumController::toggleLock/$1');
+
+        // Search
+        $routes->get('search', 'ForumController::search');
+
+        // User profile
+        $routes->get('user/(:num)', 'ForumController::userProfile/$1');
     });
 
     // Survei Anggota - Gunakan SurveyController existing atau tambah method

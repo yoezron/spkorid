@@ -7,16 +7,20 @@
     <nav aria-label="breadcrumb" class="mb-3">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="<?= base_url('member/forum') ?>">Forum</a></li>
-            <li class="breadcrumb-item active">Buat Diskusi Baru</li>
+            <li class="breadcrumb-item">
+                <a href="<?= base_url('member/forum/thread/' . $thread['id']) ?>">
+                    <?= character_limiter(esc($thread['title']), 30) ?>
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Edit</li>
         </ol>
     </nav>
 
     <!-- Page Header -->
     <div class="mb-4">
         <h1 class="h3 text-gray-800">
-            <i class="fas fa-plus-circle"></i> Buat Diskusi Baru
+            <i class="fas fa-edit"></i> Edit Diskusi
         </h1>
-        <p class="text-muted">Mulai diskusi baru dengan anggota serikat lainnya</p>
     </div>
 
     <div class="row">
@@ -36,8 +40,8 @@
                         </div>
                     <?php endif; ?>
 
-                    <!-- Form Create Thread -->
-                    <?= form_open('member/forum/store') ?>
+                    <!-- Form Edit Thread -->
+                    <?= form_open('member/forum/update-thread/' . $thread['id']) ?>
                     <?= csrf_field() ?>
 
                     <div class="mb-3">
@@ -46,11 +50,9 @@
                         </label>
                         <select class="form-select <?= validation_show_error('category_id') ? 'is-invalid' : '' ?>"
                             id="category_id" name="category_id" required>
-                            <option value="">-- Pilih Kategori --</option>
                             <?php foreach ($categories as $cat): ?>
                                 <option value="<?= $cat['id'] ?>"
-                                    <?= old('category_id') == $cat['id'] ? 'selected' : '' ?>
-                                    <?= $this->request->getGet('category') == $cat['id'] ? 'selected' : '' ?>>
+                                    <?= ($thread['category_id'] == $cat['id']) ? 'selected' : '' ?>>
                                     <?= esc($cat['name']) ?>
                                 </option>
                             <?php endforeach; ?>
@@ -68,16 +70,12 @@
                             class="form-control <?= validation_show_error('title') ? 'is-invalid' : '' ?>"
                             id="title"
                             name="title"
-                            value="<?= old('title') ?>"
-                            placeholder="Tulis judul yang jelas dan deskriptif..."
+                            value="<?= old('title', $thread['title']) ?>"
                             maxlength="255"
                             required>
                         <div class="invalid-feedback">
                             <?= validation_show_error('title') ?>
                         </div>
-                        <small class="form-text text-muted">
-                            Minimal 5 karakter, maksimal 255 karakter
-                        </small>
                     </div>
 
                     <div class="mb-4">
@@ -88,22 +86,23 @@
                             id="content"
                             name="content"
                             rows="10"
-                            placeholder="Jelaskan pertanyaan atau topik diskusi Anda secara rinci..."
-                            required><?= old('content') ?></textarea>
+                            required><?= old('content', $thread['content']) ?></textarea>
                         <div class="invalid-feedback">
                             <?= validation_show_error('content') ?>
                         </div>
-                        <small class="form-text text-muted">
-                            Minimal 10 karakter. Gunakan bahasa yang sopan dan jelas.
-                        </small>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Catatan:</strong> Edit terakhir akan tercatat dan ditampilkan di thread.
                     </div>
 
                     <div class="d-flex justify-content-between">
-                        <a href="<?= base_url('member/forum') ?>" class="btn btn-secondary">
+                        <a href="<?= base_url('member/forum/thread/' . $thread['id']) ?>" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Batal
                         </a>
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-paper-plane"></i> Publikasikan Diskusi
+                            <i class="fas fa-save"></i> Simpan Perubahan
                         </button>
                     </div>
 
@@ -112,36 +111,36 @@
             </div>
         </div>
 
-        <!-- Sidebar with Tips -->
+        <!-- Sidebar Info -->
         <div class="col-lg-4">
-            <div class="card mb-4">
-                <div class="card-header bg-info text-white">
-                    <h6 class="mb-0"><i class="fas fa-lightbulb"></i> Tips Membuat Diskusi</h6>
-                </div>
-                <div class="card-body">
-                    <ul class="small mb-0">
-                        <li class="mb-2">Gunakan judul yang jelas dan spesifik</li>
-                        <li class="mb-2">Pilih kategori yang sesuai dengan topik</li>
-                        <li class="mb-2">Jelaskan pertanyaan atau masalah dengan detail</li>
-                        <li class="mb-2">Sertakan konteks yang relevan</li>
-                        <li class="mb-2">Gunakan bahasa yang sopan dan profesional</li>
-                        <li>Hindari posting duplikat, cek dulu apakah sudah ada diskusi serupa</li>
-                    </ul>
-                </div>
-            </div>
-
             <div class="card">
-                <div class="card-header bg-warning text-dark">
-                    <h6 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Aturan Forum</h6>
+                <div class="card-header bg-info text-white">
+                    <h6 class="mb-0"><i class="fas fa-info-circle"></i> Informasi Thread</h6>
                 </div>
                 <div class="card-body">
-                    <ul class="small mb-0">
-                        <li class="mb-2">Dilarang spam atau promosi</li>
-                        <li class="mb-2">Tidak boleh menyebarkan informasi palsu</li>
-                        <li class="mb-2">Hormati pendapat anggota lain</li>
-                        <li class="mb-2">Topik harus relevan dengan serikat</li>
-                        <li>Pelanggaran dapat berakibat pembatasan akses</li>
-                    </ul>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5">Dibuat:</dt>
+                        <dd class="col-sm-7"><?= date('d M Y H:i', strtotime($thread['created_at'])) ?></dd>
+
+                        <dt class="col-sm-5">Terakhir Update:</dt>
+                        <dd class="col-sm-7"><?= date('d M Y H:i', strtotime($thread['updated_at'])) ?></dd>
+
+                        <dt class="col-sm-5">Views:</dt>
+                        <dd class="col-sm-7"><?= number_format($thread['views']) ?></dd>
+
+                        <dt class="col-sm-5">Status:</dt>
+                        <dd class="col-sm-7">
+                            <?php if ($thread['is_pinned']): ?>
+                                <span class="badge bg-danger">Pinned</span>
+                            <?php endif; ?>
+                            <?php if ($thread['is_locked']): ?>
+                                <span class="badge bg-warning">Locked</span>
+                            <?php endif; ?>
+                            <?php if (!$thread['is_pinned'] && !$thread['is_locked']): ?>
+                                <span class="badge bg-success">Normal</span>
+                            <?php endif; ?>
+                        </dd>
+                    </dl>
                 </div>
             </div>
         </div>
@@ -153,41 +152,14 @@
 <?= $this->section('scripts') ?>
 <script>
     $(document).ready(function() {
-        // Character counter for title
-        $('#title').on('input', function() {
-            var length = $(this).val().length;
-            var maxLength = 255;
-            if (length > 200) {
-                $(this).next('.invalid-feedback').after('<small class="text-warning">Karakter: ' + length + '/' + maxLength + '</small>');
-            }
-        });
-
-        // Auto-save draft (optional)
+        // Auto-save draft
         var autoSaveTimer;
         $('#content, #title').on('input', function() {
             clearTimeout(autoSaveTimer);
             autoSaveTimer = setTimeout(function() {
-                // Save to localStorage
-                localStorage.setItem('forum_draft_title', $('#title').val());
-                localStorage.setItem('forum_draft_content', $('#content').val());
-                localStorage.setItem('forum_draft_category', $('#category_id').val());
-            }, 1000);
-        });
-
-        // Load draft if exists
-        if (localStorage.getItem('forum_draft_title') && !$('#title').val()) {
-            if (confirm('Anda memiliki draft yang tersimpan. Muat draft?')) {
-                $('#title').val(localStorage.getItem('forum_draft_title'));
-                $('#content').val(localStorage.getItem('forum_draft_content'));
-                $('#category_id').val(localStorage.getItem('forum_draft_category'));
-            }
-        }
-
-        // Clear draft on submit
-        $('form').on('submit', function() {
-            localStorage.removeItem('forum_draft_title');
-            localStorage.removeItem('forum_draft_content');
-            localStorage.removeItem('forum_draft_category');
+                console.log('Auto-saving draft...');
+                // You can implement auto-save to localStorage here
+            }, 2000);
         });
     });
 </script>
