@@ -13,7 +13,7 @@ class AuthFilter implements FilterInterface
         $session = session();
 
         if (!$session->get('logged_in')) {
-            if ($request->isAjax()) {
+            if ($request->isAJAX()) {
                 return response()->setJSON([
                     'status' => false,
                     'message' => 'Session expired',
@@ -25,36 +25,37 @@ class AuthFilter implements FilterInterface
             return redirect()->to('/login');
         }
 
-        // Check role permissions if arguments provided
+        // Check role permissions if arguments are provided
         if ($arguments !== null) {
-            $userRole = $session->get('role_id');
+            $userRoleId = (int) $session->get('role_id');
 
-            // SUPER ADMIN BYPASS - Super Admin bisa akses semua area
-            if ($userRole == 1) {
+            // SUPER ADMIN BYPASS - Super Admin can access all areas
+            if ($userRoleId === 1) {
                 return; // Allow access
             }
 
             $allowedRoles = is_array($arguments) ? $arguments : [$arguments];
 
-            // Role hierarchy
             $roleHierarchy = [
                 'super_admin' => 1,
-                'pengurus' => 2,
-                'member' => 3
+                'pengurus'    => 2,
+                'member'      => 3,
+                'anggota'     => 3 // Alias for member
             ];
 
-            // Get minimum required role
-            $minRequiredRole = 3; // Default member
+            // Convert allowed role names to their IDs
+            $allowedRoleIds = [];
             foreach ($allowedRoles as $role) {
-                $roleId = $roleHierarchy[$role] ?? $role;
-                if ($roleId < $minRequiredRole) {
-                    $minRequiredRole = $roleId;
+                if (isset($roleHierarchy[$role])) {
+                    $allowedRoleIds[] = $roleHierarchy[$role];
                 }
             }
 
-            // Check if user role is equal or higher (lower number = higher privilege)
-            if ($userRole > $minRequiredRole) {
-                throw new \CodeIgniter\Exceptions\PageNotFoundException('Halaman tidak ditemukan');
+            // *** INI ADALAH PERBAIKAN UTAMA ***
+            // Check if the user's role is in the list of allowed roles.
+            if (!in_array($userRoleId, $allowedRoleIds)) {
+                // If not allowed, throw a PageNotFoundException for security.
+                throw new \CodeIgniter\Exceptions\PageNotFoundException('Halaman tidak ditemukan.');
             }
         }
     }

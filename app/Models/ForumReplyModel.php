@@ -95,15 +95,11 @@ class ForumReplyModel extends Model
     {
         return $this->select('forum_replies.*, 
                              users.nama_lengkap as author_name,
-                             users.foto as author_photo,
-                             users.email as author_email,
-                             users.status_kepegawaian,
-                             editor.nama_lengkap as editor_name')
+                             members.foto_path as author_photo') // Ambil foto dari tabel members
             ->join('users', 'users.id = forum_replies.user_id')
-            ->join('users as editor', 'editor.id = forum_replies.edited_by', 'left')
+            ->join('members', 'members.id = users.member_id', 'left') // Join ke tabel members
             ->where('forum_replies.thread_id', $threadId)
             ->where('forum_replies.deleted_at', null)
-            ->where('forum_replies.parent_id', null) // Only main replies, not nested
             ->orderBy('forum_replies.created_at', 'ASC')
             ->paginate($perPage);
     }
@@ -136,12 +132,11 @@ class ForumReplyModel extends Model
     /**
      * Mendapatkan recent replies untuk user
      */
-    public function getUserRecentReplies($userId, $limit = 5)
+    public function getUserRecentReplies($userId, $limit = 10)
     {
         return $this->select('forum_replies.*, 
-                             forum_threads.title as thread_title,
-                             forum_threads.slug as thread_slug')
-            ->join('forum_threads', 'forum_threads.id = forum_replies.thread_id')
+                             forum_threads.title as thread_title') // DITAMBAHKAN: Pilih judul thread
+            ->join('forum_threads', 'forum_threads.id = forum_replies.thread_id') // DITAMBAHKAN: Join tabel thread
             ->where('forum_replies.user_id', $userId)
             ->where('forum_replies.deleted_at', null)
             ->orderBy('forum_replies.created_at', 'DESC')

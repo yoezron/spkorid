@@ -1,7 +1,7 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('title') ?>
-Invoice <?= esc($payment['invoice_number']) ?>
+Invoice <?= esc($payment['nomor_transaksi']) ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -26,7 +26,7 @@ Invoice <?= esc($payment['invoice_number']) ?>
                             </div>
                         </div>
                         <div class="col-sm-6 text-sm-end">
-                            <p class="invoice-id">Invoice #<?= esc($payment['invoice_number']) ?></p>
+                            <p class="invoice-id">Invoice #<?= esc($payment['nomor_transaksi']) ?></p>
                             <p class="invoice-date">Tanggal: <?= date('d F Y', strtotime($payment['tanggal_pembayaran'])) ?></p>
                         </div>
                     </div>
@@ -39,8 +39,8 @@ Invoice <?= esc($payment['invoice_number']) ?>
                             <p class="invoice-info-text">
                                 <strong><?= esc($member['nama_lengkap']) ?></strong><br>
                                 <?= esc($member['nomor_anggota']) ?><br>
-                                <?= esc($user['email']) ?><br>
-                                <?= esc($member['nomor_telepon']) ?>
+                                <?= esc($member['email']) ?><br>
+                                <?= esc($member['nomor_whatsapp']) ?>
                             </p>
                         </div>
                         <div class="col-sm-6 text-sm-end">

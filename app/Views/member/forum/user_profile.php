@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/member_layout') ?>
+<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
@@ -16,7 +16,7 @@
         <div class="card-body">
             <div class="row">
                 <div class="col-md-2 text-center">
-                    <img src="<?= base_url('uploads/photos/' . ($user['foto'] ?? 'default.png')) ?>"
+                    <img src="<?= base_url(!empty($user['foto_path']) ? $user['foto_path'] : 'assets/images/avatars/avatar.png') ?>"
                         class="rounded-circle mb-3"
                         width="120"
                         height="120"

@@ -339,7 +339,7 @@ Profil Saya
                                                 <td>
                                                     <button class="btn btn-sm btn-outline-primary"
                                                         data-bs-toggle="modal"
-                                                        data-bs-target="#paymentDetail<?= $payment['id'] ?>">
+                                                        data-bs-target="#paymentDetailModal<?= $payment['id'] ?>">
                                                         <i class="material-icons" style="font-size: 16px;">visibility</i>
                                                     </button>
                                                 </td>
@@ -387,6 +387,54 @@ Profil Saya
         <?php endif; ?>
     </div>
 </div>
+
+<!-- Payment Detail Modals -->
+<?php if (!empty($payment_history)): ?>
+    <?php foreach ($payment_history as $payment): ?>
+        <div class="modal fade" id="paymentDetailModal<?= $payment['id'] ?>" tabindex="-1" aria-labelledby="paymentDetailModalLabel<?= $payment['id'] ?>" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="paymentDetailModalLabel<?= $payment['id'] ?>">Detail Pembayaran: <?= esc($payment['nomor_transaksi']) ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><strong>Jenis:</strong> <?= esc(ucfirst(str_replace('_', ' ', $payment['jenis_pembayaran']))) ?></li>
+                                    <li class="list-group-item"><strong>Periode:</strong> <?= date('F Y', strtotime($payment['tanggal_pembayaran'])) ?></li>
+                                    <li class="list-group-item"><strong>Metode:</strong> <?= esc($payment['metode_pembayaran']) ?></li>
+                                    <li class="list-group-item"><strong>Status:</strong> <span class="badge bg-<?= $payment['status_pembayaran'] == 'verified' ? 'success' : ($payment['status_pembayaran'] == 'pending' ? 'warning' : 'danger') ?>"><?= esc(ucfirst($payment['status_pembayaran'])) ?></span></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Bukti Pembayaran:</h6>
+                                <?php if (!empty($payment['bukti_pembayaran_path']) && file_exists(FCPATH . $payment['bukti_pembayaran_path'])): ?>
+                                    <a href="<?= base_url($payment['bukti_pembayaran_path']) ?>" target="_blank">
+                                        <img src="<?= base_url($payment['bukti_pembayaran_path']) ?>" class="img-fluid rounded" alt="Bukti Pembayaran">
+                                    </a>
+                                <?php else: ?>
+                                    <p class="text-muted">Bukti pembayaran tidak tersedia.</p>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php if (!empty($payment['catatan'])): ?>
+                            <div class="mt-3">
+                                <strong>Catatan:</strong>
+                                <div class="alert alert-secondary mt-2"><?= esc($payment['catatan']) ?></div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="<?= base_url('member/payment/invoice/' . $payment['id']) ?>" class="btn btn-info">Lihat Invoice</a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>
 
 <!-- Upload Payment Modal -->
 <div class="modal fade" id="uploadPaymentModal" tabindex="-1" aria-labelledby="uploadPaymentModalLabel" aria-hidden="true">

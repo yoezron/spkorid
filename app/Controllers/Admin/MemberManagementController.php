@@ -153,7 +153,7 @@ class MemberManagementController extends BaseController
         $verifiedBy = session()->get('user_id');
         $notes = $this->request->getPost('notes') ?? '';
 
-        $result = $this->memberModel->verifyMember($id, $verifiedBy, $notes);
+        $result = $this->memberModel->updateStatus($id, 'active', $notes, $verifiedBy);
 
         if ($result) {
             // Send notification email to member
@@ -381,12 +381,23 @@ class MemberManagementController extends BaseController
     {
         $member = $this->memberModel->find($memberId);
 
+        // Mengambil data member yang lebih lengkap untuk email
+        $memberData = $this->memberModel->getMemberWithDetails($memberId);
+        if (!$memberData) return; // Hentikan jika member tidak ditemukan
+
         $emailService = \Config\Services::email();
         $emailService->setFrom('noreply@spk.org', 'SPK Indonesia');
-        $emailService->setTo($member['email']);
-        $emailService->setSubject('Keanggotaan Anda Telah Diverifikasi');
+        $emailService->setTo($memberData['email']);
+        $emailService->setSubject('Keanggotaan Anda Telah Disetujui');
 
-        $message = view('emails/member_verified', ['member' => $member]);
+        // Menggunakan view 'emails/approval' yang sudah ada dan sesuai
+        $message = view('emails/approval', [
+            'nama' => $memberData['nama_lengkap'],
+            'nomor_anggota' => $memberData['nomor_anggota'],
+            'tanggal_bergabung' => date('d F Y', strtotime($memberData['tanggal_bergabung'])),
+            'login_url' => base_url('login')
+        ]);
+
         $emailService->setMessage($message);
         $emailService->send();
     }

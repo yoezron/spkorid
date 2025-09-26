@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/member_layout') ?>
+<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
@@ -86,7 +86,7 @@
             <!-- Author Info -->
             <div class="row">
                 <div class="col-md-2 text-center border-end">
-                    <img src="<?= base_url('uploads/photos/' . ($thread['author_photo'] ?? 'default.png')) ?>"
+                    <img src="<?= base_url(!empty($thread['author_photo']) ? $thread['author_photo'] : 'assets/images/avatars/avatar.png') ?>"
                         class="rounded-circle mb-2" width="80" height="80" alt="<?= esc($thread['author_name']) ?>">
                     <h6 class="mb-1"><?= esc($thread['author_name']) ?></h6>
                     <small class="text-muted d-block"><?= esc($thread['author_email']) ?></small>
@@ -132,7 +132,7 @@
                     <div class="border-bottom p-3" id="reply-<?= $reply['id'] ?>">
                         <div class="row">
                             <div class="col-md-2 text-center border-end">
-                                <img src="<?= base_url('uploads/photos/' . ($reply['author_photo'] ?? 'default.png')) ?>"
+                                <img src="<?= base_url(!empty($reply['author_photo']) ? $reply['author_photo'] : 'assets/images/avatars/avatar.png') ?>"
                                     class="rounded-circle mb-2" width="60" height="60" alt="<?= esc($reply['author_name']) ?>">
                                 <h6 class="small mb-0"><?= esc($reply['author_name']) ?></h6>
                                 <small class="text-muted d-block"><?= esc($reply['status_kepegawaian'] ?? 'Anggota') ?></small>

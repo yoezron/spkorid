@@ -39,7 +39,7 @@ Riwayat Iuran
                                 <?php foreach ($payments as $payment): ?>
                                     <tr>
                                         <th scope="row"><?= $i++ ?></th>
-                                        <td><?= esc($payment['invoice_number']) ?></td>
+                                        <td><?= esc($payment['nomor_transaksi']) ?></td>
                                         <td>Rp <?= number_format($payment['jumlah'], 0, ',', '.') ?></td>
                                         <td><?= date('d F Y', strtotime($payment['tanggal_pembayaran'])) ?></td>
                                         <td>

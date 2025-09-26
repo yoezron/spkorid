@@ -55,48 +55,49 @@ class ForumController extends BaseController
         $keyword = $this->request->getGet('search');
         $sort = $this->request->getGet('sort') ?? 'latest';
 
-        // Build query
-        $query = $this->threadModel
-            ->select('forum_threads.*, 
-                     users.nama_lengkap as author_name,
-                     users.foto as author_photo,
-                     COUNT(DISTINCT forum_replies.id) as reply_count,
-                     MAX(forum_replies.created_at) as last_reply_time')
-            ->join('users', 'users.id = forum_threads.user_id')
-            ->join('forum_replies', 'forum_replies.thread_id = forum_threads.id', 'left')
-            ->where('forum_threads.category_id', $category['id'])
-            ->where('forum_threads.deleted_at', null)
-            ->groupBy('forum_threads.id');
+        // Build query - menggunakan getThreadsByCategory dari model
+        $perPage = 20;
+        $threads = $this->threadModel->getThreadsByCategory($category['id'], $perPage);
 
         // Apply search
         if ($keyword) {
-            $query->groupStart()
-                ->like('forum_threads.title', $keyword)
-                ->orLike('forum_threads.content', $keyword)
-                ->groupEnd();
+            $this->threadModel->like('forum_threads.title', $keyword)
+                ->orLike('forum_threads.content', $keyword);
         }
 
-        // Apply sorting
+        // Apply sorting  
         switch ($sort) {
             case 'popular':
-                $query->orderBy('forum_threads.views', 'DESC');
+                $this->threadModel->orderBy('forum_threads.views', 'DESC');
                 break;
             case 'unanswered':
-                $query->having('reply_count', 0);
-                $query->orderBy('forum_threads.created_at', 'DESC');
+                $threads = $this->threadModel
+                    ->select('forum_threads.*, users.nama_lengkap as author_name, users.foto as author_photo')
+                    ->selectRaw('(SELECT COUNT(id) FROM forum_replies WHERE thread_id = forum_threads.id AND deleted_at IS NULL) as reply_count')
+                    ->join('users', 'users.id = forum_threads.user_id')
+                    ->where('forum_threads.category_id', $category['id'])
+                    ->where('forum_threads.deleted_at', null)
+                    ->having('reply_count', 0)
+                    ->orderBy('forum_threads.created_at', 'DESC')
+                    ->paginate($perPage);
                 break;
             case 'oldest':
-                $query->orderBy('forum_threads.created_at', 'ASC');
+                $this->threadModel->orderBy('forum_threads.created_at', 'ASC');
                 break;
             default: // latest
-                $query->orderBy('forum_threads.is_pinned', 'DESC')
-                    ->orderBy('COALESCE(MAX(forum_replies.created_at), forum_threads.created_at)', 'DESC');
+                $this->threadModel->orderBy('forum_threads.is_pinned', 'DESC')
+                    ->orderBy('forum_threads.created_at', 'DESC');
+        }
+
+        // Get threads if not already fetched (for unanswered case)
+        if (!isset($threads) || $sort != 'unanswered') {
+            $threads = $this->threadModel->getThreadsByCategory($category['id'], $perPage);
         }
 
         $data = [
             'title'    => 'Forum: ' . esc($category['name']),
             'category' => $category,
-            'threads'  => $query->paginate(20),
+            'threads'  => $threads,
             'pager'    => $this->threadModel->pager,
             'keyword'  => $keyword,
             'sort'     => $sort
@@ -524,7 +525,10 @@ class ForumController extends BaseController
      */
     public function userProfile($userId)
     {
-        $user = $this->userModel->find($userId);
+        $user = $this->userModel
+            ->select('users.*, members.foto_path, members.status_kepegawaian_id, members.created_at as member_created_at')
+            ->join('members', 'members.id = users.member_id', 'left')
+            ->find($userId);
 
         if (!$user) {
             return redirect()->to('member/forum')->with('error', 'Pengguna tidak ditemukan.');

@@ -124,6 +124,8 @@ $routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:me
     $routes->get('payment', 'PaymentController::index');
     $routes->get('payment/history', 'PaymentController::history');
     $routes->post('payment/uploadProof', 'PaymentController::uploadProof');
+    $routes->get('payment/invoice/(:num)', 'PaymentController::invoice/$1');
+    $routes->get('payment/download-invoice/(:num)', 'PaymentController::downloadInvoice/$1');
 
     // Blog/Tulisan Anggota - Gunakan BlogController existing
     $routes->get('my-posts', 'BlogController::myPosts');
@@ -332,13 +334,13 @@ $routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'au
     $routes->get('survey/manage', 'SurveyController::index');
 
     // Payment Management
-    $routes->get('payments', 'PaymentController::index');
-    $routes->get('payments/pending', 'PaymentController::pending');
-    $routes->get('payments/verified', 'PaymentController::verified');
-    $routes->post('payments/verify/(:num)', 'PaymentController::verify/$1');
-    $routes->post('payments/reject/(:num)', 'PaymentController::reject/$1');
-    $routes->get('payments/report', 'PaymentController::report');
-    $routes->get('payments/export', 'PaymentController::export');
+    $routes->get('payments', 'PaymentManagementController::index');
+    $routes->get('payments/pending', 'PaymentManagementController::pending');
+    $routes->get('payments/verified', 'PaymentManagementController::verified');
+    $routes->post('payments/verify/(:num)', 'PaymentManagementController::verify/$1');
+    $routes->post('payments/reject/(:num)', 'PaymentManagementController::reject/$1');
+    $routes->get('payments/report', 'PaymentManagementController::report');
+    $routes->get('payments/export', 'PaymentManagementController::export');
 
     // System Settings
     $routes->get('settings', 'SettingsController::index');

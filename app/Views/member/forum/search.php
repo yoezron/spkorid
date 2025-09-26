@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/member_layout') ?>
+<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
@@ -43,8 +43,12 @@
                 <div class="col-md-2">
                     <select name="category" class="form-select">
                         <option value="">Semua Kategori</option>
+                        <?php
+                        $request = \Config\Services::request();
+                        $selectedCategory = $request->getGet('category');
+                        ?>
                         <?php foreach ($categories as $cat): ?>
-                            <option value="<?= $cat['id'] ?>" <?= ($this->request->getGet('category') == $cat['id']) ? 'selected' : '' ?>>
+                            <option value="<?= $cat['id'] ?>" <?= ($selectedCategory == $cat['id']) ? 'selected' : '' ?>>
                                 <?= esc($cat['name']) ?>
                             </option>
                         <?php endforeach; ?>

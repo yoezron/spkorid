@@ -88,17 +88,16 @@ class ForumThreadModel extends Model
     public function getThreadsByCategory($categoryId, $perPage = 20)
     {
         return $this->select('forum_threads.*, 
-                             users.nama_lengkap as author_name,
-                             users.foto as author_photo,
-                             COUNT(DISTINCT forum_replies.id) as reply_count,
-                             MAX(forum_replies.created_at) as last_reply_time')
+                         users.nama_lengkap as author_name,
+                         members.foto_path as author_photo') // DIUBAH: Mengambil foto_path dari members
+            ->select('(SELECT COUNT(id) FROM forum_replies WHERE thread_id = forum_threads.id AND deleted_at IS NULL) as reply_count')
+            ->select('(SELECT MAX(created_at) FROM forum_replies WHERE thread_id = forum_threads.id AND deleted_at IS NULL) as last_reply_time')
             ->join('users', 'users.id = forum_threads.user_id')
-            ->join('forum_replies', 'forum_replies.thread_id = forum_threads.id', 'left')
+            ->join('members', 'members.id = users.member_id', 'left') // DITAMBAHKAN: Join ke tabel members
             ->where('forum_threads.category_id', $categoryId)
             ->where('forum_threads.deleted_at', null)
-            ->groupBy('forum_threads.id')
             ->orderBy('forum_threads.is_pinned', 'DESC')
-            ->orderBy('COALESCE(MAX(forum_replies.created_at), forum_threads.created_at)', 'DESC')
+            ->orderBy('forum_threads.created_at', 'DESC')
             ->paginate($perPage);
     }
 
@@ -108,12 +107,13 @@ class ForumThreadModel extends Model
     public function getThreadWithDetails($threadId)
     {
         $thread = $this->select('forum_threads.*, 
-                                users.nama_lengkap as author_name,
-                                users.foto as author_photo,
-                                users.email as author_email,
-                                forum_categories.name as category_name,
-                                forum_categories.slug as category_slug')
+                            users.nama_lengkap as author_name,
+                            members.foto_path as author_photo,  
+                            users.email as author_email,
+                            forum_categories.name as category_name,
+                            forum_categories.slug as category_slug')
             ->join('users', 'users.id = forum_threads.user_id')
+            ->join('members', 'members.id = users.member_id', 'left') // DITAMBAHKAN
             ->join('forum_categories', 'forum_categories.id = forum_threads.category_id')
             ->where('forum_threads.id', $threadId)
             ->where('forum_threads.deleted_at', null)
@@ -172,9 +172,12 @@ class ForumThreadModel extends Model
     public function getUserThreads($userId, $limit = null)
     {
         $query = $this->select('forum_threads.*, 
-                               forum_categories.name as category_name,
-                               COUNT(DISTINCT forum_replies.id) as reply_count')
+                           forum_categories.name as category_name,
+                           members.foto_path as author_photo, 
+                           COUNT(DISTINCT forum_replies.id) as reply_count')
             ->join('forum_categories', 'forum_categories.id = forum_threads.category_id')
+            ->join('users', 'users.id = forum_threads.user_id', 'left') // DITAMBAHKAN
+            ->join('members', 'members.id = users.member_id', 'left') // DITAMBAHKAN
             ->join('forum_replies', 'forum_replies.thread_id = forum_threads.id', 'left')
             ->where('forum_threads.user_id', $userId)
             ->where('forum_threads.deleted_at', null)

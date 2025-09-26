@@ -30,7 +30,7 @@ class PaymentManagementController extends BaseController
     {
         $data = [
             'title'    => 'Verifikasi Pembayaran - SPK',
-            'payments' => $this->paymentModel->getPendingPaymentsWithMemberData(), // Asumsi method ini mengambil data pembayaran beserta data member
+            'payments' => $this->paymentModel->getPendingPayments(), // Asumsi method ini mengambil data pembayaran beserta data member
         ];
 
         return view('admin/payment/pending', $data);

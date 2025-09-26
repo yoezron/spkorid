@@ -36,7 +36,7 @@ class PaymentHistoryModel extends Model
     {
         return $this->where('member_id', $memberId)
             ->orderBy('tanggal_pembayaran', 'DESC')
-            ->findAll();
+            ->paginate(10);
     }
 
     // Get pending payments

@@ -1,4 +1,4 @@
-<?= $this->extend('layouts/member_layout') ?>
+<?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
 
@@ -47,10 +47,13 @@
                         <select class="form-select <?= validation_show_error('category_id') ? 'is-invalid' : '' ?>"
                             id="category_id" name="category_id" required>
                             <option value="">-- Pilih Kategori --</option>
+                            <?php
+                            $request = \Config\Services::request();
+                            $selectedCategory = old('category_id') ?? $request->getGet('category');
+                            ?>
                             <?php foreach ($categories as $cat): ?>
                                 <option value="<?= $cat['id'] ?>"
-                                    <?= old('category_id') == $cat['id'] ? 'selected' : '' ?>
-                                    <?= $this->request->getGet('category') == $cat['id'] ? 'selected' : '' ?>>
+                                    <?= ($selectedCategory == $cat['id']) ? 'selected' : '' ?>>
                                     <?= esc($cat['name']) ?>
                                 </option>
                             <?php endforeach; ?>

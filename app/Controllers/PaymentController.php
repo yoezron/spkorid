@@ -10,16 +10,19 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\PaymentHistoryModel;
 use App\Models\MemberModel;
+use App\Models\UserModel;
 
 class PaymentController extends BaseController
 {
     protected $paymentModel;
     protected $memberModel;
+    protected $userModel;
 
     public function __construct()
     {
         $this->paymentModel = new PaymentHistoryModel();
         $this->memberModel = new MemberModel();
+        $this->userModel = new UserModel();
     }
 
     /**
@@ -31,7 +34,8 @@ class PaymentController extends BaseController
 
         $data = [
             'title' => 'Riwayat Pembayaran - SPK',
-            'payments' => $this->paymentModel->getMemberPayments($memberId)
+            'payments' => $this->paymentModel->getMemberPayments($memberId),
+            'pager'    => $this->paymentModel->pager
         ];
 
         return view('payment/history', $data);
@@ -138,7 +142,7 @@ class PaymentController extends BaseController
                 'periode_tahun' => $dateObject->format('Y'),
                 'jumlah' => $this->request->getPost('amount'),
                 'metode_pembayaran' => $this->request->getPost('metode_pembayaran'),
-                'bukti_pembayaran_path' => 'uploads/payments/' . $buktiName,
+                'bukti_pembayaran' => 'uploads/payments/' . $buktiName,
                 'tanggal_pembayaran' => $paymentDate,
                 'status_pembayaran' => 'pending',
                 'catatan' => $this->request->getPost('notes')
@@ -150,5 +154,53 @@ class PaymentController extends BaseController
         }
 
         return redirect()->back()->withInput()->with('error', 'Gagal mengunggah bukti pembayaran. Silakan coba lagi.');
+    }
+
+    /**
+     * Menampilkan halaman invoice untuk pembayaran.
+     */
+    public function invoice($id)
+    {
+        $memberId = session()->get('member_id');
+        $payment = $this->paymentModel->find($id);
+
+        if (!$payment || $payment['member_id'] != $memberId) {
+            return redirect()->to('member/payment/history')->with('error', 'Invoice tidak ditemukan.');
+        }
+
+        $data = [
+            'title'   => 'Invoice ' . esc($payment['nomor_transaksi']),
+            'payment' => $payment,
+            'member'  => $this->memberModel->find($memberId),
+            'user'    => $this->userModel->where('member_id', $memberId)->first() // INI PENTING
+        ];
+
+        return view('payment/invoice', $data);
+    }
+
+    /**
+     * Mengunduh invoice sebagai PDF.
+     */
+    public function downloadInvoice($id)
+    {
+        $memberId = session()->get('member_id');
+        $payment = $this->paymentModel->find($id);
+
+        if (!$payment || $payment['member_id'] != $memberId) {
+            return redirect()->to('member/payment/history')->with('error', 'Invoice tidak ditemukan.');
+        }
+
+        $data = [
+            'payment' => $payment,
+            'member'  => $this->memberModel->find($memberId),
+            'user'    => $this->userModel->where('member_id', $memberId)->first() // INI JUGA PENTING
+        ];
+
+        $dompdf = new \Dompdf\Dompdf();
+        $dompdf->loadHtml(view('payment/invoice_pdf_template', $data));
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $dompdf->stream("invoice-" . $payment['nomor_transaksi'] . ".pdf", ['Attachment' => 0]);
     }
 }
