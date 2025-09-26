@@ -204,7 +204,7 @@ class SurveyAnswerModel extends Model
             ')
             ->where('question_id', $questionId)
             ->where('answer_text !=', '')
-            ->where('answer_text REGEXP', '^[0-9]+\.?[0-9]*$')
+            ->where("answer_text REGEXP '^[0-9]+\\.?[0-9]*$'") // PERBAIKAN DI SINI
             ->get()
             ->getRowArray();
 
@@ -213,7 +213,7 @@ class SurveyAnswerModel extends Model
             ->select('CAST(answer_text AS DECIMAL(10,2)) as value')
             ->where('question_id', $questionId)
             ->where('answer_text !=', '')
-            ->where('answer_text REGEXP', '^[0-9]+\.?[0-9]*$')
+            ->where("answer_text REGEXP '^[0-9]+\\.?[0-9]*$'") // PERBAIKAN DI SINI JUGA
             ->orderBy('value', 'ASC')
             ->get()
             ->getResultArray();

@@ -18,6 +18,7 @@ class SurveyManagementController extends BaseController
     protected $responseModel;
     protected $answerModel;
     protected $memberModel;
+    protected $db;
 
     public function __construct()
     {
@@ -26,6 +27,7 @@ class SurveyManagementController extends BaseController
         $this->responseModel = new SurveyResponseModel();
         $this->answerModel = new SurveyAnswerModel();
         $this->memberModel = new MemberModel();
+        $this->db = \Config\Database::connect();
     }
 
     /**
@@ -33,9 +35,16 @@ class SurveyManagementController extends BaseController
      */
     public function index()
     {
-        $surveys = $this->surveyModel->orderBy('created_at', 'DESC')->findAll();
+        // --- PERBAIKAN: Mengambil data survei beserta nama pembuatnya ---
+        // Menggunakan LEFT JOIN untuk memastikan semua survei ditampilkan
+        // meskipun data user pembuatnya terhapus.
+        $surveys = $this->surveyModel
+            ->select('surveys.*, users.nama_lengkap as creator_name')
+            ->join('users', 'users.id = surveys.created_by', 'left')
+            ->orderBy('surveys.created_at', 'DESC')
+            ->findAll();
 
-        // Add response count for each survey
+        // Menambahkan jumlah responden untuk setiap survei
         foreach ($surveys as &$survey) {
             $survey['response_count'] = $this->responseModel
                 ->where('survey_id', $survey['id'])

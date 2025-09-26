@@ -49,7 +49,7 @@ $routes->get('dashboard', 'DashboardController::index', ['filter' => 'auth']);
 // ============================================
 // MEMBER ROUTES (ROLE: ANGGOTA)
 // ============================================
-$routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:member, super_admin'], function ($routes) {
+$routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:member, pengurus, super_admin'], function ($routes) {
     // Dashboard
     $routes->get('/', 'DashboardController::index');
     $routes->get('dashboard', 'DashboardController::index');
@@ -135,18 +135,18 @@ $routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:me
 // ============================================
 // PENGURUS ROUTES (ROLE: PENGURUS)
 // ============================================
-$routes->group('pengurus', ['namespace' => 'App\Controllers\Pengurus', 'filter' => 'auth:pengurus, super_admin'], function ($routes) {
+$routes->group('pengurus', ['filter' => 'auth:pengurus, super_admin'], function ($routes) {
     // Dashboard
     $routes->get('/', 'DashboardController::index');
     $routes->get('dashboard', 'DashboardController::index');
 
     // Inherit Member Routes (Profile, Kartu, dll)
-    $routes->get('profile', 'ProfileController::index');
-    $routes->get('profile/edit', 'ProfileController::edit');
-    $routes->post('profile/update', 'ProfileController::update');
+    $routes->get('profile', 'MemberController::profile');
+    $routes->get('profile/edit', 'MemberController::edit');
+    $routes->post('profile/update', 'MemberController::update');
     $routes->get('card', 'MemberCardController::index');
-    $routes->get('change-password', 'ProfileController::changePassword');
-    $routes->post('change-password', 'ProfileController::updatePassword');
+    $routes->get('change-password', 'MemberController::changePassword');
+    $routes->post('change-password', 'MemberController::updatePassword');
 
     // Tambah Informasi Serikat
     $routes->get('information', 'InformationController::index');
@@ -172,11 +172,6 @@ $routes->group('pengurus', ['namespace' => 'App\Controllers\Pengurus', 'filter' 
     $routes->post('complaints/respond/(:num)', 'ComplaintController::respond/$1');
     $routes->post('complaints/status/(:num)', 'ComplaintController::updateStatus/$1');
 
-    // Data Survei Upah & Survei Lainnya
-    $routes->get('survey-data', 'SurveyDataController::index');
-    $routes->get('survey-data/(:num)', 'SurveyDataController::view/$1');
-    $routes->get('survey-data/export/(:num)', 'SurveyDataController::export/$1');
-    $routes->get('survey-data/statistics/(:num)', 'SurveyDataController::statistics/$1');
 
     // Konfirmasi Calon Anggota
     $routes->get('members/pending', 'MemberManagementController::pending');
@@ -190,19 +185,6 @@ $routes->group('pengurus', ['namespace' => 'App\Controllers\Pengurus', 'filter' 
     $routes->post('members/suspend/(:num)', 'MemberManagementController::suspend/$1');
     $routes->post('members/activate/(:num)', 'MemberManagementController::activate/$1');
     $routes->delete('members/delete/(:num)', 'MemberManagementController::delete/$1');
-
-    // Buat Survei untuk Anggota
-    $routes->get('survey', 'SurveyController::index');
-    $routes->get('survey/create', 'SurveyController::create');
-    $routes->post('survey/store', 'SurveyController::store');
-    $routes->get('survey/edit/(:num)', 'SurveyController::edit/$1');
-    $routes->post('survey/update/(:num)', 'SurveyController::update/$1');
-    $routes->get('survey/questions/(:num)', 'SurveyController::questions/$1');
-    $routes->post('survey/questions/store/(:num)', 'SurveyController::storeQuestion/$1');
-    $routes->post('survey/questions/update/(:num)', 'SurveyController::updateQuestion/$1');
-    $routes->delete('survey/questions/delete/(:num)', 'SurveyController::deleteQuestion/$1');
-    $routes->post('survey/publish/(:num)', 'SurveyController::publish/$1');
-    $routes->post('survey/close/(:num)', 'SurveyController::close/$1');
 });
 
 // ============================================
@@ -393,3 +375,71 @@ if (ENVIRONMENT === 'development') {
     $routes->get('migrate', 'MigrateController::index');
     $routes->get('seed', 'SeederController::index');
 }
+
+// ============================================
+// MEMBER ROUTES - Survei
+// ============================================
+$routes->group('member', ['namespace' => 'App\Controllers\Member', 'filter' => 'auth:member, super_admin'], function ($routes) {
+    // Existing member routes...
+
+    // Survey routes
+    $routes->get('surveys', 'SurveyController::index');
+    $routes->get('surveys/take/(:num)', 'SurveyController::take/$1');
+    $routes->post('surveys/submit/(:num)', 'SurveyController::submit/$1');
+    $routes->post('surveys/auto-save/(:num)', 'SurveyController::autoSave/$1');
+    $routes->get('surveys/result/(:num)', 'SurveyController::result/$1');
+    $routes->get('surveys/my-response/(:num)', 'SurveyController::myResponse/$1');
+    $routes->get('surveys/download-file/(:num)', 'SurveyController::downloadFile/$1');
+});
+
+// ============================================
+// PENGURUS ROUTES - Survei
+// ============================================
+$routes->group('pengurus', ['namespace' => 'App\Controllers\Pengurus', 'filter' => 'auth:pengurus,super_admin'], function ($routes) {
+    // Existing pengurus routes...
+
+    // Survey Management
+    $routes->get('surveys', 'SurveyController::index');
+    $routes->get('surveys/create', 'SurveyController::create');
+    $routes->post('surveys/store', 'SurveyController::store');
+    $routes->get('surveys/edit/(:num)', 'SurveyController::edit/$1');
+    $routes->post('surveys/update/(:num)', 'SurveyController::update/$1');
+    $routes->get('surveys/results/(:num)', 'SurveyController::results/$1');
+    $routes->get('surveys/export/(:num)', 'SurveyController::export/$1');
+    $routes->post('surveys/toggle-status/(:num)', 'SurveyController::toggleStatus/$1');
+    $routes->delete('surveys/delete/(:num)', 'SurveyController::delete/$1');
+
+    // Data Survei (menu khusus pengurus)
+    $routes->get('survey-data', 'SurveyController::surveyData');
+});
+
+// ============================================
+// ADMIN ROUTES - Survei
+// ============================================
+$routes->group('admin', ['namespace' => 'App\Controllers\Admin', 'filter' => 'auth:super_admin'], function ($routes) {
+    // Existing admin routes...
+
+    // Survey Management (Full Access)
+    $routes->get('surveys', 'SurveyManagementController::index');
+    $routes->get('surveys/create', 'SurveyManagementController::create');
+    $routes->post('surveys/store', 'SurveyManagementController::store');
+    $routes->get('surveys/edit/(:num)', 'SurveyManagementController::edit/$1');
+    $routes->post('surveys/update/(:num)', 'SurveyManagementController::update/$1');
+    $routes->get('surveys/results/(:num)', 'SurveyManagementController::results/$1');
+    $routes->get('surveys/view-response/(:num)/(:num)', 'SurveyManagementController::viewResponse/$1/$2');
+    $routes->get('surveys/export/(:num)', 'SurveyManagementController::export/$1');
+    $routes->post('surveys/toggle-status/(:num)', 'SurveyManagementController::toggleStatus/$1');
+    $routes->delete('surveys/delete/(:num)', 'SurveyManagementController::delete/$1');
+    $routes->get('surveys/clone/(:num)', 'SurveyManagementController::clone/$1');
+});
+
+// ============================================
+// API ROUTES untuk AJAX calls (jika diperlukan)
+// ============================================
+$routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes) {
+    // Survey API endpoints
+    $routes->get('surveys/active', 'SurveyApiController::getActiveSurveys');
+    $routes->get('surveys/(:num)/questions', 'SurveyApiController::getQuestions/$1');
+    $routes->get('surveys/(:num)/statistics', 'SurveyApiController::getStatistics/$1');
+    $routes->post('surveys/(:num)/validate', 'SurveyApiController::validateAnswers/$1');
+});

@@ -25,7 +25,7 @@
 
                 <?php if (isset($menu)): ?>
                     <?= form_open('admin/menus/update/' . $menu['id']) ?>
-                    <input type="hidden" name="_method" value="PUT">
+                    <input type="hidden" name="_method" value="POST">
                 <?php else: ?>
                     <?= form_open('admin/menus/store') ?>
                 <?php endif; ?>
@@ -66,8 +66,8 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="order_priority" class="form-label">Urutan</label>
-                    <input type="number" class="form-control" id="order_priority" name="order_priority" value="<?= old('order_priority', $menu['order_priority'] ?? '0') ?>" style="width: 100px;">
+                    <label for="menu_order" class="form-label">Urutan</label>
+                    <input type="number" class="form-control" id="menu_order" name="menu_order" value="<?= old('menu_order', $menu['menu_order'] ?? '0') ?>" style="width: 100px;">
                     <div class="form-text">Angka lebih kecil akan ditampilkan lebih dulu.</div>
                 </div>
 

@@ -11,6 +11,7 @@ use App\Models\MemberModel;
 use App\Models\UserModel;
 use App\Models\PaymentHistoryModel;
 use App\Models\ActivityLogModel;
+use App\Models\RoleModel;
 
 class MemberManagementController extends BaseController
 {
@@ -428,11 +429,13 @@ class MemberManagementController extends BaseController
         if (!$member) {
             return redirect()->to('admin/members')->with('error', 'Anggota tidak ditemukan.');
         }
+        $roleModel = new RoleModel(); // Buat instance RoleModel
 
         $data = [
             'title'  => 'Edit Anggota',
             'member' => $member,
-            'user'   => $this->userModel->where('member_id', $id)->first()
+            'user'   => $this->userModel->where('member_id', $id)->first(),
+            'roles'  => $roleModel->findAll() // <-- 2. AMBIL SEMUA ROLE DAN KIRIM KE VIEW
         ];
 
         return view('admin/members/edit', $data);
@@ -444,14 +447,24 @@ class MemberManagementController extends BaseController
     public function update($id)
     {
         $rules = [
-            'nama_lengkap'    => 'required|min_length[3]',
-            'nomor_anggota'   => "required|is_unique[members.nomor_anggota,id,{$id}]",
-            'status_keanggotaan' => 'required|in_list[pending,active,suspended,terminated]'
+            'nama_lengkap'       => 'required|min_length[3]',
+            'nomor_anggota'      => "required|is_unique[members.nomor_anggota,id,{$id}]",
+            'status_keanggotaan' => 'required|in_list[pending,active,suspended,terminated]',
+            'role_id'            => 'required|numeric' // <-- 1. TAMBAHKAN VALIDASI UNTUK ROLE
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
+
+        $memberData = [
+            'nama_lengkap'       => $this->request->getPost('nama_lengkap'),
+            'nomor_anggota'      => $this->request->getPost('nomor_anggota'),
+            'nomor_whatsapp'     => $this->request->getPost('nomor_telepon'),
+            'alamat_lengkap'     => $this->request->getPost('alamat'),
+            'status_keanggotaan' => $this->request->getPost('status_keanggotaan'),
+            'tanggal_bergabung'  => $this->request->getPost('tanggal_bergabung'),
+        ];
 
         $this->memberModel->update($id, [
             'nama_lengkap'       => $this->request->getPost('nama_lengkap'),
@@ -461,6 +474,11 @@ class MemberManagementController extends BaseController
             'status_keanggotaan' => $this->request->getPost('status_keanggotaan'),
             'tanggal_bergabung'  => $this->request->getPost('tanggal_bergabung'),
         ]);
+
+        $userData = [
+            'role_id' => $this->request->getPost('role_id')
+        ];
+        $this->userModel->where('member_id', $id)->set($userData)->update();
 
         return redirect()->to('admin/members/view/' . $id)->with('success', 'Data anggota berhasil diperbarui.');
     }

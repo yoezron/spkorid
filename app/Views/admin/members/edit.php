@@ -45,7 +45,7 @@ Edit Anggota
 
                         <div class="mb-3">
                             <label for="nomor_telepon" class="form-label">Nomor Telepon</label>
-                            <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" value="<?= esc($member['nomor_whatsapp'] ?? 'N/A') ?>">
+                            <input type="tel" class="form-control" id="nomor_telepon" name="nomor_telepon" value="<?= old('nomor_telepon', $member['nomor_whatsapp'] ?? '') ?>">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -56,11 +56,25 @@ Edit Anggota
                         </div>
 
                         <div class="mb-3">
+                            <label for="role_id" class="form-label">Peran (Role)</label>
+                            <select class="form-select <?= (validation_show_error('role_id')) ? 'is-invalid' : '' ?>" id="role_id" name="role_id" required>
+                                <?php foreach ($roles as $role): ?>
+                                    <option value="<?= $role['id'] ?>" <?= ($user['role_id'] == $role['id']) ? 'selected' : '' ?>>
+                                        <?= esc(ucfirst($role['role_name'])) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php if (validation_show_error('role_id')): ?>
+                                <div class="invalid-feedback"><?= validation_show_error('role_id') ?></div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="mb-3">
                             <label for="status_keanggotaan" class="form-label">Status Keanggotaan</label>
                             <select class="form-select <?= (validation_show_error('status_keanggotaan')) ? 'is-invalid' : '' ?>" id="status_keanggotaan" name="status_keanggotaan" required>
                                 <option value="pending" <?= ($member['status_keanggotaan'] == 'pending') ? 'selected' : '' ?>>Pending</option>
                                 <option value="active" <?= ($member['status_keanggotaan'] == 'active') ? 'selected' : '' ?>>Active</option>
                                 <option value="suspended" <?= ($member['status_keanggotaan'] == 'suspended') ? 'selected' : '' ?>>Suspended</option>
+                                <option value="terminated" <?= ($member['status_keanggotaan'] == 'terminated') ? 'selected' : '' ?>>Terminated</option>
                             </select>
                             <?php if (validation_show_error('status_keanggotaan')): ?>
                                 <div class="invalid-feedback"><?= validation_show_error('status_keanggotaan') ?></div>
@@ -73,15 +87,6 @@ Edit Anggota
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="mb-3">
-                            <label for="alamat" class="form-label">Alamat</label>
-                            <textarea class="form-control" id="alamat" name="alamat" rows="3"><?= esc($member['alamat_lengkap'] ?? 'N/A') ?></textarea>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="mt-4">
                     <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
                     <a href="<?= base_url('admin/members/view/' . $member['id']) ?>" class="btn btn-light">Batal</a>

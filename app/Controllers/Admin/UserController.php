@@ -1,9 +1,5 @@
 <?php
-// ============================================
-// USER MANAGEMENT CONTROLLER
-// ============================================
 
-// app/Controllers/Admin/UserController.php
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;

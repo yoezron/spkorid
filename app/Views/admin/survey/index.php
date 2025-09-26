@@ -252,13 +252,8 @@ Manajemen Survei
                                             <strong><?= $survey['response_count'] ?? 0 ?></strong> responden
                                         </td>
                                         <td>
-                                            <?php
-                                            $creator = $this->db->table('users')
-                                                ->where('id', $survey['created_by'])
-                                                ->get()
-                                                ->getRowArray();
-                                            echo $creator ? esc($creator['nama_lengkap']) : 'Unknown';
-                                            ?>
+                                            <!-- PERBAIKAN: Menampilkan nama pembuat dari data yang sudah disiapkan di controller -->
+                                            <?= esc($survey['creator_name'] ?? 'Unknown') ?>
                                         </td>
                                         <td class="text-center">
                                             <div class="dropdown custom-dropdown">
@@ -360,3 +355,37 @@ Manajemen Survei
             }
         });
     }
+
+    function deleteSurvey(surveyId) {
+        Swal.fire({
+            title: 'Anda Yakin?',
+            text: "Survei ini akan dihapus secara permanen!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#e7515a',
+            cancelButtonColor: '#888ea8',
+            confirmButtonText: 'Ya, Hapus!',
+            cancelButtonText: 'Batal'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch('<?= base_url('admin/surveys/delete/') ?>' + surveyId, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            Swal.fire('Terhapus!', data.message, 'success').then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire('Error!', data.message, 'error');
+                        }
+                    });
+            }
+        });
+    }
+</script>
+<?= $this->endSection() ?>

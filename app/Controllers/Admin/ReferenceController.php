@@ -1,9 +1,5 @@
 <?php
-// ============================================
-// REFERENCE DATA MANAGEMENT CONTROLLER
-// ============================================
 
-// app/Controllers/Admin/ReferenceController.php
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;

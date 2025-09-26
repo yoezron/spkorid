@@ -168,7 +168,7 @@ class SurveyModel extends Model
 
         // Total members who haven't responded
         $totalMembers = $db->table('members')
-            ->where('status', 'active')
+            ->where('status_keanggotaan', 'active') // PERBAIKAN: Mengganti 'status' menjadi 'status_keanggotaan'
             ->countAllResults();
 
         $responseRate = $totalMembers > 0 ? round(($totalResponses / $totalMembers) * 100, 2) : 0;

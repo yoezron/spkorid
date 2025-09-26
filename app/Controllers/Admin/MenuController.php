@@ -88,7 +88,7 @@ class MenuController extends BaseController
     {
         $rules = [
             'menu_name' => 'required|min_length[3]',
-            'menu_url' => 'required',
+            'menu_url'  => 'required',
             'menu_icon' => 'required'
         ];
 
@@ -96,14 +96,21 @@ class MenuController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $this->menuModel->update($id, [
-            'menu_name' => $this->request->getPost('menu_name'),
-            'menu_url' => $this->request->getPost('menu_url'),
-            'menu_icon' => $this->request->getPost('menu_icon'),
-            'parent_id' => $this->request->getPost('parent_id'),
+        // Get parent_id from the form
+        $parentId = $this->request->getPost('parent_id');
+
+        // Prepare the data array, converting empty parent_id to null
+        $data = [
+            'menu_name'  => $this->request->getPost('menu_name'),
+            'menu_url'   => $this->request->getPost('menu_url'),
+            'menu_icon'  => $this->request->getPost('menu_icon'),
+            'parent_id'  => empty($parentId) ? null : $parentId,
             'menu_order' => $this->request->getPost('menu_order') ?? 0,
-            'is_active' => $this->request->getPost('is_active') ?? 1
-        ]);
+            'is_active'  => $this->request->getPost('is_active') ?? 1
+        ];
+
+        // Use the CORRECT data array for the update
+        $this->menuModel->update($id, $data);
 
         return redirect()->to('/admin/menus')->with('success', 'Menu berhasil diperbarui');
     }
