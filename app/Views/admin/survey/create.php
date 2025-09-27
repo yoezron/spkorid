@@ -100,9 +100,33 @@ Buat Survei Baru
                 </div>
 
                 <div class="bs-stepper-content">
-                    <form id="surveyForm" action="<?= site_url('admin/surveys/store') ?>"
-                        method="post" class="needs-validation" novalidate>
+                    <!-- Form harus membungkus SEMUA step content -->
+                    <form id="surveyForm" method="POST" action="<?= base_url('admin/surveys/store') ?>" novalidate>
                         <?= csrf_field() ?>
+
+                        <!-- Hidden input untuk validasi questions -->
+                        <input type="hidden" name="questions" value="1">
+
+                        <!-- ERROR DISPLAY -->
+                        <?php if (session()->getFlashdata('error')): ?>
+                            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                                <strong>Error!</strong> <?= session()->getFlashdata('error') ?>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if (session()->getFlashdata('errors')): ?>
+                            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                                <strong>Terdapat beberapa kesalahan:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <?php foreach (session()->getFlashdata('errors') as $error): ?>
+                                        <li><?= esc($error) ?></li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        <?php endif; ?>
+                        <!-- form fields -->
 
                         <!-- Step 1: Detail Survei -->
                         <div id="detail-part" class="content" role="tabpanel" aria-labelledby="detail-part-trigger">
@@ -117,17 +141,30 @@ Buat Survei Baru
                                     <textarea class="form-control" id="description" name="description" rows="3" placeholder="Tuliskan tujuan, target responden, durasi, dll." required></textarea>
                                     <div class="invalid-feedback">Deskripsi wajib diisi (min 10 karakter).</div>
                                 </div>
+                                <!-- CARI input start_date dan end_date, pastikan formatnya seperti ini -->
                                 <div class="col-md-6">
-                                    <label for="start_date" class="form-label required">Tanggal Mulai</label>
-                                    <input type="text" class="form-control flatpickr" id="start_date" name="start_date" placeholder="Pilih tanggal & waktu mulai" required>
-                                    <div class="form-help">Format: <code>YYYY-MM-DD HH:mm</code>. Respon dibuka dari waktu ini.</div>
-                                    <div class="invalid-feedback">Tanggal mulai wajib diisi.</div>
+                                    <label class="form-label required">Tanggal & Waktu Mulai</label>
+                                    <input type="datetime-local"
+                                        class="form-control"
+                                        id="start_date"
+                                        name="start_date"
+                                        required
+                                        min="<?= date('Y-m-d\TH:i') ?>">
+                                    <div class="invalid-feedback">
+                                        Tanggal mulai wajib diisi
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <label for="end_date" class="form-label required">Tanggal Selesai</label>
-                                    <input type="text" class="form-control flatpickr" id="end_date" name="end_date" placeholder="Pilih tanggal & waktu selesai" required>
-                                    <div class="form-help">Harus sama atau setelah tanggal mulai.</div>
-                                    <div class="invalid-feedback">Tanggal selesai wajib diisi.</div>
+                                    <label class="form-label required">Tanggal & Waktu Berakhir</label>
+                                    <input type="datetime-local"
+                                        class="form-control"
+                                        id="end_date"
+                                        name="end_date"
+                                        required
+                                        min="<?= date('Y-m-d\TH:i', strtotime('+1 hour')) ?>">
+                                    <div class="invalid-feedback">
+                                        Tanggal berakhir wajib diisi
+                                    </div>
                                 </div>
                             </div>
                             <div class="mt-3 stepper-action">
@@ -229,11 +266,14 @@ Buat Survei Baru
                                 <div class="text-muted small">Periksa kembali sebelum mempublikasikan.</div>
                                 <div class="stepper-action">
                                     <button class="btn btn-light" type="button" id="btn-step4-prev">Sebelumnya</button>
-                                    <button type="submit" class="btn btn-success"><i class="material-icons-outlined me-1">publish</i> Publikasikan Survei</button>
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="material-icons-outlined me-1">publish</i>
+                                        Publikasikan Survei
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </form> <!-- TUTUP FORM DI SINI, SETELAH SEMUA STEP -->
                 </div>
             </div>
         </div>
@@ -622,6 +662,94 @@ Buat Survei Baru
         }
         // Empty state on load
         toggleEmptyState();
+    });
+
+    // Form validation before submit
+    document.getElementById('surveyForm').addEventListener('submit', function(e) {
+        console.log('Form is being submitted...');
+
+        // Validasi minimal ada 1 pertanyaan
+        const questions = document.querySelectorAll('.question-block');
+        if (questions.length === 0) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Minimal tambahkan satu pertanyaan dalam survei!'
+            });
+            return false;
+        }
+
+        // Validasi tanggal
+        const startDate = document.getElementById('start_date').value;
+        const endDate = document.getElementById('end_date').value;
+
+        if (!startDate || !endDate) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Tanggal Tidak Valid',
+                text: 'Pastikan tanggal mulai dan berakhir sudah diisi!'
+            });
+            return false;
+        }
+
+        if (new Date(startDate) >= new Date(endDate)) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Tanggal Tidak Valid',
+                text: 'Tanggal berakhir harus setelah tanggal mulai!'
+            });
+            return false;
+        }
+
+        // Validasi setiap pertanyaan punya text
+        let hasEmptyQuestion = false;
+        questions.forEach((block, index) => {
+            const textInput = block.querySelector('input[name*="[text]"]');
+            if (!textInput || !textInput.value.trim()) {
+                hasEmptyQuestion = true;
+                textInput?.classList.add('is-invalid');
+            }
+
+            // Untuk pertanyaan pilihan, validasi minimal ada 1 opsi
+            const type = block.querySelector('input[name*="[type]"]').value;
+            if (['radio', 'checkbox', 'dropdown'].includes(type)) {
+                const options = block.querySelectorAll('input[name*="[options][]"]');
+                const hasValidOption = Array.from(options).some(opt => opt.value.trim());
+                if (!hasValidOption) {
+                    hasEmptyQuestion = true;
+                    options.forEach(opt => opt.classList.add('is-invalid'));
+                }
+            }
+        });
+
+        if (hasEmptyQuestion) {
+            e.preventDefault();
+            Swal.fire({
+                icon: 'error',
+                title: 'Pertanyaan Tidak Lengkap',
+                text: 'Pastikan semua pertanyaan memiliki teks dan opsi (untuk pertanyaan pilihan)!'
+            });
+            return false;
+        }
+
+        // Show loading state
+        const submitBtn = this.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menyimpan...';
+
+        console.log('Form validation passed, submitting...');
+    });
+
+    // Debug: Log form data saat akan submit
+    document.getElementById('surveyForm').addEventListener('formdata', (e) => {
+        console.log('Form Data being sent:');
+        for (let [key, value] of e.formData.entries()) {
+            console.log(key, value);
+        }
     });
 </script>
 <?= $this->endSection() ?>

@@ -8,23 +8,31 @@ use App\Models\SurveyQuestionModel;
 use App\Models\SurveyResponseModel;
 use App\Models\SurveyAnswerModel;
 
+/**
+ * Class SurveyController
+ * Handles all survey-related actions for members.
+ */
 class SurveyController extends BaseController
 {
     protected $surveyModel;
     protected $questionModel;
     protected $responseModel;
     protected $answerModel;
-
+    protected $db;
     public function __construct()
     {
         $this->surveyModel = new SurveyModel();
         $this->questionModel = new SurveyQuestionModel();
         $this->responseModel = new SurveyResponseModel();
         $this->answerModel = new SurveyAnswerModel();
+        $this->db = \Config\Database::connect();
     }
 
     /**
-     * Daftar survei yang tersedia untuk anggota
+     * Menampilkan daftar survei yang tersedia untuk anggota.
+     * Memisahkan survei ke dalam kategori: tersedia, selesai, dan akan datang.
+     *
+     * @return \CodeIgniter\HTTP\Response|string
      */
     public function index()
     {
@@ -34,16 +42,16 @@ class SurveyController extends BaseController
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
-        // Get available surveys for member
+        // Ambil semua survei yang relevan untuk anggota
         $surveys = $this->surveyModel->getSurveysForMember($memberId);
 
-        // Separate surveys by status
+        // Inisialisasi array untuk setiap status survei
         $availableSurveys = [];
         $completedSurveys = [];
         $upcomingSurveys = [];
-
         $now = date('Y-m-d H:i:s');
 
+        // Kelompokkan survei berdasarkan statusnya
         foreach ($surveys as $survey) {
             if ($survey['has_responded'] > 0) {
                 $completedSurveys[] = $survey;
@@ -55,134 +63,113 @@ class SurveyController extends BaseController
         }
 
         $data = [
-            'title' => 'Survei Anggota - SPK',
+            'title'             => 'Survei Anggota - SPK',
             'available_surveys' => $availableSurveys,
             'completed_surveys' => $completedSurveys,
-            'upcoming_surveys' => $upcomingSurveys
+            'upcoming_surveys'  => $upcomingSurveys
         ];
 
         return view('member/survey/index', $data);
     }
 
     /**
-     * Form isi survei
+     * Menampilkan form untuk mengisi survei.
+     *
+     * @param int $id ID Survei
+     * @return \CodeIgniter\HTTP\Response|string
      */
     public function take($id)
     {
         $memberId = session()->get('member_id');
-
         if (!$memberId) {
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
-        // Check if already responded (unless multiple submissions allowed)
         $survey = $this->surveyModel->find($id);
 
+        // Validasi survei
         if (!$survey || !$survey['is_active']) {
-            return redirect()->to('/member/surveys')
-                ->with('error', 'Survei tidak ditemukan atau sudah ditutup');
+            return redirect()->to('/member/surveys')->with('error', 'Survei tidak ditemukan atau sudah ditutup');
         }
 
-        // Check date range
+        // Validasi rentang waktu survei
         $now = date('Y-m-d H:i:s');
         if ($now < $survey['start_date']) {
-            return redirect()->to('/member/surveys')
-                ->with('info', 'Survei belum dibuka');
+            return redirect()->to('/member/surveys')->with('info', 'Survei belum dibuka');
         }
-
         if ($now > $survey['end_date']) {
-            return redirect()->to('/member/surveys')
-                ->with('info', 'Survei sudah ditutup');
+            return redirect()->to('/member/surveys')->with('info', 'Survei sudah ditutup');
         }
 
-        // Check if already responded
-        if (
-            !$survey['allow_multiple_submissions'] &&
-            $this->responseModel->hasResponded($id, $memberId)
-        ) {
-            return redirect()->to('/member/surveys')
-                ->with('info', 'Anda sudah mengisi survei ini');
+        // Validasi apakah anggota sudah pernah mengisi
+        if (!$survey['allow_multiple_submissions'] && $this->responseModel->hasResponded($id, $memberId)) {
+            return redirect()->to('/member/surveys')->with('info', 'Anda sudah mengisi survei ini');
         }
 
-        // Get survey with questions
-        $survey = $this->surveyModel->getSurveyWithQuestions($id);
-
-        // Randomize questions if enabled
-        if ($survey['randomize_questions']) {
-            shuffle($survey['questions']);
+        $surveyData = $this->surveyModel->getSurveyWithQuestions($id);
+        if ($surveyData['randomize_questions']) {
+            shuffle($surveyData['questions']);
         }
 
-        // Check for partial response
         $partialResponse = $this->responseModel->getPartialResponse($id, $memberId);
-
-        // Set start time in session
         if (!$partialResponse) {
             session()->set('survey_start_time_' . $id, time());
         }
 
         $data = [
-            'title' => 'Isi Survei: ' . $survey['title'],
-            'survey' => $survey,
-            'partial_response' => $partialResponse
+            'title'             => 'Isi Survei: ' . $surveyData['title'],
+            'survey'            => $surveyData,
+            'partial_response'  => $partialResponse
         ];
 
         return view('member/survey/take', $data);
     }
 
     /**
-     * Submit survei
+     * Memproses data yang disubmit dari form survei.
+     *
+     * @param int $id ID Survei
+     * @return \CodeIgniter\HTTP\RedirectResponse
      */
     public function submit($id)
     {
         $memberId = session()->get('member_id');
-
         if (!$memberId) {
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
         $survey = $this->surveyModel->find($id);
-
         if (!$survey || !$survey['is_active']) {
-            return redirect()->to('/member/surveys')
-                ->with('error', 'Survei tidak valid');
+            return redirect()->to('/member/surveys')->with('error', 'Survei tidak valid');
         }
 
-        // Check if already responded
-        if (
-            !$survey['allow_multiple_submissions'] &&
-            $this->responseModel->hasResponded($id, $memberId)
-        ) {
-            return redirect()->to('/member/surveys')
-                ->with('error', 'Anda sudah mengisi survei ini');
+        if (!$survey['allow_multiple_submissions'] && $this->responseModel->hasResponded($id, $memberId)) {
+            return redirect()->to('/member/surveys')->with('error', 'Anda sudah mengisi survei ini');
         }
 
-        // Get questions
         $questions = $this->questionModel->getQuestionsBySurvey($id);
-
-        // Validate answers
         $errors = [];
         $answers = [];
         $files = [];
 
+        // Validasi setiap jawaban
         foreach ($questions as $question) {
             $fieldName = 'question_' . $question['id'];
             $answer = $this->request->getPost($fieldName);
 
-            // Handle file upload
+            // Penanganan upload file
             if ($question['question_type'] == 'file') {
                 $file = $this->request->getFile($fieldName);
                 if ($file && $file->isValid()) {
                     $files[$question['id']] = $file;
-                    $answer = 'file_uploaded'; // Placeholder, actual path will be set during save
+                    $answer = 'file_uploaded'; // Placeholder
                 } elseif ($question['is_required']) {
                     $errors[] = $question['question_text'] . ' wajib diupload';
                     continue;
                 }
             }
 
-            // Validate answer
             $validation = $this->questionModel->validateAnswer($question['id'], $answer);
-
             if (!$validation['valid']) {
                 $errors[] = $question['question_text'] . ': ' . $validation['message'];
             } else {
@@ -192,53 +179,40 @@ class SurveyController extends BaseController
             }
         }
 
-        // If validation errors
         if (!empty($errors)) {
-            return redirect()->back()
-                ->withInput()
-                ->with('errors', $errors);
+            return redirect()->back()->withInput()->with('errors', $errors);
         }
 
-        // Save response
+        // Simpan response dan jawaban
         $responseId = $this->responseModel->saveResponseWithAnswers($id, $memberId, $answers, $files);
 
         if ($responseId) {
-            // Delete partial response if exists
+            // Hapus partial response jika ada
             $partial = $this->responseModel->getPartialResponse($id, $memberId);
             if ($partial) {
                 $this->responseModel->delete($partial['id']);
             }
 
-            // Log activity
             $this->logMemberActivity('submit_survey', 'Mengisi survei: ' . $survey['title']);
 
-            // Check if can show results
-            if ($survey['show_results_to_participants']) {
-                return redirect()->to('/member/surveys/result/' . $id)
-                    ->with('success', 'Terima kasih! Survei berhasil dikirim.');
-            } else {
-                return redirect()->to('/member/surveys')
-                    ->with('success', 'Terima kasih! Survei berhasil dikirim.');
-            }
+            $redirectPath = $survey['show_results_to_participants'] ? '/member/surveys/result/' . $id : '/member/surveys';
+            return redirect()->to($redirectPath)->with('success', 'Terima kasih! Survei berhasil dikirim.');
         } else {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Gagal menyimpan survei. Silakan coba lagi.');
+            return redirect()->back()->withInput()->with('error', 'Gagal menyimpan survei. Silakan coba lagi.');
         }
     }
 
     /**
-     * Simpan partial response (auto-save)
+     * Menyimpan progres pengisian survei secara otomatis (auto-save).
+     *
+     * @param int $id ID Survei
+     * @return \CodeIgniter\HTTP\Response
      */
     public function autoSave($id)
     {
         $memberId = session()->get('member_id');
-
         if (!$memberId) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Session expired'
-            ]);
+            return $this->response->setJSON(['success' => false, 'message' => 'Sesi berakhir'])->setStatusCode(401);
         }
 
         $questions = $this->questionModel->getQuestionsBySurvey($id);
@@ -247,7 +221,6 @@ class SurveyController extends BaseController
         foreach ($questions as $question) {
             $fieldName = 'question_' . $question['id'];
             $answer = $this->request->getPost($fieldName);
-
             if (!empty($answer) || $answer === '0') {
                 $answers[$question['id']] = $answer;
             }
@@ -256,55 +229,45 @@ class SurveyController extends BaseController
         $saved = $this->responseModel->savePartialResponse($id, $memberId, $answers);
 
         return $this->response->setJSON([
-            'success' => $saved,
-            'message' => $saved ? 'Progress tersimpan' : 'Gagal menyimpan',
+            'success'   => $saved,
+            'message'   => $saved ? 'Progres tersimpan' : 'Gagal menyimpan',
             'timestamp' => date('H:i:s')
         ]);
     }
 
     /**
-     * Lihat hasil survei (jika diizinkan)
+     * Menampilkan hasil agregat dari sebuah survei jika diizinkan.
+     *
+     * @param int $id ID Survei
+     * @return \CodeIgniter\HTTP\Response|string
      */
     public function result($id)
     {
         $memberId = session()->get('member_id');
-
         if (!$memberId) {
             return redirect()->to('/login')->with('error', 'Silakan login terlebih dahulu');
         }
 
         $survey = $this->surveyModel->find($id);
-
         if (!$survey || !$survey['show_results_to_participants']) {
-            return redirect()->to('/member/surveys')
-                ->with('error', 'Hasil survei tidak tersedia');
+            return redirect()->to('/member/surveys')->with('error', 'Hasil survei tidak tersedia');
         }
 
-        // Check if member has responded
         if (!$this->responseModel->hasResponded($id, $memberId)) {
-            return redirect()->to('/member/surveys/take/' . $id)
-                ->with('info', 'Silakan isi survei terlebih dahulu');
+            return redirect()->to('/member/surveys/take/' . $id)->with('info', 'Silakan isi survei terlebih dahulu untuk melihat hasil');
         }
 
-        // Get survey with questions
-        $survey = $this->surveyModel->getSurveyWithQuestions($id);
+        $surveyData = $this->surveyModel->getSurveyWithQuestions($id);
 
-        // Get statistics for each question
-        foreach ($survey['questions'] as &$question) {
+        foreach ($surveyData['questions'] as &$question) {
             $question['distribution'] = $this->answerModel->getAnswerDistribution($question['id']);
         }
 
-        // Get member's own response
-        $memberResponse = $this->responseModel->getMemberResponse($id, $memberId);
-
-        // Get overall statistics
-        $statistics = $this->surveyModel->getSurveyStatistics($id);
-
         $data = [
-            'title' => 'Hasil Survei: ' . $survey['title'],
-            'survey' => $survey,
-            'statistics' => $statistics,
-            'member_response' => $memberResponse
+            'title'           => 'Hasil Survei: ' . $surveyData['title'],
+            'survey'          => $surveyData,
+            'statistics'      => $this->surveyModel->getSurveyStatistics($id),
+            'member_response' => $this->responseModel->getMemberResponse($id, $memberId)
         ];
 
         return view('member/survey/result', $data);

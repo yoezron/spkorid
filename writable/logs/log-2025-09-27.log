@@ -523,3 +523,177 @@ INFO - 2025-09-27 07:40:20 --> CSRF token verified.
 DEBUG - 2025-09-27 07:40:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-09-27 07:40:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-09-27 07:40:27 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 07:50:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:21:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:21:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:21:49 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 08:22:31 --> CSRF token verified.
+DEBUG - 2025-09-27 08:22:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:22:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 08:23:10 --> CSRF token verified.
+DEBUG - 2025-09-27 08:23:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:23:11 --> Survey data: {"title":"Survei","description":"Survei ini merupakan bla bla bla","start_date":"2025-09-28 12:00:00","end_date":"2025-09-30 12:00:00","is_anonymous":0,"allow_multiple_submissions":0,"require_login":1,"show_results_to_participants":0,"randomize_questions":0,"is_active":1,"created_by":1,"created_at":"2025-09-27 08:23:11","updated_at":"2025-09-27 08:23:11"}
+ERROR - 2025-09-27 08:23:11 --> Error creating survey: Gagal membuat survei: {"start_date":"The start_date field must contain a valid date.","end_date":"The end_date field must contain a valid date."}
+ERROR - 2025-09-27 08:23:11 --> Stack trace: #0 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\Admin\SurveyManagementController->store()
+#1 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\SurveyManagementController))
+#2 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#4 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#5 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#6 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#7 {main}
+DEBUG - 2025-09-27 08:23:11 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 08:26:34 --> CSRF token verified.
+DEBUG - 2025-09-27 08:26:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:26:34 --> Survey data to insert: {"title":"Survei Baru","description":"Survei ini adalah survei percobaan baru","start_date":"2025-09-28 12:00:0","end_date":"2025-09-30 12:00:0","is_anonymous":0,"allow_multiple_submissions":0,"require_login":1,"show_results_to_participants":0,"randomize_questions":0,"is_active":1,"created_by":1,"created_at":"2025-09-27 08:26:34","updated_at":"2025-09-27 08:26:34"}
+DEBUG - 2025-09-27 08:26:34 --> Raw dates received - Start: 2025-09-28 12:00:0, End: 2025-09-30 12:00:0
+DEBUG - 2025-09-27 08:26:34 --> Converted dates - Start: 2025-09-28 12:00:0, End: 2025-09-30 12:00:0
+ERROR - 2025-09-27 08:26:34 --> Error creating survey: Gagal membuat survei: {"start_date":"The start_date field must contain a valid date.","end_date":"The end_date field must contain a valid date."}
+ERROR - 2025-09-27 08:26:34 --> Stack trace: #0 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\Admin\SurveyManagementController->store()
+#1 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\SurveyManagementController))
+#2 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#4 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#5 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#6 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#7 {main}
+DEBUG - 2025-09-27 08:26:34 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:26:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 08:27:21 --> CSRF token verified.
+DEBUG - 2025-09-27 08:27:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:27:21 --> Survey data to insert: {"title":"Survei Baru","description":"Survei ini merupakan survei baru dicoba","start_date":"2025-09-28 12:00:0","end_date":"2025-09-30 12:00:0","is_anonymous":0,"allow_multiple_submissions":0,"require_login":1,"show_results_to_participants":0,"randomize_questions":0,"is_active":1,"created_by":1,"created_at":"2025-09-27 08:27:21","updated_at":"2025-09-27 08:27:21"}
+DEBUG - 2025-09-27 08:27:21 --> Raw dates received - Start: 2025-09-28 12:00:0, End: 2025-09-30 12:00:0
+DEBUG - 2025-09-27 08:27:21 --> Converted dates - Start: 2025-09-28 12:00:0, End: 2025-09-30 12:00:0
+ERROR - 2025-09-27 08:27:21 --> Error creating survey: Gagal membuat survei: {"start_date":"The start_date field must contain a valid date.","end_date":"The end_date field must contain a valid date."}
+ERROR - 2025-09-27 08:27:21 --> Stack trace: #0 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\Admin\SurveyManagementController->store()
+#1 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\SurveyManagementController))
+#2 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#3 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#4 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#5 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#6 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#7 {main}
+DEBUG - 2025-09-27 08:27:21 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:31:02 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 08:31:36 --> CSRF token verified.
+DEBUG - 2025-09-27 08:31:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:31:36 --> Survey data to insert: {"title":"Survei","description":"Survei ini adalah survei yang bla bla bla","start_date":"2025-09-28 12:00:0","end_date":"2025-09-30 12:00:0","is_anonymous":0,"allow_multiple_submissions":0,"require_login":1,"show_results_to_participants":0,"randomize_questions":0,"is_active":1,"created_by":1,"created_at":"2025-09-27 08:31:36","updated_at":"2025-09-27 08:31:36"}
+DEBUG - 2025-09-27 08:31:36 --> Raw dates received - Start: 2025-09-28 12:00:0, End: 2025-09-30 12:00:0
+DEBUG - 2025-09-27 08:31:36 --> Converted dates - Start: 2025-09-28 12:00:0, End: 2025-09-30 12:00:0
+ERROR - 2025-09-27 08:31:36 --> mysqli_sql_exception: Unknown column 'action' in 'field list' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `ac...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `ac...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `ac...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `ac...', Array, false)
+#4 C:\laragon\www\spkorid\app\Controllers\Admin\SurveyManagementController.php(752): CodeIgniter\Database\BaseBuilder->insert(Array)
+#5 C:\laragon\www\spkorid\app\Controllers\Admin\SurveyManagementController.php(278): App\Controllers\Admin\SurveyManagementController->logActivity('create_survey', 'Membuat survei:...')
+#6 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\Admin\SurveyManagementController->store()
+#7 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\SurveyManagementController))
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#10 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#13 {main}
+ERROR - 2025-09-27 08:31:37 --> Error creating survey: Unknown column 'action' in 'field list'
+ERROR - 2025-09-27 08:31:37 --> Stack trace: #0 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `ac...', Array, false)
+#1 C:\laragon\www\spkorid\app\Controllers\Admin\SurveyManagementController.php(752): CodeIgniter\Database\BaseBuilder->insert(Array)
+#2 C:\laragon\www\spkorid\app\Controllers\Admin\SurveyManagementController.php(278): App\Controllers\Admin\SurveyManagementController->logActivity('create_survey', 'Membuat survei:...')
+#3 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\Admin\SurveyManagementController->store()
+#4 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\SurveyManagementController))
+#5 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#6 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#7 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#8 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#9 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#10 {main}
+DEBUG - 2025-09-27 08:31:37 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:32:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 08:33:23 --> CSRF token verified.
+DEBUG - 2025-09-27 08:33:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:33:23 --> Survey data to insert: {"title":"Survei","description":"Survei Ini adalah survei bla bla bla","start_date":"2025-09-28 12:00:0","end_date":"2025-09-30 12:00:0","is_anonymous":0,"allow_multiple_submissions":0,"require_login":1,"show_results_to_participants":0,"randomize_questions":0,"is_active":1,"created_by":1,"created_at":"2025-09-27 08:33:23","updated_at":"2025-09-27 08:33:23"}
+DEBUG - 2025-09-27 08:33:23 --> Raw dates received - Start: 2025-09-28 12:00:0, End: 2025-09-30 12:00:0
+DEBUG - 2025-09-27 08:33:23 --> Converted dates - Start: 2025-09-28 12:00:0, End: 2025-09-30 12:00:0
+DEBUG - 2025-09-27 08:33:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:33:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 08:33:45 --> ErrorException: Undefined variable $statistics
+[Method: GET, Route: admin/surveys/edit/5]
+in APPPATH\Views\admin\survey\edit.php on line 202.
+ 1 APPPATH\Views\admin\survey\edit.php(202): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $statistics', 'C:\\laragon\\www\\spkorid\\app\\Views\\admin\\survey\\edit.php', 202)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\admin\\survey\\edit.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/survey/edit', [], true)
+ 5 APPPATH\Controllers\Admin\SurveyManagementController.php(327): view('admin/survey/edit', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin\SurveyManagementController->edit('5')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\SurveyManagementController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 08:36:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 08:37:52 --> CSRF token verified.
+DEBUG - 2025-09-27 08:37:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:37:52 --> Survey data to insert: {"title":"Survei Terbaru Aktif","description":"Ini adalah survei terbaru yang aktif","start_date":"2025-09-27 12:00:0","end_date":"2025-09-30 12:00:0","is_anonymous":0,"allow_multiple_submissions":0,"require_login":1,"show_results_to_participants":0,"randomize_questions":0,"is_active":1,"created_by":1,"created_at":"2025-09-27 08:37:52","updated_at":"2025-09-27 08:37:52"}
+DEBUG - 2025-09-27 08:37:52 --> Raw dates received - Start: 2025-09-27 12:00:0, End: 2025-09-30 12:00:0
+DEBUG - 2025-09-27 08:37:52 --> Converted dates - Start: 2025-09-27 12:00:0, End: 2025-09-30 12:00:0
+DEBUG - 2025-09-27 08:37:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:38:16 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 08:38:16 --> ErrorException: Undefined variable $statistics
+[Method: GET, Route: admin/surveys/edit/1]
+in APPPATH\Views\admin\survey\edit.php on line 202.
+ 1 APPPATH\Views\admin\survey\edit.php(202): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $statistics', 'C:\\laragon\\www\\spkorid\\app\\Views\\admin\\survey\\edit.php', 202)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\admin\\survey\\edit.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/survey/edit', [], true)
+ 5 APPPATH\Controllers\Admin\SurveyManagementController.php(327): view('admin/survey/edit', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin\SurveyManagementController->edit('1')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\SurveyManagementController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 08:38:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:46:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:46:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:55:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:55:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:56:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:56:08 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:58:51 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:59:01 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 08:59:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 09:00:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 09:00:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 09:00:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 09:01:26 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 09:01:26 --> CodeIgniter\Exceptions\RuntimeException: View themes, no current section.
+[Method: GET, Route: admin/surveys/results/6]
+in SYSTEMPATH\View\View.php on line 430.
+ 1 APPPATH\Views\admin\survey\results.php(1): CodeIgniter\View\View->endSection()
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\admin\\survey\\results.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('admin/survey/results', [], true)
+ 5 APPPATH\Controllers\Admin\SurveyManagementController.php(498): view('admin/survey/results', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Admin\SurveyManagementController->results('6')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Admin\SurveyManagementController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 09:01:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 09:02:53 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 09:59:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 09:59:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:12:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:12:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 13:13:00 --> CSRF token verified.
+DEBUG - 2025-09-27 13:13:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:13:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:13:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:13:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:13:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:14:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.

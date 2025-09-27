@@ -31,22 +31,21 @@ class SurveyModel extends Model
     protected $validationRules = [
         'title' => 'required|min_length[3]|max_length[255]',
         'description' => 'required',
-        'start_date' => 'required|valid_date[Y-m-d H:i]',
-        'end_date'   => 'required|valid_date[Y-m-d H:i]',
         'created_by' => 'required|integer'
     ];
 
     protected $validationMessages = [
         'title' => [
             'required' => 'Judul survei wajib diisi',
-            'min_length' => 'Judul survei minimal 3 karakter',
-            'max_length' => 'Judul survei maksimal 255 karakter'
+            'min_length' => 'Judul minimal 5 karakter'
         ],
         'description' => [
-            'required' => 'Deskripsi survei wajib diisi'
+            'required' => 'Deskripsi wajib diisi',
+            'min_length' => 'Deskripsi minimal 10 karakter'
         ]
     ];
 
+    protected $skipValidation = false;
     /**
      * Get active surveys
      */

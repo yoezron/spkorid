@@ -61,6 +61,7 @@
     <script src="<?= base_url('neptune-assets/plugins/pace/pace.min.js') ?>"></script>
     <script src="<?= base_url('neptune-assets/js/main.min.js') ?>"></script>
     <script src="<?= base_url('neptune-assets/js/custom.js') ?>"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- PAGE-SPECIFIC SCRIPTS -->
     <?= $this->renderSection('pageScripts') ?>

@@ -74,96 +74,198 @@ class SurveyManagementController extends BaseController
         return view('admin/survey/create', $data);
     }
 
+
     /**
      * Simpan survei baru
+     * File: app/Controllers/Admin/SurveyManagementController.php
      */
     public function store()
     {
+        // Cek session user terlebih dahulu
+        $userId = session()->get('user_id') ?? session()->get('id');
+        if (!$userId) {
+            return redirect()->back()
+                ->with('error', 'Session expired. Silakan login kembali.')
+                ->withInput();
+        }
+
+        // PERBAIKAN: Ubah validasi tanggal
         $rules = [
             'title' => 'required|min_length[5]|max_length[255]',
             'description' => 'required|min_length[10]',
-            'start_date' => 'required|valid_date[Y-m-d H:i]',
-            'end_date'   => 'required|valid_date[Y-m-d H:i]',
+            'start_date' => 'required',  // Hapus valid_date
+            'end_date' => 'required',     // Hapus valid_date
             'questions' => 'required'
         ];
 
-        if (!$this->validate($rules)) {
+        $messages = [
+            'title' => [
+                'required' => 'Judul survei wajib diisi',
+                'min_length' => 'Judul survei minimal 5 karakter',
+                'max_length' => 'Judul survei maksimal 255 karakter'
+            ],
+            'description' => [
+                'required' => 'Deskripsi survei wajib diisi',
+                'min_length' => 'Deskripsi survei minimal 10 karakter'
+            ],
+            'start_date' => [
+                'required' => 'Tanggal mulai wajib diisi'
+            ],
+            'end_date' => [
+                'required' => 'Tanggal berakhir wajib diisi'
+            ],
+            'questions' => [
+                'required' => 'Minimal harus ada satu pertanyaan'
+            ]
+        ];
+
+        if (!$this->validate($rules, $messages)) {
             return redirect()->back()
                 ->withInput()
                 ->with('errors', $this->validator->getErrors());
+        }
+
+        // PERBAIKAN: Konversi format datetime-local ke format database
+        $startDateRaw = $this->request->getPost('start_date');
+        $endDateRaw = $this->request->getPost('end_date');
+
+        // datetime-local mengirim format: 2024-01-15T10:30
+        // Kita perlu mengubahnya ke: 2024-01-15 10:30:00
+
+        // Coba parse dengan berbagai format
+        if (strpos($startDateRaw, 'T') !== false) {
+            // Format datetime-local (2024-01-15T10:30)
+            $startDate = str_replace('T', ' ', $startDateRaw) . ':00';
+            $endDate = str_replace('T', ' ', $endDateRaw) . ':00';
+        } else if (strpos($startDateRaw, ' ') !== false) {
+            // Format dengan spasi (2024-01-15 10:30:00)
+            $startDate = $startDateRaw;
+            $endDate = $endDateRaw;
+        } else {
+            // Format lainnya, coba parse
+            $startDate = date('Y-m-d H:i:s', strtotime($startDateRaw));
+            $endDate = date('Y-m-d H:i:s', strtotime($endDateRaw));
+        }
+
+        // Validasi tanggal
+        $startTimestamp = strtotime($startDate);
+        $endTimestamp = strtotime($endDate);
+
+        if (!$startTimestamp || !$endTimestamp) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Format tanggal tidak valid. Silakan gunakan pemilih tanggal.');
+        }
+
+        if ($startTimestamp >= $endTimestamp) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Tanggal berakhir harus setelah tanggal mulai');
+        }
+
+        // Validasi questions array
+        $questions = $this->request->getPost('questions');
+        if (!$questions || !is_array($questions)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Data pertanyaan tidak valid');
+        }
+
+        // Filter pertanyaan kosong
+        $validQuestions = array_filter($questions, function ($q) {
+            return isset($q['text']) && !empty(trim($q['text']));
+        });
+
+        if (empty($validQuestions)) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Minimal harus ada satu pertanyaan yang valid');
         }
 
         $db = \Config\Database::connect();
         $db->transStart();
 
         try {
-            // Prepare survey data
+            // Prepare survey data dengan format tanggal yang sudah dikonversi
             $surveyData = [
-                'title' => $this->request->getPost('title'),
-                'description' => $this->request->getPost('description'),
-                'start_date' => $this->request->getPost('start_date'),
-                'end_date' => $this->request->getPost('end_date'),
-                'is_anonymous' => $this->request->getPost('is_anonymous') ? 1 : 0,
-                'allow_multiple_submissions' => $this->request->getPost('allow_multiple') ? 1 : 0,
-                'require_login' => $this->request->getPost('require_login') ? 1 : 0,
-                'show_results_to_participants' => $this->request->getPost('show_results') ? 1 : 0,
-                'randomize_questions' => $this->request->getPost('randomize') ? 1 : 0,
+                'title' => trim($this->request->getPost('title')),
+                'description' => trim($this->request->getPost('description')),
+                'start_date' => $startDate,  // Sudah dalam format Y-m-d H:i:s
+                'end_date' => $endDate,      // Sudah dalam format Y-m-d H:i:s
+                'is_anonymous' => $this->request->getPost('is_anonymous') == '1' ? 1 : 0,
+                'allow_multiple_submissions' => $this->request->getPost('allow_multiple') == '1' ? 1 : 0,
+                'require_login' => $this->request->getPost('require_login') == '1' ? 1 : 0,
+                'show_results_to_participants' => $this->request->getPost('show_results') == '1' ? 1 : 0,
+                'randomize_questions' => $this->request->getPost('randomize') == '1' ? 1 : 0,
                 'is_active' => 1,
-                'created_by' => (int) (session()->get('user_id') ?? session()->get('id') ?? session()->get('member_id'))
-
+                'created_by' => (int) $userId,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ];
+
+            // Log untuk debugging
+            log_message('debug', 'Survey data to insert: ' . json_encode($surveyData));
+            log_message('debug', 'Raw dates received - Start: ' . $startDateRaw . ', End: ' . $endDateRaw);
+            log_message('debug', 'Converted dates - Start: ' . $startDate . ', End: ' . $endDate);
 
             // Insert survey
             $surveyId = $this->surveyModel->insert($surveyData);
 
             if (!$surveyId) {
-                throw new \Exception('Gagal membuat survei');
+                $errors = $this->surveyModel->errors();
+                throw new \Exception('Gagal membuat survei: ' . json_encode($errors));
             }
 
             // Process and insert questions
-            $questions = $this->request->getPost('questions');
-
-            if (!is_array($questions) || empty($questions)) {
-                throw new \Exception('Pertanyaan survei tidak valid');
-            }
-
-            foreach ($questions as $index => $question) {
-                if (empty($question['text'])) continue;
-
+            $questionOrder = 1;
+            foreach ($validQuestions as $question) {
                 $questionData = [
                     'survey_id' => $surveyId,
-                    'question_text' => $question['text'],
+                    'question_text' => trim($question['text']),
                     'question_type' => $question['type'] ?? 'text',
-                    'is_required' => isset($question['required']) ? 1 : 0,
-                    'order_number' => $index + 1,
-                    'placeholder' => $question['placeholder'] ?? null,
-                    'help_text' => $question['help_text'] ?? null
+                    'is_required' => isset($question['required']) && $question['required'] == '1' ? 1 : 0,
+                    'order_number' => $questionOrder++,
+                    'placeholder' => isset($question['placeholder']) ? trim($question['placeholder']) : null,
+                    'help_text' => isset($question['help_text']) ? trim($question['help_text']) : null,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
                 ];
 
-                // Handle options for choice questions
+                // Handle options untuk pertanyaan pilihan
                 if (in_array($question['type'], ['radio', 'checkbox', 'dropdown'])) {
-                    if (!empty($question['options'])) {
-                        // Filter empty options
-                        $options = array_filter($question['options'], function ($opt) {
+                    if (isset($question['options']) && is_array($question['options'])) {
+                        $options = array_values(array_filter($question['options'], function ($opt) {
                             return !empty(trim($opt));
-                        });
-                        $questionData['options'] = json_encode(array_values($options));
+                        }));
+
+                        if (!empty($options)) {
+                            $questionData['options'] = json_encode($options);
+                        }
                     }
                 }
 
-                // Handle number/scale constraints
+                // Handle constraints untuk number/scale
                 if (in_array($question['type'], ['number', 'rating', 'scale'])) {
-                    $questionData['min_value'] = $question['min_value'] ?? null;
-                    $questionData['max_value'] = $question['max_value'] ?? null;
+                    $questionData['min_value'] = isset($question['min_value']) && is_numeric($question['min_value'])
+                        ? (int) $question['min_value'] : null;
+                    $questionData['max_value'] = isset($question['max_value']) && is_numeric($question['max_value'])
+                        ? (int) $question['max_value'] : null;
                 }
 
-                // Handle text length constraints
+                // Handle constraints untuk text/textarea
                 if (in_array($question['type'], ['text', 'textarea'])) {
-                    $questionData['min_length'] = $question['min_length'] ?? null;
-                    $questionData['max_length'] = $question['max_length'] ?? null;
+                    $questionData['min_length'] = isset($question['min_length']) && is_numeric($question['min_length'])
+                        ? (int) $question['min_length'] : null;
+                    $questionData['max_length'] = isset($question['max_length']) && is_numeric($question['max_length'])
+                        ? (int) $question['max_length'] : null;
                 }
 
-                $this->questionModel->insert($questionData);
+                $questionId = $this->questionModel->insert($questionData);
+
+                if (!$questionId) {
+                    $errors = $this->questionModel->errors();
+                    throw new \Exception('Gagal menyimpan pertanyaan: ' . json_encode($errors));
+                }
             }
 
             $db->transComplete();
@@ -173,22 +275,34 @@ class SurveyManagementController extends BaseController
             }
 
             // Log activity
-            $this->logActivity('create_survey', 'Membuat survei: ' . $surveyData['title']);
+            // $this->logActivity('create_survey', 'Membuat survei: ' . $surveyData['title']);
 
-            // Send notification to members if requested
-            if ($this->request->getPost('notify_members')) {
-                $this->notifyMembers($surveyId);
-            }
+            // // Send notification jika diminta
+            // if ($this->request->getPost('notify_members') == '1') {
+            //     try {
+            //         $this->notifyMembers($surveyId);
+            //     } catch (\Exception $e) {
+            //         log_message('error', 'Failed to send notifications: ' . $e->getMessage());
+            //     }
+            // }
 
             return redirect()->to('/admin/surveys')
-                ->with('success', 'Survei berhasil dibuat');
+                ->with('success', 'Survei berhasil dibuat dan dipublikasikan!');
         } catch (\Exception $e) {
             $db->transRollback();
-            log_message('error', 'Error creating survey: ' . $e->getMessage());
 
-            return redirect()->back()
-                ->withInput()
-                ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            log_message('error', 'Error creating survey: ' . $e->getMessage());
+            log_message('error', 'Stack trace: ' . $e->getTraceAsString());
+
+            if (ENVIRONMENT === 'development') {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Debug Error: ' . $e->getMessage());
+            } else {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Terjadi kesalahan saat menyimpan survei. Silakan coba lagi.');
+            }
         }
     }
 
