@@ -4,141 +4,89 @@
 Manajemen Survei
 <?= $this->endSection() ?>
 
-<?= $this->section('styles') ?>
-<link rel="stylesheet" type="text/css" href="<?= base_url('plugins/table/datatable/datatables.css') ?>">
-<link rel="stylesheet" type="text/css" href="<?= base_url('plugins/table/datatable/dt-global_style.css') ?>">
-<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/forms/switches.css') ?>">
-<style>
-    .survey-card {
-        border: 1px solid #e0e6ed;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
-        transition: all 0.3s;
-    }
-
-    .survey-card:hover {
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .survey-stats {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 15px;
-        padding-top: 15px;
-        border-top: 1px solid #e0e6ed;
-    }
-
-    .stat-item {
-        text-align: center;
-    }
-
-    .stat-value {
-        font-size: 24px;
-        font-weight: bold;
-        color: #5c1ac3;
-    }
-
-    .stat-label {
-        font-size: 12px;
-        color: #888ea8;
-        text-transform: uppercase;
-    }
-
-    .survey-status {
-        padding: 4px 12px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
-
-    .status-active {
-        background: #1abc9c20;
-        color: #1abc9c;
-    }
-
-    .status-inactive {
-        background: #e7515a20;
-        color: #e7515a;
-    }
-
-    .status-upcoming {
-        background: #e2a03f20;
-        color: #e2a03f;
-    }
-
-    .status-expired {
-        background: #888ea820;
-        color: #888ea8;
-    }
-</style>
-<?= $this->endSection() ?>
-
 <?= $this->section('content') ?>
+<div class="page-content">
+    <div class="page-header">
+        <nav class="navbar navbar-expand">
+            <div class="container-fluid">
+                <div class="navbar-collapse" id="navbarSupportedContent">
+                    <div class="page-title">
+                        <h4>Manajemen Survei</h4>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="<?= base_url('admin/dashboard') ?>">Dashboard</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Survei</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="main-wrapper">
 
-<div class="row layout-top-spacing">
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
-        <!-- Summary Cards -->
-        <div class="row mb-4">
-            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-                <div class="widget widget-card-one">
-                    <div class="widget-content">
-                        <div class="media">
-                            <div class="w-img">
-                                <img src="<?= base_url('assets/img/survey-icon.svg') ?>" alt="survey">
+        <!-- =================================================================
+        PENYEMPURNAAN 1: KARTU STATISTIK SESUAI TEMPLATE NEPTUNE
+        - Menggunakan komponen .widget.widget-stats dari template.
+        - Tampilan lebih bersih, ikon lebih besar dan konsisten.
+        - Menghapus style inline dan custom gradient.
+        ================================================================== -->
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="card widget widget-stats">
+                    <div class="card-body">
+                        <div class="widget-stats-container d-flex">
+                            <div class="widget-stats-icon widget-stats-icon-primary">
+                                <i class="material-icons-outlined">poll</i>
                             </div>
-                            <div class="media-body">
-                                <h6>Total Survei</h6>
-                                <p class="meta-date-time"><?= number_format($summary['total_surveys'] ?? 0) ?></p>
+                            <div class="widget-stats-content flex-fill">
+                                <span class="widget-stats-title">Total Survei</span>
+                                <span class="widget-stats-amount"><?= number_format($summary['total_surveys'] ?? 0) ?></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-                <div class="widget widget-card-one">
-                    <div class="widget-content">
-                        <div class="media">
-                            <div class="w-img">
-                                <img src="<?= base_url('assets/img/active-icon.svg') ?>" alt="active">
+            <div class="col-lg-3 col-md-6">
+                <div class="card widget widget-stats">
+                    <div class="card-body">
+                        <div class="widget-stats-container d-flex">
+                            <div class="widget-stats-icon widget-stats-icon-success">
+                                <i class="material-icons-outlined">task_alt</i>
                             </div>
-                            <div class="media-body">
-                                <h6>Survei Aktif</h6>
-                                <p class="meta-date-time"><?= number_format($summary['active_surveys'] ?? 0) ?></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-                <div class="widget widget-card-one">
-                    <div class="widget-content">
-                        <div class="media">
-                            <div class="w-img">
-                                <img src="<?= base_url('assets/img/upcoming-icon.svg') ?>" alt="upcoming">
-                            </div>
-                            <div class="media-body">
-                                <h6>Akan Datang</h6>
-                                <p class="meta-date-time"><?= number_format($summary['upcoming_surveys'] ?? 0) ?></p>
+                            <div class="widget-stats-content flex-fill">
+                                <span class="widget-stats-title">Survei Aktif</span>
+                                <span class="widget-stats-amount"><?= number_format($summary['active_surveys'] ?? 0) ?></span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
-                <div class="widget widget-card-one">
-                    <div class="widget-content">
-                        <div class="media">
-                            <div class="w-img">
-                                <img src="<?= base_url('assets/img/response-icon.svg') ?>" alt="responses">
+            <div class="col-lg-3 col-md-6">
+                <div class="card widget widget-stats">
+                    <div class="card-body">
+                        <div class="widget-stats-container d-flex">
+                            <div class="widget-stats-icon widget-stats-icon-warning">
+                                <i class="material-icons-outlined">pending_actions</i>
                             </div>
-                            <div class="media-body">
-                                <h6>Total Responden</h6>
-                                <p class="meta-date-time"><?= number_format($summary['total_responses'] ?? 0) ?></p>
+                            <div class="widget-stats-content flex-fill">
+                                <span class="widget-stats-title">Akan Datang</span>
+                                <span class="widget-stats-amount"><?= number_format($summary['upcoming_surveys'] ?? 0) ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="card widget widget-stats">
+                    <div class="card-body">
+                        <div class="widget-stats-container d-flex">
+                            <div class="widget-stats-icon widget-stats-icon-info">
+                                <i class="material-icons-outlined">group</i>
+                            </div>
+                            <div class="widget-stats-content flex-fill">
+                                <span class="widget-stats-title">Total Responden</span>
+                                <span class="widget-stats-amount"><?= number_format($summary['total_responses'] ?? 0) ?></span>
                             </div>
                         </div>
                     </div>
@@ -146,244 +94,186 @@ Manajemen Survei
             </div>
         </div>
 
-        <!-- Main Content -->
-        <div class="widget-content widget-content-area br-6">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="mb-0">Daftar Survei</h4>
-                <div>
-                    <button type="button" class="btn btn-info btn-sm mr-2" onclick="window.location.reload()">
-                        <i data-feather="refresh-cw"></i> Refresh
-                    </button>
-                    <a href="<?= base_url('admin/surveys/create') ?>" class="btn btn-primary">
-                        <i data-feather="plus"></i> Buat Survei Baru
-                    </a>
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+                    <h5 class="card-title m-0">Daftar Semua Survei</h5>
+                    <a href="<?= base_url('admin/surveys/create') ?>" class="btn btn-primary"><i class="material-icons-outlined me-1">add</i>Buat Survei Baru</a>
                 </div>
-            </div>
 
-            <!-- Filter Tabs -->
-            <ul class="nav nav-tabs mb-3" id="surveyTabs" role="tablist">
-                <li class="nav-item">
-                    <a class="nav-link active" id="all-tab" data-toggle="tab" href="#all" role="tab">
-                        Semua <span class="badge badge-primary ml-2"><?= count($surveys) ?></span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="active-tab" data-toggle="tab" href="#active" role="tab">
-                        Aktif <span class="badge badge-success ml-2">
-                            <?= count(array_filter($surveys, function ($s) {
-                                $now = date('Y-m-d H:i:s');
-                                return $s['is_active'] && $s['start_date'] <= $now && $s['end_date'] >= $now;
-                            })) ?>
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="upcoming-tab" data-toggle="tab" href="#upcoming" role="tab">
-                        Akan Datang <span class="badge badge-warning ml-2">
-                            <?= count(array_filter($surveys, function ($s) {
-                                return $s['is_active'] && $s['start_date'] > date('Y-m-d H:i:s');
-                            })) ?>
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" id="expired-tab" data-toggle="tab" href="#expired" role="tab">
-                        Selesai <span class="badge badge-secondary ml-2">
-                            <?= count(array_filter($surveys, function ($s) {
-                                return $s['end_date'] < date('Y-m-d H:i:s');
-                            })) ?>
-                        </span>
-                    </a>
-                </li>
-            </ul>
-
-            <!-- Survey List -->
-            <div class="tab-content" id="surveyTabContent">
-                <div class="tab-pane fade show active" id="all" role="tabpanel">
-                    <div class="table-responsive">
-                        <table id="survey-table" class="table table-hover" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>Judul</th>
-                                    <th>Periode</th>
-                                    <th>Status</th>
-                                    <th>Responden</th>
-                                    <th>Dibuat Oleh</th>
-                                    <th class="text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($surveys as $survey): ?>
-                                    <?php
-                                    $now = date('Y-m-d H:i:s');
-                                    $status = 'inactive';
-                                    $statusText = 'Nonaktif';
-
-                                    if ($survey['is_active']) {
-                                        if ($survey['end_date'] < $now) {
-                                            $status = 'expired';
-                                            $statusText = 'Selesai';
-                                        } elseif ($survey['start_date'] > $now) {
-                                            $status = 'upcoming';
-                                            $statusText = 'Akan Datang';
-                                        } else {
-                                            $status = 'active';
-                                            $statusText = 'Aktif';
-                                        }
-                                    }
-                                    ?>
-                                    <tr>
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <strong><?= esc($survey['title']) ?></strong>
-                                                <small class="text-muted"><?= character_limiter(esc($survey['description']), 50) ?></small>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex flex-column">
-                                                <small><?= date('d M Y', strtotime($survey['start_date'])) ?></small>
-                                                <small><?= date('d M Y', strtotime($survey['end_date'])) ?></small>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="survey-status status-<?= $status ?>"><?= $statusText ?></span>
-                                        </td>
-                                        <td>
-                                            <strong><?= $survey['response_count'] ?? 0 ?></strong> responden
-                                        </td>
-                                        <td>
-                                            <!-- PERBAIKAN: Menampilkan nama pembuat dari data yang sudah disiapkan di controller -->
-                                            <?= esc($survey['creator_name'] ?? 'Unknown') ?>
-                                        </td>
-                                        <td class="text-center">
-                                            <div class="dropdown custom-dropdown">
-                                                <a class="dropdown-toggle" href="#" role="button" data-toggle="dropdown">
-                                                    <i data-feather="more-horizontal"></i>
-                                                </a>
-                                                <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="<?= base_url('admin/surveys/results/' . $survey['id']) ?>">
-                                                        <i data-feather="bar-chart"></i> Lihat Hasil
-                                                    </a>
-                                                    <a class="dropdown-item" href="<?= base_url('admin/surveys/edit/' . $survey['id']) ?>">
-                                                        <i data-feather="edit"></i> Edit
-                                                    </a>
-                                                    <a class="dropdown-item" href="javascript:void(0);" onclick="toggleStatus(<?= $survey['id'] ?>)">
-                                                        <i data-feather="<?= $survey['is_active'] ? 'toggle-right' : 'toggle-left' ?>"></i>
-                                                        <?= $survey['is_active'] ? 'Nonaktifkan' : 'Aktifkan' ?>
-                                                    </a>
-                                                    <a class="dropdown-item" href="<?= base_url('admin/surveys/clone/' . $survey['id']) ?>">
-                                                        <i data-feather="copy"></i> Duplikat
-                                                    </a>
-                                                    <a class="dropdown-item" href="<?= base_url('admin/surveys/export/' . $survey['id']) ?>">
-                                                        <i data-feather="download"></i> Export Excel
-                                                    </a>
-                                                    <div class="dropdown-divider"></div>
-                                                    <a class="dropdown-item text-danger" href="javascript:void(0);" onclick="deleteSurvey(<?= $survey['id'] ?>)">
-                                                        <i data-feather="trash-2"></i> Hapus
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                <?php if (session()->getFlashdata('success')) : ?>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <?= session()->getFlashdata('success') ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
+                <?php endif; ?>
+                <?php if (session()->getFlashdata('error')) : ?>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <?= session()->getFlashdata('error') ?>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                <?php endif; ?>
+
+                <div class="table-responsive">
+                    <table id="survey-table" class="table table-hover" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Judul Survei</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Responden</th>
+                                <th>Periode</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($surveys as $survey) : ?>
+                                <tr>
+                                    <td>
+                                        <p class="mb-0 fw-bold"><?= esc($survey['title']) ?></p>
+                                        <small class="text-muted">Dibuat oleh: <?= esc($survey['creator_name'] ?? 'N/A') ?></small>
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- =================================================================
+                                        PENYEMPURNAAN 2: LOGIKA STATUS YANG LEBIH AKURAT
+                                        - Menghitung status (Aktif, Selesai, dll.) berdasarkan tanggal dan is_active.
+                                        - Menggunakan warna badge yang sesuai dari template Neptune.
+                                        ================================================================== -->
+                                        <?php
+                                        $now = time();
+                                        $startDate = strtotime($survey['start_date']);
+                                        $endDate = strtotime($survey['end_date']);
+                                        $status = '';
+                                        $badgeClass = '';
+
+                                        if ($survey['is_active'] == 0) {
+                                            $status = 'Nonaktif';
+                                            $badgeClass = 'badge-danger';
+                                        } elseif ($startDate > $now) {
+                                            $status = 'Akan Datang';
+                                            $badgeClass = 'badge-info';
+                                        } elseif ($endDate < $now) {
+                                            $status = 'Selesai';
+                                            $badgeClass = 'badge-secondary';
+                                        } else {
+                                            $status = 'Aktif';
+                                            $badgeClass = 'badge-success';
+                                        }
+                                        ?>
+                                        <span class="badge <?= $badgeClass ?>"><?= $status ?></span>
+                                    </td>
+                                    <td class="text-center"><?= number_format($survey['response_count']) ?></td>
+                                    <td>
+                                        <p class="mb-0"><span class="text-success"><?= date('d M Y', $startDate) ?></span></p>
+                                        <p class="mb-0"><span class="text-danger"><?= date('d M Y', $endDate) ?></span></p>
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- =================================================================
+                                        PENYEMPURNAAN 3: TOMBOL AKSI YANG LEBIH RAPI
+                                        - Mengelompokkan aksi utama (Hasil, Edit, Hapus) agar mudah diakses.
+                                        - Memasukkan aksi sekunder (Pratinjau, Duplikat) ke dalam dropdown.
+                                        - Menggunakan ikon Material yang konsisten dengan template.
+                                        ================================================================== -->
+                                        <div class="d-inline-flex">
+                                            <a href="<?= base_url('admin/surveys/results/' . $survey['id']) ?>" class="btn btn-sm btn-light" data-bs-toggle="tooltip" title="Lihat Hasil"><i class="material-icons-outlined">bar_chart</i></a>
+                                            <a href="<?= base_url('admin/surveys/edit/' . $survey['id']) ?>" class="btn btn-sm btn-light mx-1" data-bs-toggle="tooltip" title="Edit"><i class="material-icons-outlined">edit</i></a>
+                                            <a href="#" onclick="confirmDelete(<?= $survey['id'] ?>, '<?= esc($survey['title'], 'js') ?>')" class="btn btn-sm btn-light" data-bs-toggle="tooltip" title="Hapus"><i class="material-icons-outlined">delete_outline</i></a>
+
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-light ms-1" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="material-icons-outlined">more_vert</i>
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <li><a class="dropdown-item" href="<?= base_url('surveys/take/' . $survey['id']) ?>" target="_blank"><i class="material-icons-outlined me-2">visibility</i>Pratinjau</a></li>
+                                                    <li><a class="dropdown-item" href="#" onclick="cloneSurvey(<?= $survey['id'] ?>, '<?= esc($survey['title'], 'js') ?>')"><i class="material-icons-outlined me-2">content_copy</i>Duplikat</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="<?= base_url('plugins/table/datatable/datatables.js') ?>"></script>
-<script src="<?= base_url('plugins/sweetalerts/sweetalert2.min.js') ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     $(document).ready(function() {
         $('#survey-table').DataTable({
-            "dom": "<'dt--top-section'<'row'<'col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center'l><'col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3'f>>>" +
-                "<'table-responsive'tr>" +
-                "<'dt--bottom-section d-sm-flex justify-content-sm-between text-center'<'dt--pages-count  mb-sm-0 mb-3'i><'dt--pagination'p>>",
-            "oLanguage": {
-                "oPaginate": {
-                    "sPrevious": '<i data-feather="arrow-left"></i>',
-                    "sNext": '<i data-feather="arrow-right"></i>'
-                },
-                "sInfo": "Menampilkan halaman _PAGE_ dari _PAGES_",
-                "sSearch": '<i data-feather="search"></i>',
-                "sSearchPlaceholder": "Cari...",
-                "sLengthMenu": "Hasil :  _MENU_",
+            "language": {
+                "url": "//cdn.datatables.net/plug-ins/1.10.21/i18n/Indonesian.json"
             },
-            "stripeClasses": [],
-            "lengthMenu": [10, 20, 50],
-            "pageLength": 10,
-            drawCallback: function() {
-                feather.replace();
-            }
+            "columnDefs": [{
+                "orderable": false,
+                "targets": 4
+            }],
+            "order": [
+                [3, "desc"]
+            ]
         });
+
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
     });
 
-    function toggleStatus(surveyId) {
+    function confirmDelete(surveyId, surveyTitle) {
         Swal.fire({
-            title: 'Konfirmasi',
-            text: 'Apakah Anda yakin ingin mengubah status survei ini?',
-            icon: 'question',
+            title: 'Anda yakin?',
+            html: `Survei "<b>${surveyTitle}</b>" akan dihapus secara permanen!`,
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Ya, Ubah',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch('<?= base_url('admin/surveys/toggle-status/') ?>' + surveyId, {
-                        method: 'POST',
+                // Menggunakan Fetch API untuk request DELETE
+                fetch(`<?= base_url('admin/surveys/delete/') ?>${surveyId}`, {
+                        method: 'DELETE',
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest',
-                            'Content-Type': 'application/json'
+                            '<?= csrf_header() ?>': '<?= csrf_hash() ?>'
                         }
                     })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            Swal.fire('Berhasil!', data.message, 'success').then(() => {
-                                location.reload();
-                            });
+                            Swal.fire('Berhasil!', data.message, 'success')
+                                .then(() => location.reload());
                         } else {
-                            Swal.fire('Error!', data.message, 'error');
+                            Swal.fire('Gagal!', data.message, 'error');
                         }
+                    })
+                    .catch(error => {
+                        Swal.fire('Error!', 'Terjadi kesalahan saat menghubungi server.', 'error');
                     });
             }
         });
     }
 
-    function deleteSurvey(surveyId) {
+    function cloneSurvey(surveyId, surveyTitle) {
         Swal.fire({
-            title: 'Anda Yakin?',
-            text: "Survei ini akan dihapus secara permanen!",
-            icon: 'warning',
+            title: 'Duplikat Survei?',
+            html: `Ini akan membuat salinan dari survei "<b>${surveyTitle}</b>".`,
+            icon: 'info',
             showCancelButton: true,
-            confirmButtonColor: '#e7515a',
-            cancelButtonColor: '#888ea8',
-            confirmButtonText: 'Ya, Hapus!',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, duplikat!',
             cancelButtonText: 'Batal'
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch('<?= base_url('admin/surveys/delete/') ?>' + surveyId, {
-                        method: 'POST',
-                        headers: {
-                            'X-Requested-With': 'XMLHttpRequest'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire('Terhapus!', data.message, 'success').then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire('Error!', data.message, 'error');
-                        }
-                    });
+                window.location.href = `<?= base_url('admin/surveys/clone/') ?>${surveyId}`;
             }
         });
     }

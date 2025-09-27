@@ -31,8 +31,8 @@ class SurveyModel extends Model
     protected $validationRules = [
         'title' => 'required|min_length[3]|max_length[255]',
         'description' => 'required',
-        'start_date' => 'required|valid_date',
-        'end_date' => 'required|valid_date',
+        'start_date' => 'required|valid_date[Y-m-d H:i]',
+        'end_date'   => 'required|valid_date[Y-m-d H:i]',
         'created_by' => 'required|integer'
     ];
 

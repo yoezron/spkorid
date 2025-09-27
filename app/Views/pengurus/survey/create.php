@@ -4,534 +4,584 @@
 Buat Survei Baru
 <?= $this->endSection() ?>
 
-<?= $this->section('styles') ?>
-<link href="<?= base_url('plugins/flatpickr/flatpickr.css') ?>" rel="stylesheet" type="text/css">
-<link href="<?= base_url('plugins/noUiSlider/nouislider.min.css') ?>" rel="stylesheet" type="text/css">
-<link rel="stylesheet" type="text/css" href="<?= base_url('assets/css/forms/switches.css') ?>">
+<?= $this->section('pageStyles') ?>
+<link href="<?= base_url('neptune-assets/plugins/flatpickr/flatpickr.min.css') ?>" rel="stylesheet">
+<link href="<?= base_url('neptune-assets/plugins/sweetalert2/sweetalert2.min.css') ?>" rel="stylesheet">
+<link href="<?= base_url('neptune-assets/plugins/bs-stepper/bs-stepper.min.css') ?>" rel="stylesheet">
 <style>
+    .card+.card {
+        margin-top: 1rem
+    }
+
+    .form-help {
+        font-size: .875rem;
+        color: var(--bs-secondary-color)
+    }
+
+    .required::after {
+        content: " *";
+        color: var(--bs-danger)
+    }
+
     .question-block {
-        border: 1px solid #e0e6ed;
-        border-radius: 8px;
-        padding: 20px;
-        margin-bottom: 20px;
+        border: 1px dashed var(--bs-border-color);
+        border-radius: .75rem;
+        padding: 1rem;
         background: #fff;
-        position: relative;
+        margin-bottom: .75rem
     }
 
     .question-block.dragging {
-        opacity: 0.5;
+        opacity: .65
     }
 
-    .question-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #e0e6ed;
-    }
-
-    .question-number {
-        background: #5c1ac3;
-        color: white;
-        padding: 5px 12px;
-        border-radius: 4px;
-        font-weight: bold;
-    }
-
-    .question-actions button {
-        margin-left: 5px;
-    }
-
-    .options-container {
-        margin-top: 15px;
-    }
-
-    .option-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
-    .option-item input {
-        flex: 1;
-        margin: 0 10px;
+    .options-list .input-group+.input-group {
+        margin-top: .5rem
     }
 
     .drag-handle {
-        cursor: move;
-        color: #888;
+        cursor: grab;
+        color: #adb5bd
     }
 
-    .question-type-selector {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 10px;
-        margin-bottom: 20px;
+    .sticky-actions {
+        position: sticky;
+        bottom: 0;
+        background: rgba(255, 255, 255, .92);
+        backdrop-filter: blur(6px);
+        border-top: 1px solid var(--bs-border-color);
+        padding: .75rem 1rem;
+        z-index: 5
     }
 
-    .type-option {
-        padding: 15px;
-        border: 2px solid #e0e6ed;
-        border-radius: 8px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .type-option:hover {
-        border-color: #5c1ac3;
-        background: #f8f9fa;
-    }
-
-    .type-option.selected {
-        border-color: #5c1ac3;
-        background: #5c1ac320;
-    }
-
-    .type-option i {
-        font-size: 24px;
-        margin-bottom: 5px;
-        display: block;
+    .stepper-action {
+        display: flex;
+        gap: .5rem;
+        flex-wrap: wrap
     }
 </style>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
+<div class="container py-3">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="mb-3">Buat Survei Baru</h5>
 
-<div class="row layout-top-spacing">
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
-        <div class="widget-content widget-content-area br-6">
-            <div class="p-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4>Buat Survei Baru</h4>
-                    <a href="<?= base_url('admin/surveys') ?>" class="btn btn-secondary">
-                        <i data-feather="arrow-left"></i> Kembali
-                    </a>
+            <div id="surveyStepper" class="bs-stepper">
+                <div class="bs-stepper-header" role="tablist">
+                    <div class="step" data-target="#detail-part">
+                        <button type="button" class="step-trigger" role="tab" id="detail-part-trigger">
+                            <span class="bs-stepper-circle">1</span>
+                            <span class="bs-stepper-label">Detail Survei</span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#settings-part">
+                        <button type="button" class="step-trigger" role="tab" id="settings-part-trigger">
+                            <span class="bs-stepper-circle">2</span>
+                            <span class="bs-stepper-label">Pengaturan</span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#questions-part">
+                        <button type="button" class="step-trigger" role="tab" id="questions-part-trigger">
+                            <span class="bs-stepper-circle">3</span>
+                            <span class="bs-stepper-label">Pertanyaan</span>
+                        </button>
+                    </div>
+                    <div class="line"></div>
+                    <div class="step" data-target="#preview-part">
+                        <button type="button" class="step-trigger" role="tab" id="preview-part-trigger">
+                            <span class="bs-stepper-circle">4</span>
+                            <span class="bs-stepper-label">Pratinjau & Simpan</span>
+                        </button>
+                    </div>
                 </div>
 
-                <?php if (session()->getFlashdata('errors')): ?>
-                    <div class="alert alert-danger">
-                        <ul class="mb-0">
-                            <?php foreach (session()->getFlashdata('errors') as $error): ?>
-                                <li><?= esc($error) ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                <?php endif; ?>
+                <div class="bs-stepper-content">
+                    <form id="surveyForm" action="<?= base_url('admin/surveys/store') ?>" method="post" class="needs-validation" novalidate>
+                        <?= csrf_field() ?>
 
-                <form id="surveyForm" action="<?= base_url('admin/surveys/store') ?>" method="post">
-                    <?= csrf_field() ?>
-
-                    <!-- Survey Details -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">Informasi Survei</h5>
+                        <!-- Step 1: Detail Survei -->
+                        <div id="detail-part" class="content" role="tabpanel" aria-labelledby="detail-part-trigger">
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label for="title" class="form-label required">Judul Survei</label>
+                                    <input type="text" class="form-control" id="title" name="title" placeholder="Contoh: Survei Kepuasan Layanan" required>
+                                    <div class="invalid-feedback">Judul wajib diisi (min 5 karakter).</div>
+                                </div>
+                                <div class="col-12">
+                                    <label for="description" class="form-label required">Deskripsi</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3" placeholder="Tuliskan tujuan, target responden, durasi, dll." required></textarea>
+                                    <div class="invalid-feedback">Deskripsi wajib diisi (min 10 karakter).</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="start_date" class="form-label required">Tanggal Mulai</label>
+                                    <input type="text" class="form-control flatpickr" id="start_date" name="start_date" placeholder="Pilih tanggal & waktu mulai" required>
+                                    <div class="form-help">Format: <code>YYYY-MM-DD HH:mm</code>. Respon dibuka dari waktu ini.</div>
+                                    <div class="invalid-feedback">Tanggal mulai wajib diisi.</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="end_date" class="form-label required">Tanggal Selesai</label>
+                                    <input type="text" class="form-control flatpickr" id="end_date" name="end_date" placeholder="Pilih tanggal & waktu selesai" required>
+                                    <div class="form-help">Harus sama atau setelah tanggal mulai.</div>
+                                    <div class="invalid-feedback">Tanggal selesai wajib diisi.</div>
+                                </div>
+                            </div>
+                            <div class="mt-3 stepper-action">
+                                <button class="btn btn-primary" type="button" id="btn-step1-next">Selanjutnya</button>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="title">Judul Survei <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" id="title" name="title"
-                                    value="<?= old('title') ?>" required maxlength="255"
-                                    placeholder="Masukkan judul survei yang menarik">
-                            </div>
 
-                            <div class="form-group">
-                                <label for="description">Deskripsi <span class="text-danger">*</span></label>
-                                <textarea class="form-control" id="description" name="description"
-                                    rows="3" required><?= old('description') ?></textarea>
-                                <small class="form-text text-muted">Jelaskan tujuan dan manfaat survei ini</small>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="start_date">Tanggal Mulai <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control flatpickr" id="start_date"
-                                            name="start_date" value="<?= old('start_date') ?>" required>
+                        <!-- Step 2: Pengaturan -->
+                        <div id="settings-part" class="content" role="tabpanel" aria-labelledby="settings-part-trigger">
+                            <div class="list-group">
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Mode Anonim</strong>
+                                        <p class="mb-0 text-muted small">Tidak menyimpan identitas responden.</p>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="end_date">Tanggal Berakhir <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control flatpickr" id="end_date"
-                                            name="end_date" value="<?= old('end_date') ?>" required>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="is_anonymous" value="1">
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Survey Settings -->
-                            <div class="form-row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="switch s-icons s-outline s-outline-primary">
-                                            <input type="checkbox" name="is_anonymous" value="1" <?= old('is_anonymous') ? 'checked' : '' ?>>
-                                            <span class="slider"></span>
-                                        </label>
-                                        <label class="ml-2">Survei Anonim</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="switch s-icons s-outline s-outline-primary">
-                                            <input type="checkbox" name="allow_multiple" value="1" <?= old('allow_multiple') ? 'checked' : '' ?>>
-                                            <span class="slider"></span>
-                                        </label>
-                                        <label class="ml-2">Izinkan Isi Berulang</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="switch s-icons s-outline s-outline-primary">
-                                            <input type="checkbox" name="show_results" value="1" <?= old('show_results') ? 'checked' : '' ?>>
-                                            <span class="slider"></span>
-                                        </label>
-                                        <label class="ml-2">Tampilkan Hasil ke Peserta</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="switch s-icons s-outline s-outline-primary">
-                                            <input type="checkbox" name="randomize" value="1" <?= old('randomize') ? 'checked' : '' ?>>
-                                            <span class="slider"></span>
-                                        </label>
-                                        <label class="ml-2">Acak Pertanyaan</label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="switch s-icons s-outline s-outline-success">
-                                    <input type="checkbox" name="notify_members" value="1" checked>
-                                    <span class="slider"></span>
                                 </label>
-                                <label class="ml-2">Kirim notifikasi ke semua anggota</label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Izinkan Pengisian Ganda</strong>
+                                        <p class="mb-0 text-muted small">Responden dapat mengisi lebih dari sekali.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="allow_multiple" value="1">
+                                    </div>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Wajib Login</strong>
+                                        <p class="mb-0 text-muted small">Hanya anggota yang login yang dapat mengisi.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="require_login" value="1" checked>
+                                    </div>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Tampilkan Hasil ke Peserta</strong>
+                                        <p class="mb-0 text-muted small">Ringkasan hasil dapat dilihat setelah submit.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="show_results" value="1">
+                                    </div>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Acak Urutan Pertanyaan</strong>
+                                        <p class="mb-0 text-muted small">Urutan pertanyaan diacak untuk tiap responden.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="randomize" value="1">
+                                    </div>
+                                </label>
+                                <label class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>Kirim Notifikasi ke Anggota</strong>
+                                        <p class="mb-0 text-muted small">Kirim email/notification kepada anggota saat survei dipublikasikan.</p>
+                                    </div>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="notify_members" value="1">
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="mt-3 stepper-action">
+                                <button class="btn btn-light" type="button" id="btn-step2-prev">Sebelumnya</button>
+                                <button class="btn btn-primary" type="button" id="btn-step2-next">Selanjutnya</button>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Questions -->
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0">Pertanyaan Survei</h5>
-                            <button type="button" class="btn btn-primary btn-sm" id="addQuestion">
-                                <i data-feather="plus"></i> Tambah Pertanyaan
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <div id="questionsContainer">
-                                <!-- Questions will be added here dynamically -->
+                        <!-- Step 3: Pertanyaan -->
+                        <div id="questions-part" class="content" role="tabpanel" aria-labelledby="questions-part-trigger">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0">Pembuat Pertanyaan</h6>
+                                <div class="stepper-action">
+                                    <button type="button" class="btn btn-primary" id="addQuestionBtn" data-bs-toggle="modal" data-bs-target="#questionTypeModal">
+                                        <i class="material-icons-outlined me-1">add</i> Tambah Pertanyaan
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="expandAllBtn">Buka Semua</button>
+                                    <button type="button" class="btn btn-outline-secondary" id="collapseAllBtn">Tutup Semua</button>
+                                </div>
                             </div>
-
-                            <div id="noQuestionsMessage" class="text-center py-5 text-muted">
-                                <i data-feather="help-circle" style="width: 48px; height: 48px;"></i>
-                                <p class="mt-3">Belum ada pertanyaan. Klik tombol "Tambah Pertanyaan" untuk memulai.</p>
+                            <div id="questionsContainer"></div>
+                            <div id="noQuestionsMessage" class="text-center p-4 border rounded bg-light">
+                                <p class="text-muted mb-0">Belum ada pertanyaan. Klik <strong>Tambah Pertanyaan</strong> untuk memulai.</p>
+                            </div>
+                            <div class="mt-3 stepper-action">
+                                <button class="btn btn-light" type="button" id="btn-step3-prev">Sebelumnya</button>
+                                <button class="btn btn-primary" type="button" id="btn-step3-next">Selanjutnya</button>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Submit Buttons -->
-                    <div class="mt-4 text-right">
-                        <button type="button" class="btn btn-secondary" onclick="saveDraft()">
-                            <i data-feather="save"></i> Simpan Draft
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i data-feather="send"></i> Buat Survei
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Question Template Modal -->
-<div class="modal fade" id="questionTypeModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Pilih Tipe Pertanyaan</h5>
-                <button type="button" class="close" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="question-type-selector">
-                    <?php foreach ($question_types as $key => $type): ?>
-                        <div class="type-option" data-type="<?= $key ?>">
-                            <i data-feather="<?= $type['icon'] ?>"></i>
-                            <div class="font-weight-bold"><?= $type['label'] ?></div>
-                            <small><?= $type['description'] ?></small>
+                        <!-- Step 4: Pratinjau & Simpan -->
+                        <div id="preview-part" class="content" role="tabpanel" aria-labelledby="preview-part-trigger">
+                            <h6 class="mb-3">Pratinjau Survei</h6>
+                            <div id="surveyPreview" class="p-3 border rounded bg-light" style="min-height: 200px;"></div>
+                            <div class="sticky-actions mt-3 d-flex justify-content-between align-items-center">
+                                <div class="text-muted small">Periksa kembali sebelum mempublikasikan.</div>
+                                <div class="stepper-action">
+                                    <button class="btn btn-light" type="button" id="btn-step4-prev">Sebelumnya</button>
+                                    <button type="submit" class="btn btn-success"><i class="material-icons-outlined me-1">publish</i> Publikasikan Survei</button>
+                                </div>
+                            </div>
                         </div>
-                    <?php endforeach; ?>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
+    <!-- Modal Pilih Tipe Pertanyaan -->
+    <?= $this->include('partials/question_type_modal') ?>
+</div>
 <?= $this->endSection() ?>
 
-<?= $this->section('scripts') ?>
-<script src="<?= base_url('plugins/flatpickr/flatpickr.js') ?>"></script>
-<script src="<?= base_url('plugins/sweetalerts/sweetalert2.min.js') ?>"></script>
-<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-
+<?= $this->section('pageScripts') ?>
+<script src="<?= base_url('neptune-assets/plugins/flatpickr/flatpickr.js') ?>"></script>
+<script src="<?= base_url('neptune-assets/plugins/flatpickr/l10n/id.js') ?>"></script>
+<script src="<?= base_url('neptune-assets/plugins/sweetalert2/sweetalert2.min.js') ?>"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+<script src="<?= base_url('neptune-assets/plugins/bs-stepper/bs-stepper.min.js') ?>"></script>
 <script>
-    let questionIndex = 0;
-    const questionsContainer = document.getElementById('questionsContainer');
-    const noQuestionsMessage = document.getElementById('noQuestionsMessage');
-
-    // Initialize flatpickr
-    flatpickr('.flatpickr', {
-        enableTime: true,
-        dateFormat: "Y-m-d H:i",
-        minDate: "today"
-    });
-
-    // Initialize Sortable
-    new Sortable(questionsContainer, {
-        animation: 150,
-        handle: '.drag-handle',
-        ghostClass: 'dragging'
-    });
-
-    // Add question button
-    document.getElementById('addQuestion').addEventListener('click', function() {
-        $('#questionTypeModal').modal('show');
-    });
-
-    // Select question type
-    document.querySelectorAll('.type-option').forEach(option => {
-        option.addEventListener('click', function() {
-            const type = this.dataset.type;
-            $('#questionTypeModal').modal('hide');
-            addQuestion(type);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Elements
+        const stepperEl = document.getElementById('surveyStepper');
+        const stepper = new window.Stepper(stepperEl, {
+            linear: false
         });
-    });
+        const startEl = document.getElementById('start_date');
+        const endEl = document.getElementById('end_date');
+        const questionsContainer = document.getElementById('questionsContainer');
+        const noQuestionsMessage = document.getElementById('noQuestionsMessage');
+        const surveyForm = document.getElementById('surveyForm');
 
-    function addQuestion(type) {
-        questionIndex++;
-        noQuestionsMessage.style.display = 'none';
-
-        const questionBlock = document.createElement('div');
-        questionBlock.className = 'question-block';
-        questionBlock.dataset.index = questionIndex;
-
-        let optionsHtml = '';
-        if (['radio', 'checkbox', 'dropdown'].includes(type)) {
-            optionsHtml = `
-            <div class="options-container">
-                <label>Opsi Jawaban:</label>
-                <div class="options-list" id="options-${questionIndex}">
-                    <div class="option-item">
-                        <i data-feather="circle"></i>
-                        <input type="text" class="form-control" name="questions[${questionIndex}][options][]" placeholder="Opsi 1">
-                        <button type="button" class="btn btn-danger btn-sm" onclick="removeOption(this)">
-                            <i data-feather="x"></i>
-                        </button>
-                    </div>
-                    <div class="option-item">
-                        <i data-feather="circle"></i>
-                        <input type="text" class="form-control" name="questions[${questionIndex}][options][]" placeholder="Opsi 2">
-                        <button type="button" class="btn btn-danger btn-sm" onclick="removeOption(this)">
-                            <i data-feather="x"></i>
-                        </button>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-secondary btn-sm mt-2" onclick="addOption(${questionIndex})">
-                    <i data-feather="plus"></i> Tambah Opsi
-                </button>
-            </div>
-        `;
-        }
-
-        let constraintsHtml = '';
-        if (['number', 'rating', 'scale'].includes(type)) {
-            constraintsHtml = `
-            <div class="form-row mt-3">
-                <div class="col-md-6">
-                    <label>Nilai Minimum</label>
-                    <input type="number" class="form-control" name="questions[${questionIndex}][min_value]" placeholder="0">
-                </div>
-                <div class="col-md-6">
-                    <label>Nilai Maksimum</label>
-                    <input type="number" class="form-control" name="questions[${questionIndex}][max_value]" placeholder="100">
-                </div>
-            </div>
-        `;
-        }
-
-        if (['text', 'textarea'].includes(type)) {
-            constraintsHtml = `
-            <div class="form-row mt-3">
-                <div class="col-md-6">
-                    <label>Minimal Karakter</label>
-                    <input type="number" class="form-control" name="questions[${questionIndex}][min_length]" placeholder="0">
-                </div>
-                <div class="col-md-6">
-                    <label>Maksimal Karakter</label>
-                    <input type="number" class="form-control" name="questions[${questionIndex}][max_length]" placeholder="500">
-                </div>
-            </div>
-        `;
-        }
-
-        questionBlock.innerHTML = `
-        <div class="question-header">
-            <div class="d-flex align-items-center">
-                <i data-feather="move" class="drag-handle mr-2"></i>
-                <span class="question-number">Pertanyaan ${questionIndex}</span>
-            </div>
-            <div class="question-actions">
-                <button type="button" class="btn btn-info btn-sm" onclick="duplicateQuestion(${questionIndex})">
-                    <i data-feather="copy"></i>
-                </button>
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeQuestion(${questionIndex})">
-                    <i data-feather="trash-2"></i>
-                </button>
-            </div>
-        </div>
-        <input type="hidden" name="questions[${questionIndex}][type]" value="${type}">
-        <div class="form-group">
-            <label>Teks Pertanyaan <span class="text-danger">*</span></label>
-            <input type="text" class="form-control" name="questions[${questionIndex}][text]" required>
-        </div>
-        <div class="form-row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Placeholder</label>
-                    <input type="text" class="form-control" name="questions[${questionIndex}][placeholder]" placeholder="Teks bantuan">
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Help Text</label>
-                    <input type="text" class="form-control" name="questions[${questionIndex}][help_text]" placeholder="Petunjuk pengisian">
-                </div>
-            </div>
-        </div>
-        ${constraintsHtml}
-        ${optionsHtml}
-        <div class="form-group mt-3">
-            <label class="switch s-icons s-outline s-outline-danger">
-                <input type="checkbox" name="questions[${questionIndex}][required]" value="1" checked>
-                <span class="slider"></span>
-            </label>
-            <label class="ml-2">Wajib diisi</label>
-        </div>
-    `;
-
-        questionsContainer.appendChild(questionBlock);
-        feather.replace();
-        updateQuestionNumbers();
-    }
-
-    function removeQuestion(index) {
-        Swal.fire({
-            title: 'Hapus Pertanyaan?',
-            text: 'Pertanyaan ini akan dihapus dari survei.',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Hapus',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                document.querySelector(`[data-index="${index}"]`).remove();
-                updateQuestionNumbers();
-
-                if (questionsContainer.children.length === 0) {
-                    noQuestionsMessage.style.display = 'block';
+        // Flatpickr (ID locale + 24h + constraint end >= start)
+        const fpOpts = {
+            enableTime: true,
+            time_24hr: true,
+            dateFormat: 'Y-m-d H:i',
+            locale: (flatpickr.l10ns && flatpickr.l10ns.id) ? flatpickr.l10ns.id : 'default',
+            allowInput: true
+        };
+        const startPicker = flatpickr(startEl, {
+            ...fpOpts,
+            minDate: 'today',
+            onChange: function(sel) {
+                if (sel?.length) {
+                    endPicker.set('minDate', sel[0]);
+                    const ed = endPicker.selectedDates[0];
+                    if (ed && ed < sel[0]) endPicker.setDate(sel[0], true);
                 }
             }
         });
-    }
-
-    function duplicateQuestion(index) {
-        const original = document.querySelector(`[data-index="${index}"]`);
-        const clone = original.cloneNode(true);
-        questionIndex++;
-        clone.dataset.index = questionIndex;
-
-        // Update all name attributes
-        clone.querySelectorAll('[name]').forEach(input => {
-            input.name = input.name.replace(/\[\d+\]/, `[${questionIndex}]`);
+        const endPicker = flatpickr(endEl, {
+            ...fpOpts,
+            minDate: 'today'
         });
 
-        questionsContainer.appendChild(clone);
-        feather.replace();
-        updateQuestionNumbers();
-    }
-
-    function addOption(questionId) {
-        const optionsList = document.getElementById(`options-${questionId}`);
-        const optionCount = optionsList.children.length + 1;
-
-        const optionDiv = document.createElement('div');
-        optionDiv.className = 'option-item';
-        optionDiv.innerHTML = `
-        <i data-feather="circle"></i>
-        <input type="text" class="form-control" name="questions[${questionId}][options][]" placeholder="Opsi ${optionCount}">
-        <button type="button" class="btn btn-danger btn-sm" onclick="removeOption(this)">
-            <i data-feather="x"></i>
-        </button>
-    `;
-
-        optionsList.appendChild(optionDiv);
-        feather.replace();
-    }
-
-    function removeOption(button) {
-        const optionItem = button.closest('.option-item');
-        const optionsList = optionItem.parentElement;
-
-        if (optionsList.children.length > 2) {
-            optionItem.remove();
-        } else {
-            Swal.fire('Peringatan', 'Minimal harus ada 2 opsi', 'warning');
-        }
-    }
-
-    function updateQuestionNumbers() {
-        document.querySelectorAll('.question-block').forEach((block, index) => {
-            const numberSpan = block.querySelector('.question-number');
-            numberSpan.textContent = `Pertanyaan ${index + 1}`;
+        // Sortable
+        new Sortable(questionsContainer, {
+            animation: 150,
+            handle: '.drag-handle',
+            onEnd: updateQuestionNumbers
         });
-    }
 
-    function saveDraft() {
-        // Implementation for saving as draft (set is_active = 0)
-        const form = document.getElementById('surveyForm');
-        const input = document.createElement('input');
-        input.type = 'hidden';
-        input.name = 'save_as_draft';
-        input.value = '1';
-        form.appendChild(input);
-        form.submit();
-    }
+        // Stepper Nav
+        document.getElementById('btn-step1-next').addEventListener('click', () => stepper.next());
+        document.getElementById('btn-step2-prev').addEventListener('click', () => stepper.previous());
+        document.getElementById('btn-step2-next').addEventListener('click', () => stepper.next());
+        document.getElementById('btn-step3-prev').addEventListener('click', () => stepper.previous());
+        document.getElementById('btn-step3-next').addEventListener('click', () => {
+            buildPreview();
+            stepper.next();
+        });
+        document.getElementById('btn-step4-prev').addEventListener('click', () => stepper.previous());
 
-    // Form validation
-    document.getElementById('surveyForm').addEventListener('submit', function(e) {
-        const questions = questionsContainer.querySelectorAll('.question-block');
+        // Expand/Collapse all
+        document.getElementById('expandAllBtn').addEventListener('click', () => toggleAll(true));
+        document.getElementById('collapseAllBtn').addEventListener('click', () => toggleAll(false));
 
-        if (questions.length === 0) {
-            e.preventDefault();
-            Swal.fire('Error', 'Survei harus memiliki minimal 1 pertanyaan', 'error');
-            return false;
+        function toggleAll(open) {
+            questionsContainer.querySelectorAll('.question-block .q-content').forEach((c) => {
+
+                c.style.display = open ? '' : 'none';
+            });
         }
 
-        // Validate date range
-        const startDate = document.getElementById('start_date').value;
-        const endDate = document.getElementById('end_date').value;
-
-        if (new Date(startDate) >= new Date(endDate)) {
-            e.preventDefault();
-            Swal.fire('Error', 'Tanggal berakhir harus setelah tanggal mulai', 'error');
-            return false;
+        function toggleEmptyState() {
+            noQuestionsMessage.style.display = questionsContainer.children.length ? 'none' : 'block';
         }
+
+        function updateQuestionNumbers() {
+            [...questionsContainer.querySelectorAll('.question-block')].forEach((el, i) => {
+                const badge = el.querySelector('.q-number');
+                if (badge) badge.textContent = i + 1;
+            });
+        }
+
+        // Modal: pilih tipe pertanyaan
+        const modalEl = document.getElementById('questionTypeModal');
+        modalEl?.addEventListener('click', function(e) {
+            const opt = e.target.closest('.type-option');
+            if (!opt) return;
+            const type = opt.dataset.type || 'text';
+            addQuestion(type);
+            bootstrap.Modal.getInstance(modalEl)?.hide();
+        });
+
+        // Tambah pertanyaan builder
+        function addQuestion(type) {
+            const index = questionsContainer.children.length;
+            const block = document.createElement('div');
+            block.className = 'question-block';
+            block.innerHTML = renderQuestionBlock(index, type);
+            questionsContainer.appendChild(block);
+            attachQuestionEvents(block);
+            toggleEmptyState();
+            updateQuestionNumbers();
+        }
+
+        function renderQuestionBlock(i, type) {
+            const header = `
+        <div class="d-flex align-items-center justify-content-between mb-2">
+          <div class="d-flex align-items-center gap-2">
+            <i class="material-icons drag-handle">drag_indicator</i>
+            <span class="badge bg-secondary">#<span class="q-number">${i+1}</span></span>
+            <span class="ms-1 fw-semibold text-muted small">${labelOf(type)}</span>
+          </div>
+          <div class="btn-group btn-group-sm">
+            <button type="button" class="btn btn-outline-secondary toggleBtn">Tutup</button>
+            <button type="button" class="btn btn-outline-danger deleteBtn"><i class="material-icons-outlined small">delete</i></button>
+          </div>
+        </div>`;
+
+            const basic = `
+        <input type="hidden" name="questions[${i}][type]" value="${type}">
+        <div class="mb-2">
+          <label class="form-label required">Teks Pertanyaan</label>
+          <input type="text" name="questions[${i}][text]" class="form-control" placeholder="Ketik pertanyaan..." required>
+          <div class="invalid-feedback">Teks pertanyaan wajib diisi.</div>
+        </div>
+        <div class="row g-2">
+          <div class="col-md-6">
+            <label class="form-label">Placeholder (opsional)</label>
+            <input type="text" name="questions[${i}][placeholder]" class="form-control" placeholder="Contoh: Masukkan jawaban">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Bantuan (opsional)</label>
+            <input type="text" name="questions[${i}][help_text]" class="form-control" placeholder="Petunjuk singkat untuk responden">
+          </div>
+        </div>`;
+
+            const required = `
+        <div class="form-check form-switch mt-2">
+          <input class="form-check-input" type="checkbox" id="req-${i}" name="questions[${i}][required]" value="1" checked>
+          <label class="form-check-label small" for="req-${i}">Wajib diisi</label>
+        </div>`;
+
+            let extra = '';
+            if (['radio', 'checkbox', 'dropdown'].includes(type)) {
+                extra = `
+        <div class="mt-2">
+          <label class="form-label">Opsi Jawaban</label>
+          <div class="options-list">
+            <div class="input-group">
+              <span class="input-group-text">1</span>
+              <input type="text" name="questions[${i}][options][]" class="form-control" placeholder="Tulis opsi...">
+              <button class="btn btn-outline-danger removeOptionBtn" type="button"><i class="material-icons-outlined small">close</i></button>
+            </div>
+          </div>
+          <button class="btn btn-sm btn-outline-primary mt-2 addOptionBtn" type="button"><i class="material-icons-outlined small">add</i> Tambah Opsi</button>
+        </div>`;
+            } else if (['number', 'rating', 'scale'].includes(type)) {
+                extra = `
+        <div class="row g-2 mt-2">
+          <div class="col-md-6">
+            <label class="form-label">Nilai Minimum</label>
+            <input type="number" step="any" name="questions[${i}][min_value]" class="form-control" placeholder="cth: 1">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Nilai Maksimum</label>
+            <input type="number" step="any" name="questions[${i}][max_value]" class="form-control" placeholder="cth: 5">
+          </div>
+        </div>`;
+            } else if (['text', 'textarea'].includes(type)) {
+                extra = `
+        <div class="row g-2 mt-2">
+          <div class="col-md-6">
+            <label class="form-label">Panjang Minimum</label>
+            <input type="number" name="questions[${i}][min_length]" class="form-control" placeholder="cth: 0">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Panjang Maksimum</label>
+            <input type="number" name="questions[${i}][max_length]" class="form-control" placeholder="cth: 255">
+          </div>
+        </div>`;
+            }
+
+            return `${header}<div class="q-content">${basic}${extra}${required}</div>`;
+
+        }
+
+        function attachQuestionEvents(block) {
+            block.addEventListener('click', function(e) {
+                if (e.target.closest('.deleteBtn')) {
+                    block.remove();
+                    reindexQuestions();
+                    toggleEmptyState();
+                    return;
+                }
+                if (e.target.closest('.toggleBtn')) {
+                    const c = block.querySelector('.q-content');
+                    const btn = e.target.closest('.toggleBtn');
+                    const closed = c.style.display === 'none';
+                    c.style.display = closed ? '' : 'none';
+                    btn.textContent = closed ? 'Tutup' : 'Buka';
+                    return;
+                }
+                if (e.target.closest('.addOptionBtn')) {
+                    const list = block.querySelector('.options-list');
+                    const idx = list.querySelectorAll('.input-group').length + 1;
+                    const ig = document.createElement('div');
+                    ig.className = 'input-group';
+                    ig.innerHTML = `<span class="input-group-text">${idx}</span><input type="text" name="${getOptionName(block)}" class="form-control" placeholder="Tulis opsi..."><button class="btn btn-outline-danger removeOptionBtn" type="button"><i class="material-icons-outlined small">close</i></button>`;
+                    list.appendChild(ig);
+                    return;
+                }
+                if (e.target.closest('.removeOptionBtn')) {
+                    const ig = e.target.closest('.input-group');
+                    const list = ig.parentElement;
+                    ig.remove();
+                    // re-number badges
+                    [...list.querySelectorAll('.input-group-text')].forEach((b, i) => b.textContent = i + 1);
+                    return;
+                }
+            });
+        }
+
+        function getOptionName(block) {
+            const type = block.querySelector('input[name*="[type]"]').value;
+            const name = block.querySelector('input[name*="[text]"]').name; // questions[i][text]
+            const i = (name.match(/questions\[(\d+)\]\[text\]/) || [])[1];
+            return `questions[${i}][options][]`;
+        }
+
+        function reindexQuestions() {
+            const blocks = [...questionsContainer.querySelectorAll('.question-block')];
+            blocks.forEach((el, i) => {
+                el.querySelector('.q-number').textContent = i + 1;
+                // rename inputs to keep continuous indices
+                el.querySelectorAll('[name^="questions["]').forEach((inp) => {
+                    inp.name = inp.name.replace(/questions\[(\d+)\]/, `questions[${i}]`);
+                });
+            });
+        }
+
+        function labelOf(type) {
+            const map = {
+                text: 'Jawaban Singkat',
+                textarea: 'Paragraf',
+                radio: 'Pilihan Ganda',
+                checkbox: 'Checkbox',
+                dropdown: 'Dropdown',
+                number: 'Angka',
+                rating: 'Rating',
+                scale: 'Skala',
+                date: 'Tanggal'
+            };
+            return map[type] || type;
+        }
+
+        // Build Preview (sederhana)
+        function buildPreview() {
+            const prev = document.getElementById('surveyPreview');
+            const blocks = [...questionsContainer.querySelectorAll('.question-block')];
+            if (!blocks.length) {
+                prev.innerHTML = '<p class="text-muted">(Belum ada pertanyaan)</p>';
+                return;
+            }
+            prev.innerHTML = blocks.map((b) => renderPreviewItem(b)).join('');
+        }
+
+        function renderPreviewItem(block) {
+            const type = block.querySelector('input[name*="[type]"]').value;
+            const text = block.querySelector('input[name*="[text]"]').value || '(Pertanyaan)';
+            const opts = [...block.querySelectorAll('.options-list input')].map(i => i.value).filter(Boolean);
+            let field = '';
+            switch (type) {
+                case 'text':
+                    field = '<input class="form-control" disabled placeholder="Jawaban singkat">';
+                    break;
+                case 'textarea':
+                    field = '<textarea class="form-control" disabled rows="3" placeholder="Paragraf"></textarea>';
+                    break;
+                case 'radio':
+                    field = opts.map((o, i) => `<div class="form-check"><input class="form-check-input" type="radio" disabled><label class="form-check-label">${o||('Opsi '+(i+1))}</label></div>`).join('');
+                    break;
+                case 'checkbox':
+                    field = opts.map((o, i) => `<div class="form-check"><input class="form-check-input" type="checkbox" disabled><label class="form-check-label">${o||('Opsi '+(i+1))}</label></div>`).join('');
+                    break;
+                case 'dropdown':
+                    field = `<select class="form-select" disabled>${opts.map(o=>`<option>${o||'Opsi'}</option>`).join('')}</select>`;
+                    break;
+                case 'number':
+                    field = '<input type="number" class="form-control" disabled>';
+                    break;
+                case 'rating':
+                    field = '<div style="color:#adb5bd;font-size:1.25rem">★ ★ ★ ★ ★</div>';
+                    break;
+                case 'scale':
+                    field = '<div class="text-muted small">Skala (min–maks)</div>';
+                    break;
+                case 'date':
+                    field = '<input type="text" class="form-control" disabled placeholder="YYYY-MM-DD">';
+                    break;
+                default:
+                    field = '<div class="text-muted">(preview tidak tersedia)</div>';
+            }
+            return `<div class="mb-3"><div class="fw-semibold mb-1">${text}</div>${field}</div>`;
+        }
+
+        // Validation & submit guard
+        surveyForm.addEventListener('submit', function(e) {
+            // native required
+            if (!surveyForm.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+                surveyForm.classList.add('was-validated');
+                return;
+            }
+            // logical checks
+            const sd = startPicker.selectedDates[0];
+            const ed = endPicker.selectedDates[0];
+            if (sd && ed && ed < sd) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Rentang waktu tidak valid',
+                    text: 'Tanggal Selesai harus setelah Tanggal Mulai.'
+                });
+                return;
+            }
+            if (!questionsContainer.children.length) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Belum ada pertanyaan',
+                    text: 'Tambahkan minimal satu pertanyaan sebelum mempublikasikan.'
+                });
+            }
+        });
+
+        // Empty state on load
+        toggleEmptyState();
     });
-
-    // Initialize feather icons
-    feather.replace();
 </script>
 <?= $this->endSection() ?>

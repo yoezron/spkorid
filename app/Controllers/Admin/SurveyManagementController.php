@@ -82,8 +82,8 @@ class SurveyManagementController extends BaseController
         $rules = [
             'title' => 'required|min_length[5]|max_length[255]',
             'description' => 'required|min_length[10]',
-            'start_date' => 'required|valid_date',
-            'end_date' => 'required|valid_date',
+            'start_date' => 'required|valid_date[Y-m-d H:i]',
+            'end_date'   => 'required|valid_date[Y-m-d H:i]',
             'questions' => 'required'
         ];
 
@@ -109,7 +109,8 @@ class SurveyManagementController extends BaseController
                 'show_results_to_participants' => $this->request->getPost('show_results') ? 1 : 0,
                 'randomize_questions' => $this->request->getPost('randomize') ? 1 : 0,
                 'is_active' => 1,
-                'created_by' => session()->get('user_id')
+                'created_by' => (int) (session()->get('user_id') ?? session()->get('id') ?? session()->get('member_id'))
+
             ];
 
             // Insert survey
