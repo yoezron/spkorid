@@ -121,7 +121,7 @@ $routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:me
         $routes->post('surveys/submit/(:num)', 'SurveyController::submit/$1');
         $routes->post('surveys/auto-save/(:num)', 'SurveyController::autoSave/$1');
         $routes->get('surveys/result/(:num)', 'SurveyController::result/$1');
-        $routes->get('surveys/my-response/(:num)', 'SurveyController::myResponse/$1');
+        $routes->get('surveys/my-response/(:num)', 'SurveyController::myResponse/$1', ['as' => 'member_survey_my_response']);
         $routes->get('surveys/download-file/(:num)', 'SurveyController::downloadFile/$1');
     });
 

@@ -1,21 +1,20 @@
 <?php
 
 /**
- * View: member/survey/my_response.php
- * Menampilkan jawaban milik member untuk satu survei.
+ * View: member/survey/my_response.php (robust answer binding)
+ * Menampilkan jawaban milik member untuk satu survei, tahan terhadap variasi struktur data.
  *
  * Variabel yang didukung (pakai yang tersedia):
  * - $survey: array|object => id, title, description, questions (opsional)
- * - $response|$myResponse: array|object => id, is_complete, submitted_at, started_at, completion_time (opsional)
- * - $answers|$answerList|$responseAnswers: array daftar jawaban, idealnya berkey question_id
- *      Elemen bisa berisi: id, question_id, answer_text, file_path, created_at, question_text (opsional)
- * - $questions|$surveyQuestions: array daftar pertanyaan (opsional)
+ * - $response|$myResponse: array|object => answers/answer_list/responseAnswers (opsional)
+ * - $answers|$answerList|$responseAnswers|$myAnswers|$myAnswerList: array daftar jawaban
+ * - $questions|$surveyQuestions|$questionList: array daftar pertanyaan
  */
 
 $layout = $layout ?? 'layouts/main';
 echo $this->extend($layout);
 
-// helper kecil supaya view tahan array|object
+// ===== Helpers =====
 function _arr($src, $key, $default = null)
 {
     if (is_array($src) && array_key_exists($key, $src)) return $src[$key];
@@ -30,45 +29,131 @@ function _any($src, array $keys, $default = null)
     }
     return $default;
 }
-function _to_array($v)
+function _to_array_any($v)
 {
     if (is_array($v)) return $v;
     if (is_object($v)) return (array)$v;
     if (is_string($v)) {
+        // coba JSON dulu
         $j = json_decode($v, true);
-        if (json_last_error() === JSON_ERROR_NONE && is_array($j)) return $j;
-        // single string fallback
+        if (json_last_error() === JSON_ERROR_NONE) {
+            if (is_array($j)) return $j;
+            if ($j === null || $j === '') return [];
+        }
         $t = trim($v);
         return $t === '' ? [] : [$t];
     }
     return $v ? [$v] : [];
 }
-function _collect_questions($survey, $questions = null, $surveyQuestions = null)
+function _collect_questions($survey, $questions = null, $surveyQuestions = null, $questionList = null)
 {
-    $cands = [];
-    if ($questions)        $cands[] = $questions;
-    if ($surveyQuestions)  $cands[] = $surveyQuestions;
-    if ($survey && _arr($survey, 'questions', null)) $cands[] = _arr($survey, 'questions');
-    foreach ($cands as $c) if (is_array($c) && $c) return $c;
+    foreach ([$questions, $surveyQuestions, $questionList, _arr($survey, 'questions', null)] as $cand) {
+        if (is_array($cand) && $cand) return $cand;
+    }
     return [];
 }
-function _answers_map($answers, $answerList = null, $responseAnswers = null)
+function _flatten_candidates($cand)
 {
-    $src = $answers ?? $answerList ?? $responseAnswers ?? [];
-    // jika bentuknya list jawaban, ubah ke peta question_id => row
-    $map = [];
-    foreach ((array)$src as $row) {
-        $qid = _any($row, ['question_id', 'qid', 'questionId'], null);
-        if ($qid === null) continue;
-        $map[(string)$qid] = $row;
+    if (is_array($cand)) {
+        foreach (['data', 'items', 'rows', 'list', 'answers', 'answer_list', 'responseAnswers', 'myAnswers'] as $k) {
+            if (isset($cand[$k]) && is_array($cand[$k])) return $cand[$k];
+        }
     }
-    return $map ?: (is_array($src) ? $src : []);
+    return $cand;
+}
+function _collect_answer_sources($survey, $resp, ...$named)
+{
+    $cands = [];
+    foreach ($named as $n) if ($n) $cands[] = $n;
+    // ambil dari $response/$myResponse bila ada
+    if ($resp) {
+        foreach (['answers', 'answer_list', 'responseAnswers', 'myAnswers'] as $k) {
+            $v = _arr($resp, $k, null);
+            if ($v) $cands[] = $v;
+        }
+    }
+    // beberapa implementasi menyimpan di $survey['answers']
+    $svAns = _arr($survey ?? [], 'answers', null);
+    if ($svAns) $cands[] = $svAns;
+
+    // flatten jika dibungkus data/items/list
+    $outs = [];
+    foreach ($cands as $cand) {
+        $cand = _flatten_candidates($cand);
+        if (is_array($cand) && $cand) $outs[] = $cand;
+    }
+    return $outs;
+}
+function _build_answer_index(array $sources)
+{
+    $idx = [];
+    foreach ($sources as $src) {
+        // bentuk A: associative map [question_id => value]
+        $isAssoc = is_array($src) && count($src) && array_keys($src) !== range(0, count($src) - 1);
+        if ($isAssoc) {
+            foreach ($src as $k => $v) {
+                $qid = (string)$k;
+                // value bisa string/array; simpan sebagai row seragam
+                if (!isset($idx[$qid])) {
+                    $idx[$qid] = [
+                        'id'          => null,
+                        'question_id' => $qid,
+                        'answer_text' => is_array($v) ? json_encode(array_values($v), JSON_UNESCAPED_UNICODE) : (string)$v,
+                        'file_path'   => null,
+                    ];
+                }
+            }
+            continue;
+        }
+
+        // bentuk B: array of rows
+        foreach ((array)$src as $row) {
+            if (!is_array($row) && !is_object($row)) continue;
+            $qid = _any($row, ['question_id', 'qid', 'questionId'], null);
+            // beberapa implementasi tidak ada question_id, tapi ada 'question' => ['id'=>...]
+            if ($qid === null) {
+                $qobj = _arr($row, 'question', null);
+                if ($qobj) $qid = _arr($qobj, 'id', null);
+            }
+            if ($qid === null) continue;
+
+            $qid = (string)$qid;
+            if (isset($idx[$qid])) continue; // first wins
+
+            $aid   = _any($row, ['id', 'answer_id'], null);
+            $afile = _any($row, ['file_path', 'file', 'attachment', 'attachment_path', 'fileUrl'], null);
+            $aval  = _any($row, ['answer_text', 'answer', 'value', 'answer_value', 'text', 'content'], '');
+
+            // beberapa controller menyimpan nilai array di kolom 'value' sebagai array
+            if (is_array($aval)) $aval = json_encode(array_values($aval), JSON_UNESCAPED_UNICODE);
+
+            $idx[$qid] = [
+                'id'          => $aid,
+                'question_id' => $qid,
+                'answer_text' => (string)$aval,
+                'file_path'   => $afile,
+            ];
+        }
+    }
+    return $idx;
 }
 
-$surveyId   = _arr($survey ?? [], 'id', 'unknown');
-$resp       = $response ?? $myResponse ?? [];
-$answersMap = _answers_map($answers ?? null, $answerList ?? null, $responseAnswers ?? null);
-$questions  = _collect_questions($survey ?? null, $questions ?? null, $surveyQuestions ?? null);
+// ===== Data utama =====
+$resp     = $response ?? $myResponse ?? [];
+$surveyId = _arr($survey ?? [], 'id', 'unknown');
+$questions = _collect_questions($survey ?? null, $questions ?? null, $surveyQuestions ?? null, $questionList ?? null);
+
+// kumpulkan jawaban dari berbagai kemungkinan variabel
+$sources  = _collect_answer_sources(
+    $survey ?? null,
+    $resp,
+    $answers ?? null,
+    $answerList ?? null,
+    $responseAnswers ?? null,
+    $myAnswers ?? null,
+    $myAnswerList ?? null
+);
+$answersIndex = _build_answer_index($sources);
 ?>
 
 <?= $this->section('content') ?>
@@ -84,7 +169,7 @@ $questions  = _collect_questions($survey ?? null, $questions ?? null, $surveyQue
             </div>
         </div>
 
-        <!-- Info status -->
+        <!-- Info -->
         <div class="col-lg-4 order-lg-2">
             <div class="card">
                 <div class="card-body d-flex flex-column gap-3">
@@ -133,36 +218,32 @@ $questions  = _collect_questions($survey ?? null, $questions ?? null, $surveyQue
             <div class="card">
                 <div class="card-body">
                     <?php if (!$questions): ?>
-                        <div class="alert alert-info mb-0">
-                            Pertanyaan tidak tersedia di payload. Controller sebaiknya mengirim <code>$questions</code> atau <code>$survey['questions']</code> agar urutan & teks pertanyaan akurat.
-                        </div>
+                        <div class="alert alert-info mb-0">Pertanyaan tidak tersedia di payload.</div>
                     <?php else: ?>
                         <?php foreach ($questions as $i => $q): ?>
                             <?php
                             $qid   = _any($q, ['id', 'question_id', 'qid'], $i + 1);
                             $label = _any($q, ['question_text', 'text', 'label', 'title', 'name'], 'Pertanyaan ' . ($i + 1));
-                            $ans   = $answersMap[(string)$qid] ?? null;
-                            $atext = _arr($ans ?? [], 'answer_text', '');
-                            $afile = _arr($ans ?? [], 'file_path', null);
-                            $aid   = _arr($ans ?? [], 'id', null); // jika controller kirim id answer
-                            // decode jika JSON (checkbox dsb)
-                            $vals  = _to_array($atext);
+                            $key   = (string)$qid;
+                            $ans   = $answersIndex[$key] ?? null;
+
+                            $atext = $ans ? _arr($ans, 'answer_text', '') : '';
+                            $afile = $ans ? _arr($ans, 'file_path', null) : null;
+                            $aid   = $ans ? _arr($ans, 'id', null) : null;
+
+                            $vals  = _to_array_any($atext);
                             ?>
                             <div class="mb-4">
                                 <div class="fw-semibold mb-1"><?= ($i + 1) . '. ' . esc($label) ?></div>
 
-                                <?php if ($afile): ?>
+                                <?php if ($afile && $aid): ?>
                                     <div class="d-flex align-items-center gap-2 mb-2">
                                         <span class="material-icons-outlined">attach_file</span>
-                                        <?php if ($aid !== null): ?>
-                                            <a href="<?= site_url('member/surveys/download-file/' . $aid) ?>" class="link-primary">Unduh lampiran</a>
-                                        <?php else: ?>
-                                            <a href="<?= site_url('member/surveys/download-file/' . $qid) ?>" class="link-primary">Unduh lampiran</a>
-                                        <?php endif; ?>
+                                        <a href="<?= site_url('member/surveys/download-file/' . $aid) ?>" class="link-primary">Unduh lampiran</a>
                                     </div>
                                 <?php endif; ?>
 
-                                <?php if (count($vals) > 1): ?>
+                                <?php if ($vals && count($vals) > 1): ?>
                                     <div class="d-flex flex-wrap gap-1">
                                         <?php foreach ($vals as $v): ?>
                                             <span class="badge bg-secondary"><?= esc((string)$v) ?></span>
@@ -174,6 +255,15 @@ $questions  = _collect_questions($survey ?? null, $questions ?? null, $surveyQue
                             </div>
                             <hr class="text-muted my-3">
                         <?php endforeach; ?>
+
+                        <?php if (empty($answersIndex)): ?>
+                            <div class="alert alert-warning mt-3 mb-0">
+                                Jawaban tidak ditemukan pada variabel umum (<code>$answers</code>, <code>$answerList</code>,
+                                <code>$responseAnswers</code>, <code>$myAnswers</code>, atau nested di <code>$response</code>).
+                                Pastikan controller <em>myResponse()</em> mengirim salah satu dari itu.
+                            </div>
+                        <?php endif; ?>
+
                     <?php endif; ?>
                 </div>
             </div>

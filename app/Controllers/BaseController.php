@@ -74,4 +74,108 @@ abstract class BaseController extends Controller
             // Data sudah tersedia di $this->data['sidebar_menus'], gunakan saat memanggil view di controller turunan.
         }
     }
+    protected function getUserId()
+    {
+        // Check multiple possible session keys for backward compatibility
+        $userId = session()->get('user_id');
+
+        if (!$userId) {
+            $userId = session()->get('id');
+        }
+
+        if (!$userId) {
+            // Check if user is logged in as member
+            $memberData = session()->get('member');
+            if ($memberData && isset($memberData['user_id'])) {
+                $userId = $memberData['user_id'];
+            }
+        }
+
+        return $userId ? (int) $userId : null;
+    }
+
+    /**
+     * Get current member ID from session
+     * 
+     * @return int|null
+     */
+    protected function getMemberId()
+    {
+        $memberId = session()->get('member_id');
+
+        if (!$memberId) {
+            // Check if member data exists in session
+            $memberData = session()->get('member');
+            if ($memberData && isset($memberData['id'])) {
+                $memberId = $memberData['id'];
+            }
+        }
+
+        return $memberId ? (int) $memberId : null;
+    }
+
+    /**
+     * Check if user is authenticated
+     * 
+     * @return bool
+     */
+    protected function isAuthenticated()
+    {
+        return $this->getUserId() !== null;
+    }
+
+    /**
+     * Get current user role
+     * 
+     * @return string|null
+     */
+    protected function getUserRole()
+    {
+        $role = session()->get('role');
+
+        if (!$role) {
+            $role = session()->get('user_role');
+        }
+
+        return $role;
+    }
+
+    /**
+     * Require authentication or redirect
+     * 
+     * @return mixed
+     */
+    protected function requireAuth()
+    {
+        if (!$this->isAuthenticated()) {
+            return redirect()->to('/login')
+                ->with('error', 'Silakan login terlebih dahulu');
+        }
+
+        return true;
+    }
+
+    /**
+     * Log user activity
+     * 
+     * @param string $action
+     * @param string $description
+     * @return void
+     */
+    protected function logActivity($action, $description)
+    {
+        try {
+            $db = \Config\Database::connect();
+            $db->table('activity_logs')->insert([
+                'user_id' => $this->getUserId(),
+                'action' => $action,
+                'description' => $description,
+                'ip_address' => service('request')->getIPAddress(),
+                'user_agent' => service('request')->getUserAgent()->getAgentString(),
+                'created_at' => date('Y-m-d H:i:s')
+            ]);
+        } catch (\Exception $e) {
+            log_message('error', 'Failed to log activity: ' . $e->getMessage());
+        }
+    }
 }

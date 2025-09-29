@@ -397,6 +397,10 @@ class SurveyModel extends Model
                 ->where('start_date >', $now)
                 ->countAllResults(),
             'total_responses' => $db->table('survey_responses')
+                ->where('is_complete', 1)
+                ->countAllResults(),
+            'surveys_this_month' => $this->where('MONTH(created_at)', date('m'))
+                ->where('YEAR(created_at)', date('Y'))
                 ->countAllResults()
         ];
     }

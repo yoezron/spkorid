@@ -161,11 +161,17 @@ class SurveyController extends BaseController
             if ($question['question_type'] == 'file') {
                 $file = $this->request->getFile($fieldName);
                 if ($file && $file->isValid()) {
-                    $files[$question['id']] = $file;
-                    $answer = 'file_uploaded'; // Placeholder
-                } elseif ($question['is_required']) {
-                    $errors[] = $question['question_text'] . ' wajib diupload';
-                    continue;
+                    // Validasi ukuran (max 5MB)
+                    if ($file->getSize() > 5242880) {
+                        $errors[] = "File untuk '{$question['question_text']}' terlalu besar (max 5MB)";
+                        continue;
+                    }
+                    // Validasi tipe file
+                    $allowedTypes = ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'];
+                    if (!in_array($file->getExtension(), $allowedTypes)) {
+                        $errors[] = "Tipe file tidak diizinkan untuk '{$question['question_text']}'";
+                        continue;
+                    }
                 }
             }
 

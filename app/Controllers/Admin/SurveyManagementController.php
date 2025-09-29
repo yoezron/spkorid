@@ -82,7 +82,7 @@ class SurveyManagementController extends BaseController
     public function store()
     {
         // Cek session user terlebih dahulu
-        $userId = session()->get('user_id') ?? session()->get('id');
+        $userId = $this->getUserId();
         if (!$userId) {
             return redirect()->back()
                 ->with('error', 'Session expired. Silakan login kembali.')
@@ -732,23 +732,5 @@ class SurveyManagementController extends BaseController
         if (!$email->send()) {
             log_message('error', 'Failed to send survey email to: ' . $member['email']);
         }
-    }
-
-    /**
-     * Log activity
-     */
-    private function logActivity($action, $description)
-    {
-        $activityData = [
-            'user_id' => session()->get('user_id'),
-            'action' => $action,
-            'description' => $description,
-            'ip_address' => $this->request->getIPAddress(),
-            'user_agent' => $this->request->getUserAgent()->getAgentString(),
-            'created_at' => date('Y-m-d H:i:s')
-        ];
-
-        $db = \Config\Database::connect();
-        $db->table('activity_logs')->insert($activityData);
     }
 }
