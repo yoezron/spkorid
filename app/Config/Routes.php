@@ -114,11 +114,16 @@ $routes->group('member', ['namespace' => 'App\Controllers', 'filter' => 'auth:me
         $routes->get('user/(:num)', 'ForumController::userProfile/$1');
     });
 
-    // Survei Anggota - Gunakan SurveyController existing atau tambah method
-    $routes->get('survey', 'SurveyController::index');
-    $routes->get('survey/(:num)', 'SurveyController::view/$1');
-    $routes->post('survey/submit/(:num)', 'SurveyController::submit/$1');
-    $routes->get('survey/history', 'SurveyController::history');
+    $routes->group('member', ['namespace' => 'App\Controllers\Member', 'filter' => 'auth:member, super_admin'], function ($routes) {
+        // Survey routes
+        $routes->get('surveys', 'SurveyController::index');
+        $routes->get('surveys/take/(:num)', 'SurveyController::take/$1');
+        $routes->post('surveys/submit/(:num)', 'SurveyController::submit/$1');
+        $routes->post('surveys/auto-save/(:num)', 'SurveyController::autoSave/$1');
+        $routes->get('surveys/result/(:num)', 'SurveyController::result/$1');
+        $routes->get('surveys/my-response/(:num)', 'SurveyController::myResponse/$1');
+        $routes->get('surveys/download-file/(:num)', 'SurveyController::downloadFile/$1');
+    });
 
     // Payment History - Gunakan PaymentController existing atau tambah method
     $routes->get('payment', 'PaymentController::index');
@@ -443,3 +448,5 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], function ($routes)
     $routes->get('surveys/(:num)/statistics', 'SurveyApiController::getStatistics/$1');
     $routes->post('surveys/(:num)/validate', 'SurveyApiController::validateAnswers/$1');
 });
+
+// Backward compatibility routes

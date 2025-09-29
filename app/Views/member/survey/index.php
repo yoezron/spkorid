@@ -150,7 +150,7 @@ Survei Anggota
                                         <li class="list-group-item"><i class="material-icons-outlined me-2 small">group</i><?= $survey['total_responses'] ?? 0 ?> Responden</li>
                                     </ul>
                                     <div class="card-footer">
-                                        <a href="<?= base_url('member/survey/' . $survey['id']) ?>" class="btn btn-primary w-100">
+                                        <a href="<?= base_url('member/surveys/take/' . $survey['id']) ?>" class="btn btn-primary w-100">
                                             <i class="material-icons-outlined me-1">edit</i> Isi Survei
                                         </a>
                                     </div>
@@ -180,9 +180,9 @@ Survei Anggota
                                         <p class="card-text text-muted small"><?= esc($survey['description']) ?></p>
                                     </div>
                                     <div class="card-footer d-flex gap-2">
-                                        <a href="<?= base_url('member/survey/my-response/' . $survey['id']) ?>" class="btn btn-secondary w-100">Lihat Jawaban</a>
+                                        <a href="<?= site_url('member/surveys/my-response/' . $survey['id']) ?>" class="btn btn-outline-primary">Lihat Jawaban</a>
                                         <?php if ($survey['show_results_to_participants'] ?? false): ?>
-                                            <a href="<?= base_url('member/survey/results/' . $survey['id']) ?>" class="btn btn-info w-100">Lihat Hasil</a>
+                                            <a href="<?= site_url('member/surveys/result/' . $survey['id']) ?>" class="btn btn-info w-100">Lihat Hasil</a>
                                         <?php endif; ?>
                                     </div>
                                 </div>

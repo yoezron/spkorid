@@ -35,28 +35,58 @@ class SurveyResponseModel extends Model
         $db->transStart();
 
         try {
-            // Create response record
-            $startTime = session()->get('survey_start_time_' . $surveyId);
+            // Cari response existing (draft/complete) untuk pasangan survey & member ini
+            $existing = $this->where('survey_id', $surveyId)
+                ->where('member_id', $memberId)
+                ->first();
+
+            // Hitung completion time
+            $startTime = null;
+            if ($existing && !empty($existing['started_at'])) {
+                $startTime = strtotime($existing['started_at']);
+            } else {
+                $startTime = session()->get('survey_start_time_' . $surveyId);
+                if (!is_int($startTime)) {
+                    $startTime = $startTime ? strtotime($startTime) : null;
+                }
+            }
             $completionTime = $startTime ? (time() - $startTime) : null;
 
-            $responseData = [
-                'survey_id' => $surveyId,
-                'member_id' => $memberId,
-                'ip_address' => service('request')->getIPAddress(),
-                'user_agent' => service('request')->getUserAgent()->getAgentString(),
-                'started_at' => $startTime ? date('Y-m-d H:i:s', $startTime) : date('Y-m-d H:i:s'),
-                'submitted_at' => date('Y-m-d H:i:s'),
-                'is_complete' => 1,
-                'completion_time' => $completionTime
-            ];
+            if ($existing) {
+                // Pakai baris existing (biasanya draft dari auto-save), jadikan complete
+                $responseId = $existing['id'];
 
-            $responseId = $this->insert($responseData);
+                $this->update($responseId, [
+                    'ip_address'      => service('request')->getIPAddress(),
+                    'user_agent'      => service('request')->getUserAgent()->getAgentString(),
+                    'submitted_at'    => date('Y-m-d H:i:s'),
+                    'is_complete'     => 1,
+                    'completion_time' => $completionTime,
+                ]);
 
-            // Insert answers
+                // Hapus jawaban lama agar bersih
+                $db->table('survey_answers')->where('response_id', $responseId)->delete();
+            } else {
+                // Belum ada: buat baris baru (seperti sebelumnya)
+                $responseData = [
+                    'survey_id'       => $surveyId,
+                    'member_id'       => $memberId,
+                    'ip_address'      => service('request')->getIPAddress(),
+                    'user_agent'      => service('request')->getUserAgent()->getAgentString(),
+                    'started_at'      => $startTime ? date('Y-m-d H:i:s', $startTime) : date('Y-m-d H:i:s'),
+                    'submitted_at'    => date('Y-m-d H:i:s'),
+                    'is_complete'     => 1,
+                    'completion_time' => $completionTime,
+                ];
+
+                $responseId = $this->insert($responseData);
+            }
+
+            // Simpan jawaban
             $answerModel = new SurveyAnswerModel();
 
             foreach ($answers as $questionId => $answerText) {
-                // Handle array answers (checkbox)
+                // Array (checkbox) → simpan JSON
                 if (is_array($answerText)) {
                     $answerText = json_encode($answerText);
                 }
@@ -65,10 +95,10 @@ class SurveyResponseModel extends Model
                     'response_id' => $responseId,
                     'question_id' => $questionId,
                     'answer_text' => $answerText,
-                    'created_at' => date('Y-m-d H:i:s')
+                    'created_at'  => date('Y-m-d H:i:s'),
                 ];
 
-                // Handle file uploads
+                // File upload (jika ada)
                 if (isset($files[$questionId])) {
                     $answerData['file_path'] = $this->uploadFile($files[$questionId], $responseId, $questionId);
                 }
@@ -76,17 +106,18 @@ class SurveyResponseModel extends Model
                 $answerModel->insert($answerData);
             }
 
-            // Clear session start time
+            // Bersihkan penanda waktu mulai di sesi
             session()->remove('survey_start_time_' . $surveyId);
 
             $db->transComplete();
             return $db->transStatus() ? $responseId : false;
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $db->transRollback();
             log_message('error', 'Error saving survey response: ' . $e->getMessage());
             return false;
         }
     }
+
 
     /**
      * Upload file for survey answer

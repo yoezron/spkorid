@@ -336,17 +336,48 @@ class SurveyController extends BaseController
     /**
      * Log aktivitas member
      */
+    // App/Controllers/Member/SurveyController.php
     private function logMemberActivity($action, $description)
     {
-        $activityData = [
-            'user_id' => session()->get('user_id'),
-            'action' => $action,
-            'description' => $description,
-            'ip_address' => $this->request->getIPAddress(),
-            'user_agent' => $this->request->getUserAgent()->getAgentString(),
-            'created_at' => date('Y-m-d H:i:s')
-        ];
+        try {
+            $db = \Config\Database::connect();
 
-        $this->db->table('activity_logs')->insert($activityData);
+            // kalau tabelnya tidak ada, lewati
+            if (! method_exists($db, 'tableExists') || ! $db->tableExists('survey_responses')) {
+                return;
+            }
+
+            // cocokkan field yang benar-benar ada
+            $fields = [];
+            foreach ($db->getFieldData('survey_responses') ?? [] as $fd) {
+                $fields[] = $fd->name;
+            }
+
+            $row = [];
+            if (in_array('user_id', $fields))   $row['user_id']   = session()->get('user_id');
+            if (in_array('member_id', $fields)) $row['member_id'] = session()->get('member_id');
+
+            if (in_array('action', $fields))       $row['action'] = $action;
+            elseif (in_array('activity', $fields)) $row['activity'] = $action;
+            elseif (in_array('event', $fields))    $row['event'] = $action;
+
+            if (in_array('description', $fields))  $row['description'] = $description;
+            elseif (in_array('message', $fields))  $row['message'] = $description;
+            elseif (in_array('details', $fields))  $row['details'] = $description;
+
+            if (in_array('ip_address', $fields))  $row['ip_address'] = $this->request->getIPAddress();
+            if (in_array('user_agent', $fields))  $row['user_agent'] = $this->request->getUserAgent()->getAgentString();
+
+            $now = date('Y-m-d H:i:s');
+            if (in_array('created_at', $fields))    $row['created_at'] = $now;
+            elseif (in_array('logged_at', $fields)) $row['logged_at'] = $now;
+            elseif (in_array('timestamp', $fields)) $row['timestamp'] = $now;
+
+            if (! empty($row)) {
+                $db->table('survey_responses')->insert($row);
+            }
+        } catch (\Throwable $e) {
+            log_message('warning', 'Activity log skipped: ' . $e->getMessage());
+        }
     }
 }

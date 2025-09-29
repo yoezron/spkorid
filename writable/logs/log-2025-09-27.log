@@ -697,3 +697,228 @@ DEBUG - 2025-09-27 13:13:04 --> Session: Class initialized using 'CodeIgniter\Se
 DEBUG - 2025-09-27 13:13:10 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-09-27 13:13:22 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-09-27 13:14:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:25:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:25:48 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:27:52 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:27:55 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:27:56 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:37:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:37:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:49:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 13:49:23 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "layouts/member.php"
+[Method: GET, Route: member/surveys/take/6]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('layouts/member.php')
+ 2 SYSTEMPATH\View\View.php(242): CodeIgniter\View\View->render('layouts/member', [], true)
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/survey/take', [], true)
+ 4 APPPATH\Controllers\Member\SurveyController.php(125): view('member/survey/take', [...])
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->take('6')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 13:52:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:52:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:52:40 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:52:44 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 13:52:46 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 13:52:46 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "layouts/member.php"
+[Method: GET, Route: member/surveys/take/6]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('layouts/member.php')
+ 2 SYSTEMPATH\View\View.php(242): CodeIgniter\View\View->render('layouts/member', [], true)
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/survey/take', [], true)
+ 4 APPPATH\Controllers\Member\SurveyController.php(125): view('member/survey/take', [...])
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->take('6')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 14:01:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 14:01:00 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "member/surveys/take.php"
+[Method: GET, Route: member/surveys/take/6]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('member/surveys/take.php')
+ 2 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/surveys/take', [], true)
+ 3 APPPATH\Controllers\Member\SurveyController.php(125): view('member/surveys/take', [...])
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->take('6')
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 14:01:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 14:01:25 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "layouts/member.php"
+[Method: GET, Route: member/surveys/take/6]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('layouts/member.php')
+ 2 SYSTEMPATH\View\View.php(242): CodeIgniter\View\View->render('layouts/member', [], true)
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/survey/take', [], true)
+ 4 APPPATH\Controllers\Member\SurveyController.php(125): view('member/survey/take', [...])
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->take('6')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 14:01:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:04:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 14:04:38 --> CodeIgniter\View\Exceptions\ViewException: Invalid file: "layouts/m.php"
+[Method: GET, Route: member/surveys/take/6]
+in SYSTEMPATH\Exceptions\FrameworkException.php on line 39.
+ 1 SYSTEMPATH\View\View.php(214): CodeIgniter\Exceptions\FrameworkException::forInvalidFile('layouts/m.php')
+ 2 SYSTEMPATH\View\View.php(242): CodeIgniter\View\View->render('layouts/m', [], true)
+ 3 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/survey/take', [], true)
+ 4 APPPATH\Controllers\Member\SurveyController.php(125): view('member/survey/take', [...])
+ 5 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->take('6')
+ 6 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 7 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+11 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 14:04:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:05:20 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:05:31 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:05:33 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:18:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:38:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:41:58 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:42:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:42:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:42:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:42:15 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:42:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:42:23 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:48:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:48:25 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:48:57 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:58:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 14:58:59 --> ErrorException: Undefined variable $surveyId
+[Method: GET, Route: member/surveys/take/6]
+in APPPATH\Views\member\survey\take.php on line 18.
+ 1 APPPATH\Views\member\survey\take.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $surveyId', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\survey\\take.php', 18)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\survey\\take.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/survey/take', [], true)
+ 5 APPPATH\Controllers\Member\SurveyController.php(125): view('member/survey/take', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->take('6')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 14:59:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:59:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 14:59:09 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-09-27 14:59:09 --> ErrorException: Undefined variable $surveyId
+[Method: GET, Route: member/surveys/take/6]
+in APPPATH\Views\member\survey\take.php on line 18.
+ 1 APPPATH\Views\member\survey\take.php(18): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $surveyId', 'C:\\laragon\\www\\spkorid\\app\\Views\\member\\survey\\take.php', 18)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\member\\survey\\take.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/survey/take', [], true)
+ 5 APPPATH\Controllers\Member\SurveyController.php(125): view('member/survey/take', [...])
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->take('6')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+DEBUG - 2025-09-27 15:01:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 15:01:35 --> CSRF token verified.
+DEBUG - 2025-09-27 15:01:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:01:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 15:01:47 --> CSRF token verified.
+DEBUG - 2025-09-27 15:01:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:01:47 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:01:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:02:04 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:02:28 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:02:30 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 15:02:41 --> CSRF token verified.
+DEBUG - 2025-09-27 15:02:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:02:41 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:08:36 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 15:08:45 --> CSRF token verified.
+DEBUG - 2025-09-27 15:08:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:08:45 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 15:09:00 --> CSRF token verified.
+DEBUG - 2025-09-27 15:09:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:09:00 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 15:09:38 --> CSRF token verified.
+DEBUG - 2025-09-27 15:09:38 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:09:39 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:15:59 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 15:16:06 --> CSRF token verified.
+DEBUG - 2025-09-27 15:16:06 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:16:07 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-09-27 15:19:24 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+INFO - 2025-09-27 15:19:35 --> CSRF token verified.
+DEBUG - 2025-09-27 15:19:35 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+ERROR - 2025-09-27 15:19:35 --> mysqli_sql_exception: Unknown column 'action' in 'field list' in C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php:327
+Stack trace:
+#0 C:\laragon\www\spkorid\system\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `ac...', 0)
+#1 C:\laragon\www\spkorid\system\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `ac...')
+#2 C:\laragon\www\spkorid\system\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `ac...')
+#3 C:\laragon\www\spkorid\system\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `ac...', Array, false)
+#4 C:\laragon\www\spkorid\app\Controllers\Member\SurveyController.php(350): CodeIgniter\Database\BaseBuilder->insert(Array)
+#5 C:\laragon\www\spkorid\app\Controllers\Member\SurveyController.php(196): App\Controllers\Member\SurveyController->logMemberActivity('submit_survey', 'Mengisi survei:...')
+#6 C:\laragon\www\spkorid\system\CodeIgniter.php(933): App\Controllers\Member\SurveyController->submit('6')
+#7 C:\laragon\www\spkorid\system\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+#8 C:\laragon\www\spkorid\system\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(NULL, Object(Config\Cache), false)
+#9 C:\laragon\www\spkorid\system\Boot.php(363): CodeIgniter\CodeIgniter->run()
+#10 C:\laragon\www\spkorid\system\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+#11 C:\laragon\www\spkorid\public\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+#12 C:\laragon\www\spkorid\system\rewrite.php(44): require_once('C:\\laragon\\www\\...')
+#13 {main}
+CRITICAL - 2025-09-27 15:19:35 --> CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'action' in 'field list'
+[Method: POST, Route: member/surveys/submit/6]
+in SYSTEMPATH\Database\BaseConnection.php on line 684.
+ 1 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `activity_logs` (`user_id`, `action`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (:user_id:, :action:, :description:, :ip_address:, :user_agent:, :created_at:)', [...], false)
+ 2 APPPATH\Controllers\Member\SurveyController.php(350): CodeIgniter\Database\BaseBuilder->insert([...])
+ 3 APPPATH\Controllers\Member\SurveyController.php(196): App\Controllers\Member\SurveyController->logMemberActivity('submit_survey', 'Mengisi survei: Survei Terbaru Aktif')
+ 4 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->submit('6')
+ 5 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 6 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 7 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 8 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 9 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+10 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-27 15:19:35 --> [Caused by] CodeIgniter\Database\Exceptions\DatabaseException: Unknown column 'action' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 332.
+ 1 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `activity_logs` (`user_id`, `action`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (\'1\', \'submit_survey\', \'Mengisi survei: Survei Terbaru Aktif\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\', \'2025-09-27 15:19:35\')')
+ 2 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `activity_logs` (`user_id`, `action`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (\'1\', \'submit_survey\', \'Mengisi survei: Survei Terbaru Aktif\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\', \'2025-09-27 15:19:35\')')
+ 3 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `activity_logs` (`user_id`, `action`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (:user_id:, :action:, :description:, :ip_address:, :user_agent:, :created_at:)', [...], false)
+ 4 APPPATH\Controllers\Member\SurveyController.php(350): CodeIgniter\Database\BaseBuilder->insert([...])
+ 5 APPPATH\Controllers\Member\SurveyController.php(196): App\Controllers\Member\SurveyController->logMemberActivity('submit_survey', 'Mengisi survei: Survei Terbaru Aktif')
+ 6 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->submit('6')
+ 7 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 8 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 9 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+10 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+11 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+12 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
+CRITICAL - 2025-09-27 15:19:35 --> [Caused by] mysqli_sql_exception: Unknown column 'action' in 'field list'
+in SYSTEMPATH\Database\MySQLi\Connection.php on line 327.
+ 1 SYSTEMPATH\Database\MySQLi\Connection.php(327): mysqli->query('INSERT INTO `activity_logs` (`user_id`, `action`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (\'1\', \'submit_survey\', \'Mengisi survei: Survei Terbaru Aktif\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\', \'2025-09-27 15:19:35\')', 0)
+ 2 SYSTEMPATH\Database\BaseConnection.php(729): CodeIgniter\Database\MySQLi\Connection->execute('INSERT INTO `activity_logs` (`user_id`, `action`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (\'1\', \'submit_survey\', \'Mengisi survei: Survei Terbaru Aktif\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\', \'2025-09-27 15:19:35\')')
+ 3 SYSTEMPATH\Database\BaseConnection.php(646): CodeIgniter\Database\BaseConnection->simpleQuery('INSERT INTO `activity_logs` (`user_id`, `action`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (\'1\', \'submit_survey\', \'Mengisi survei: Survei Terbaru Aktif\', \'::1\', \'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36 Edg/140.0.0.0\', \'2025-09-27 15:19:35\')')
+ 4 SYSTEMPATH\Database\BaseBuilder.php(2345): CodeIgniter\Database\BaseConnection->query('INSERT INTO `activity_logs` (`user_id`, `action`, `description`, `ip_address`, `user_agent`, `created_at`) VALUES (:user_id:, :action:, :description:, :ip_address:, :user_agent:, :created_at:)', [...], false)
+ 5 APPPATH\Controllers\Member\SurveyController.php(350): CodeIgniter\Database\BaseBuilder->insert([...])
+ 6 APPPATH\Controllers\Member\SurveyController.php(196): App\Controllers\Member\SurveyController->logMemberActivity('submit_survey', 'Mengisi survei: Survei Terbaru Aktif')
+ 7 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\Member\SurveyController->submit('6')
+ 8 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\Member\SurveyController))
+ 9 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+10 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+11 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+12 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+13 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')

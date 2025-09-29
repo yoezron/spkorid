@@ -1,827 +1,734 @@
-<?= $this->extend('layouts/main') ?>
+<?php
 
-<?= $this->section('title') ?>
-Isi Survei: <?= esc($survey['title']) ?>
-<?= $this->endSection() ?>
+/**
+ * View: take.php (Neptune-styled, auto-detect question source)
+ *
+ * Variabel yang didukung (ambil yang tersedia):
+ * - $survey: array|object => id, title, description, start_date, end_date, time_limit, is_anonymous, question_count, questions (bisa array/JSON)
+ * - $questions | $surveyQuestions | $questionList : array daftar pertanyaan (boleh object/array campur)
+ * - $validation: CodeIgniter\Validation (opsional)
+ * - $formAction: string URL submit (opsional; default current_url())
+ * - $participantId: string|int (opsional; untuk kunci autosave)
+ * - $backUrl: string (opsional; default base_url('admin/surveys'))
+ */
 
-<?= $this->section('styles') ?>
-<link href="<?= base_url('plugins/flatpickr/flatpickr.css') ?>" rel="stylesheet" type="text/css">
-<style>
-    .survey-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 30px;
-        border-radius: 12px;
-        margin-bottom: 30px;
+$layout = $layout ?? 'layouts/main';
+echo $this->extend($layout);
+
+$surveyId = is_array($survey ?? null)
+    ? ($survey['id'] ?? 'unknown')
+    : (is_object($survey ?? null) ? ($survey->id ?? 'unknown') : 'unknown');
+
+// 2) Baru susun action ke endpoint POST yang sudah ada di routes
+$action   = $formAction ?? site_url('member/surveys/submit/' . $surveyId);
+
+$participantKey = isset($participantId) ? (string)$participantId : 'guest';
+$draftKey = 'survey_draft_' . $surveyId . '_' . $participantKey;
+
+// ---------- Helpers umum ----------
+function _arr($src, $key, $default = null)
+{
+    if (is_array($src) && array_key_exists($key, $src)) return $src[$key];
+    if (is_object($src) && isset($src->{$key})) return $src->{$key};
+    return $default;
+}
+function _any($src, array $keys, $default = null)
+{
+    foreach ($keys as $k) {
+        $v = _arr($src, $k, null);
+        if ($v !== null) return $v;
     }
-
-    .question-card {
-        background: #fff;
-        border: 1px solid #e0e6ed;
-        border-radius: 12px;
-        padding: 25px;
-        margin-bottom: 20px;
-        transition: all 0.3s ease;
-    }
-
-    .question-card:hover {
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    .question-number {
-        background: #5c1ac3;
-        color: white;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        font-size: 14px;
-        margin-right: 10px;
-    }
-
-    .required-mark {
-        color: #e7515a;
-        font-weight: bold;
-    }
-
-    .radio-option,
-    .checkbox-option {
-        display: block;
-        position: relative;
-        padding: 12px 15px;
-        margin-bottom: 10px;
-        border: 1px solid #e0e6ed;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: all 0.2s;
-    }
-
-    .radio-option:hover,
-    .checkbox-option:hover {
-        background: #f8f9fa;
-        border-color: #5c1ac3;
-    }
-
-    .radio-option input[type="radio"],
-    .checkbox-option input[type="checkbox"] {
-        margin-right: 10px;
-    }
-
-    .radio-option.selected,
-    .checkbox-option.selected {
-        background: #5c1ac320;
-        border-color: #5c1ac3;
-    }
-
-    .rating-container {
-        display: flex;
-        gap: 10px;
-        margin-top: 15px;
-    }
-
-    .rating-option {
-        width: 50px;
-        height: 50px;
-        border: 2px solid #e0e6ed;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s;
-        font-weight: bold;
-    }
-
-    .rating-option:hover {
-        border-color: #5c1ac3;
-        background: #f8f9fa;
-    }
-
-    .rating-option.selected {
-        background: #5c1ac3;
-        color: white;
-        border-color: #5c1ac3;
-    }
-
-    .scale-container {
-        margin-top: 20px;
-    }
-
-    .scale-labels {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        font-size: 13px;
-        color: #888ea8;
-    }
-
-    .progress-indicator {
-        position: sticky;
-        top: 20px;
-        background: white;
-        border: 1px solid #e0e6ed;
-        border-radius: 12px;
-        padding: 20px;
-    }
-
-    .progress-step {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-        opacity: 0.5;
-        transition: opacity 0.3s;
-    }
-
-    .progress-step.completed {
-        opacity: 1;
-    }
-
-    .progress-step.completed .step-number {
-        background: #1abc9c;
-    }
-
-    .progress-step.current {
-        opacity: 1;
-    }
-
-    .progress-step.current .step-number {
-        background: #5c1ac3;
-        animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-        0% {
-            box-shadow: 0 0 0 0 rgba(92, 26, 195, 0.4);
-        }
-
-        70% {
-            box-shadow: 0 0 0 10px rgba(92, 26, 195, 0);
-        }
-
-        100% {
-            box-shadow: 0 0 0 0 rgba(92, 26, 195, 0);
+    return $default;
+}
+function _boolish($v)
+{
+    if (is_bool($v)) return $v;
+    if (is_numeric($v)) return (int)$v === 1;
+    if (is_string($v)) return in_array(strtolower(trim($v)), ['1', 'true', 'yes', 'ya', 'y', 'required'], true);
+    return false;
+}
+function _maybe_json_to_array($v)
+{
+    if (is_array($v)) return $v;
+    if (is_object($v)) return (array)$v;
+    if (is_string($v)) {
+        $t = trim($v);
+        if ($t !== '' && ($t[0] === '[' || $t[0] === '{')) {
+            $j = json_decode($v, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($j)) return $j;
         }
     }
-
-    .step-number {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        background: #e0e6ed;
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-right: 10px;
-        font-size: 12px;
-        font-weight: bold;
-    }
-
-    .auto-save-indicator {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background: #fff;
-        border: 1px solid #e0e6ed;
-        border-radius: 8px;
-        padding: 10px 15px;
-        display: none;
-        align-items: center;
-        gap: 10px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-        z-index: 1000;
-    }
-
-    .auto-save-indicator.show {
-        display: flex;
-    }
-
-    .spinner {
-        width: 16px;
-        height: 16px;
-        border: 2px solid #f3f3f3;
-        border-top: 2px solid #5c1ac3;
-        border-radius: 50%;
-        animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-        0% {
-            transform: rotate(0deg);
-        }
-
-        100% {
-            transform: rotate(360deg);
+    return $v;
+}
+function _flatten_candidates($cand)
+{
+    // ambil di bawah kunci umum: data, items, rows, list
+    if (is_array($cand)) {
+        foreach (['data', 'items', 'rows', 'list', 'questions', 'question_list'] as $k) {
+            if (isset($cand[$k]) && is_array($cand[$k])) return $cand[$k];
         }
     }
-
-    .file-upload-area {
-        border: 2px dashed #e0e6ed;
-        border-radius: 8px;
-        padding: 30px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s;
+    return $cand;
+}
+function _to_array($v)
+{
+    if (is_array($v)) return $v;
+    if (is_object($v)) return (array)$v;
+    if (is_string($v)) {
+        $parts = preg_split('/[\r\n\|\;]+/', $v);
+        if ($parts && count($parts) > 1) return array_values(array_filter(array_map('trim', $parts), 'strlen'));
+        if (trim($v) !== '') return [trim($v)];
     }
-
-    .file-upload-area:hover {
-        border-color: #5c1ac3;
-        background: #f8f9fa;
+    return [];
+}
+function _normalize_options($options)
+{
+    $arr = _to_array($options);
+    $out = [];
+    foreach ($arr as $opt) {
+        if (is_array($opt)) {
+            $lbl = _any($opt, ['label', 'text', 'name', 'title', 'option_label'], null);
+            $val = _any($opt, ['value', 'val', 'id', 'key', 'code', 'option_value'], null);
+            if ($lbl === null && $val !== null) $lbl = (string)$val;
+            if ($val === null && $lbl !== null) $val = (string)$lbl;
+            if ($lbl === null && $val === null) continue;
+            $out[] = ['value' => (string)$val, 'label' => (string)$lbl];
+        } else {
+            $out[] = ['value' => (string)$opt, 'label' => (string)$opt];
+        }
     }
+    return $out;
+}
+function _map_type($typeRaw)
+{
+    $map = [1 => 'text', 2 => 'textarea', 3 => 'number', 4 => 'email', 5 => 'phone', 6 => 'date', 7 => 'time', 8 => 'radio', 9 => 'checkbox', 10 => 'dropdown', 11 => 'rating', 12 => 'scale', 13 => 'file'];
+    if (is_numeric($typeRaw)) return $map[(int)$typeRaw] ?? 'text';
+    $t = strtolower((string)$typeRaw);
+    $aliases = ['select' => 'dropdown', 'tel' => 'phone', 'likert' => 'scale', 'star' => 'rating'];
+    return $aliases[$t] ?? ($t ?: 'text');
+}
+function _norm_q($q, $index = 0)
+{
+    $qid  = _any($q, ['id', 'question_id', 'qid', 'uuid'], 'q_' . $index);
+    $type = _map_type(_any($q, ['type', 'type_code', 'question_type'], 'text'));
+    $lab  = _any($q, ['question_text', 'text', 'label', 'title', 'name'], 'Pertanyaan ' . $index);
+    $req  = _boolish(_any($q, ['is_required', 'required', 'required_flag', 'mandatory'], false));
+    $help = _any($q, ['help_text', 'hint', 'description', 'helper_text', 'notes'], null);
+    $ph   = _any($q, ['placeholder', 'placeholder_text'], '');
+    $min  = _any($q, ['min', 'min_value', 'minval', 'scale_min', 'rating_min'], null);
+    $max  = _any($q, ['max', 'max_value', 'maxval', 'scale_max', 'rating_max'], null);
+    $step = _any($q, ['step', 'step_value', 'increment'], null);
+    $acc  = _any($q, ['accept', 'allowed_types', 'mimes'], null);
+    $multi = _boolish(_any($q, ['multiple', 'is_multiple', 'allow_multiple'], $type === 'checkbox' || $type === 'file'));
+    $opts = _normalize_options(_any($q, ['options', 'options_json', 'choices', 'scale_options', 'list'], []));
+    $maxlength = _any($q, ['maxlength', 'max_length', 'text_maxlength'], null);
 
-    .file-upload-area.dragover {
-        border-color: #5c1ac3;
-        background: #5c1ac320;
+    if ($min !== null && !is_numeric($min)) $min = null;
+    if ($max !== null && !is_numeric($max)) $max = null;
+
+    return [
+        'id' => $qid,
+        'type' => $type,
+        'label' => $lab,
+        'is_required' => $req,
+        'help_text' => $help,
+        'placeholder' => $ph,
+        'min' => $min,
+        'max' => $max,
+        'step' => $step,
+        'accept' => $acc,
+        'multiple' => $multi,
+        'options' => $opts,
+        'maxlength' => $maxlength,
+    ];
+}
+function _collect_questions($survey, $questions = null, $surveyQuestions = null, $questionList = null)
+{
+    $candidates = [];
+    $candidates[] = $questions ?? null;
+    $candidates[] = $surveyQuestions ?? null;
+    $candidates[] = $questionList ?? null;
+    $candidates[] = _arr($survey, 'questions', null);
+    $candidates[] = _arr($survey, 'question', null);
+
+    foreach ($candidates as $cand) {
+        if ($cand === null) continue;
+        $cand = _maybe_json_to_array($cand);
+        $cand = _flatten_candidates($cand);
+        if (is_array($cand) && count($cand)) return $cand;
     }
-</style>
-<?= $this->endSection() ?>
+    return [];
+}
+function _old_value($qid, $default = null)
+{
+    $v = old("answers.$qid");
+    return $v !== null ? $v : $default;
+}
+function _old_array($qid, $default = [])
+{
+    $v = old("answers.$qid");
+    return is_array($v) ? $v : $default;
+}
+
+// ---------- Data utama ----------
+$surveyId = _arr($survey, 'id', 'unknown');
+$participantKey = isset($participantId) ? (string)$participantId : 'guest';
+$draftKey = 'survey_draft_' . $surveyId . '_' . $participantKey;
+
+$qRawList = _collect_questions($survey, $questions ?? null, $surveyQuestions ?? null, $questionList ?? null);
+$qList = [];
+foreach ($qRawList as $i => $rq) {
+    $qList[] = _norm_q($rq, $i + 1);
+}
+?>
 
 <?= $this->section('content') ?>
 
-<div class="row layout-top-spacing">
-    <div class="col-xl-9 col-lg-8 col-md-12">
-        <!-- Survey Header -->
-        <div class="survey-header">
-            <h3><?= esc($survey['title']) ?></h3>
-            <p class="mb-3"><?= esc($survey['description']) ?></p>
-            <div class="d-flex gap-3 text-white-50">
-                <span><i data-feather="calendar"></i> Berakhir: <?= date('d M Y H:i', strtotime($survey['end_date'])) ?></span>
-                <?php if ($survey['is_anonymous']): ?>
-                    <span><i data-feather="user-x"></i> Survei Anonim</span>
+<div class="content-wrapper">
+    <div class="row g-3">
+
+        <!-- Header & Deskripsi -->
+        <div class="col-12">
+            <div class="page-description">
+                <h1 class="mb-1"><?= esc(_arr($survey, 'title', 'Survei')) ?></h1>
+                <?php if ($desc = _arr($survey, 'description', null)): ?>
+                    <div class="text-muted"><?= esc($desc) ?></div>
                 <?php endif; ?>
             </div>
         </div>
 
-        <!-- Alert for errors -->
-        <?php if (session()->getFlashdata('errors')): ?>
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Terdapat kesalahan:</strong>
-                <ul class="mb-0 mt-2">
-                    <?php foreach (session()->getFlashdata('errors') as $error): ?>
-                        <li><?= esc($error) ?></li>
-                    <?php endforeach; ?>
-                </ul>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-        <?php endif; ?>
-
-        <!-- Survey Form -->
-        <form id="surveyForm" action="<?= base_url('member/surveys/submit/' . $survey['id']) ?>" method="post" enctype="multipart/form-data">
-            <?= csrf_field() ?>
-
-            <?php foreach ($survey['questions'] as $index => $question): ?>
-                <div class="question-card" data-question="<?= $question['id'] ?>">
-                    <div class="question-header mb-3">
-                        <span class="question-number"><?= $index + 1 ?></span>
-                        <span class="question-text">
-                            <?= esc($question['question_text']) ?>
-                            <?php if ($question['is_required']): ?>
-                                <span class="required-mark">*</span>
-                            <?php endif; ?>
-                        </span>
-                    </div>
-
-                    <?php if (!empty($question['help_text'])): ?>
-                        <p class="text-muted small mb-3"><?= esc($question['help_text']) ?></p>
-                    <?php endif; ?>
-
-                    <!-- Answer Input Based on Question Type -->
-                    <?php
-                    $fieldName = 'question_' . $question['id'];
-                    $savedAnswer = $partial_response ?
-                        array_column($partial_response['answers'], 'answer_text', 'question_id')[$question['id']] ?? '' :
-                        old($fieldName);
-                    ?>
-
-                    <?php switch ($question['question_type']):
-                        case 'text': ?>
-                            <input type="text"
-                                class="form-control"
-                                name="<?= $fieldName ?>"
-                                id="<?= $fieldName ?>"
-                                value="<?= esc($savedAnswer) ?>"
-                                placeholder="<?= esc($question['placeholder'] ?? 'Masukkan jawaban Anda') ?>"
-                                <?= $question['is_required'] ? 'required' : '' ?>
-                                <?= $question['min_length'] ? 'minlength="' . $question['min_length'] . '"' : '' ?>
-                                <?= $question['max_length'] ? 'maxlength="' . $question['max_length'] . '"' : '' ?>>
-                            <?php break; ?>
-
-                        <?php
-                        case 'textarea': ?>
-                            <textarea class="form-control"
-                                name="<?= $fieldName ?>"
-                                id="<?= $fieldName ?>"
-                                rows="4"
-                                placeholder="<?= esc($question['placeholder'] ?? 'Masukkan jawaban Anda') ?>"
-                                <?= $question['is_required'] ? 'required' : '' ?>
-                                <?= $question['min_length'] ? 'minlength="' . $question['min_length'] . '"' : '' ?>
-                                <?= $question['max_length'] ? 'maxlength="' . $question['max_length'] . '"' : '' ?>><?= esc($savedAnswer) ?></textarea>
-                            <?php break; ?>
-
-                        <?php
-                        case 'number': ?>
-                            <input type="number"
-                                class="form-control"
-                                name="<?= $fieldName ?>"
-                                id="<?= $fieldName ?>"
-                                value="<?= esc($savedAnswer) ?>"
-                                placeholder="<?= esc($question['placeholder'] ?? 'Masukkan angka') ?>"
-                                <?= $question['is_required'] ? 'required' : '' ?>
-                                <?= $question['min_value'] !== null ? 'min="' . $question['min_value'] . '"' : '' ?>
-                                <?= $question['max_value'] !== null ? 'max="' . $question['max_value'] . '"' : '' ?>>
-                            <?php break; ?>
-
-                        <?php
-                        case 'radio': ?>
-                            <?php if (!empty($question['options'])): ?>
-                                <?php foreach ($question['options'] as $option): ?>
-                                    <label class="radio-option">
-                                        <input type="radio"
-                                            name="<?= $fieldName ?>"
-                                            value="<?= esc($option) ?>"
-                                            <?= $savedAnswer == $option ? 'checked' : '' ?>
-                                            <?= $question['is_required'] ? 'required' : '' ?>>
-                                        <?= esc($option) ?>
-                                    </label>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            <?php break; ?>
-
-                        <?php
-                        case 'checkbox': ?>
-                            <?php if (!empty($question['options'])): ?>
-                                <?php
-                                $savedCheckboxes = !empty($savedAnswer) ? json_decode($savedAnswer, true) : [];
-                                ?>
-                                <?php foreach ($question['options'] as $option): ?>
-                                    <label class="checkbox-option">
-                                        <input type="checkbox"
-                                            name="<?= $fieldName ?>[]"
-                                            value="<?= esc($option) ?>"
-                                            <?= in_array($option, $savedCheckboxes) ? 'checked' : '' ?>>
-                                        <?= esc($option) ?>
-                                    </label>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
-                            <?php break; ?>
-
-                        <?php
-                        case 'dropdown': ?>
-                            <?php if (!empty($question['options'])): ?>
-                                <select class="form-control"
-                                    name="<?= $fieldName ?>"
-                                    id="<?= $fieldName ?>"
-                                    <?= $question['is_required'] ? 'required' : '' ?>>
-                                    <option value="">-- Pilih --</option>
-                                    <?php foreach ($question['options'] as $option): ?>
-                                        <option value="<?= esc($option) ?>" <?= $savedAnswer == $option ? 'selected' : '' ?>>
-                                            <?= esc($option) ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            <?php endif; ?>
-                            <?php break; ?>
-
-                        <?php
-                        case 'date': ?>
-                            <input type="text"
-                                class="form-control flatpickr-date"
-                                name="<?= $fieldName ?>"
-                                id="<?= $fieldName ?>"
-                                value="<?= esc($savedAnswer) ?>"
-                                placeholder="Pilih tanggal"
-                                <?= $question['is_required'] ? 'required' : '' ?>>
-                            <?php break; ?>
-
-                        <?php
-                        case 'time': ?>
-                            <input type="text"
-                                class="form-control flatpickr-time"
-                                name="<?= $fieldName ?>"
-                                id="<?= $fieldName ?>"
-                                value="<?= esc($savedAnswer) ?>"
-                                placeholder="Pilih waktu"
-                                <?= $question['is_required'] ? 'required' : '' ?>>
-                            <?php break; ?>
-
-                        <?php
-                        case 'rating': ?>
-                            <div class="rating-container">
-                                <?php for ($i = 1; $i <= 5; $i++): ?>
-                                    <div class="rating-option <?= $savedAnswer == $i ? 'selected' : '' ?>"
-                                        data-value="<?= $i ?>"
-                                        onclick="selectRating('<?= $fieldName ?>', <?= $i ?>)">
-                                        <?= $i ?>
-                                    </div>
-                                <?php endfor; ?>
-                            </div>
-                            <input type="hidden"
-                                name="<?= $fieldName ?>"
-                                id="<?= $fieldName ?>"
-                                value="<?= esc($savedAnswer) ?>"
-                                <?= $question['is_required'] ? 'required' : '' ?>>
-                            <?php break; ?>
-
-                        <?php
-                        case 'scale': ?>
-                            <?php
-                            $min = $question['min_value'] ?? 1;
-                            $max = $question['max_value'] ?? 10;
-                            ?>
-                            <div class="scale-container">
-                                <div class="scale-labels">
-                                    <span><?= $min ?></span>
-                                    <span><?= $max ?></span>
-                                </div>
-                                <input type="range"
-                                    class="form-control-range"
-                                    name="<?= $fieldName ?>"
-                                    id="<?= $fieldName ?>"
-                                    min="<?= $min ?>"
-                                    max="<?= $max ?>"
-                                    value="<?= $savedAnswer ?: $min ?>"
-                                    oninput="updateScaleValue('<?= $fieldName ?>', this.value)"
-                                    <?= $question['is_required'] ? 'required' : '' ?>>
-                                <div class="text-center mt-2">
-                                    <span class="badge badge-primary" id="<?= $fieldName ?>_value">
-                                        <?= $savedAnswer ?: $min ?>
-                                    </span>
-                                </div>
-                            </div>
-                            <?php break; ?>
-
-                        <?php
-                        case 'file': ?>
-                            <div class="file-upload-area"
-                                onclick="document.getElementById('<?= $fieldName ?>').click()"
-                                ondrop="handleDrop(event, '<?= $fieldName ?>')"
-                                ondragover="handleDragOver(event)"
-                                ondragleave="handleDragLeave(event)">
-                                <i data-feather="upload-cloud" style="width: 48px; height: 48px; color: #888ea8;"></i>
-                                <p class="mt-3">Klik atau drag file untuk upload</p>
-                                <small class="text-muted">Maksimal 5MB (PDF, DOC, DOCX, JPG, PNG)</small>
-                            </div>
-                            <input type="file"
-                                name="<?= $fieldName ?>"
-                                id="<?= $fieldName ?>"
-                                style="display: none;"
-                                accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                                onchange="handleFileSelect(event, '<?= $fieldName ?>')"
-                                <?= $question['is_required'] ? 'required' : '' ?>>
-                            <div id="<?= $fieldName ?>_preview" class="mt-3"></div>
-                            <?php break; ?>
-
-                        <?php
-                        case 'email': ?>
-                            <input type="email"
-                                class="form-control"
-                                name="<?= $fieldName ?>"
-                                id="<?= $fieldName ?>"
-                                value="<?= esc($savedAnswer) ?>"
-                                placeholder="contoh@email.com"
-                                <?= $question['is_required'] ? 'required' : '' ?>>
-                            <?php break; ?>
-
-                        <?php
-                        case 'phone': ?>
-                            <input type="tel"
-                                class="form-control"
-                                name="<?= $fieldName ?>"
-                                id="<?= $fieldName ?>"
-                                value="<?= esc($savedAnswer) ?>"
-                                placeholder="08xxxxxxxxxx"
-                                pattern="[0-9+\-\s\(\)]+"
-                                <?= $question['is_required'] ? 'required' : '' ?>>
-                            <?php break; ?>
-
-                    <?php endswitch; ?>
-
-                </div>
-            <?php endforeach; ?>
-
-            <!-- Submit Buttons -->
-            <div class="d-flex justify-content-between mt-4">
-                <button type="button" class="btn btn-secondary" onclick="saveDraft()">
-                    <i data-feather="save"></i> Simpan Sementara
-                </button>
-                <button type="submit" class="btn btn-primary btn-lg">
-                    <i data-feather="send"></i> Kirim Survei
-                </button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Progress Sidebar -->
-    <div class="col-xl-3 col-lg-4 col-md-12">
-        <div class="progress-indicator">
-            <h5 class="mb-3">Progress Pengisian</h5>
-            <div class="progress mb-3">
-                <div class="progress-bar bg-primary" id="progressBar" role="progressbar"
-                    style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-            </div>
-            <p class="text-center text-muted mb-4">
-                <span id="answeredCount">0</span> dari <?= count($survey['questions']) ?> pertanyaan
-            </p>
-
-            <div class="question-progress-list">
-                <?php foreach ($survey['questions'] as $index => $question): ?>
-                    <div class="progress-step" id="step-<?= $question['id'] ?>">
-                        <span class="step-number"><?= $index + 1 ?></span>
-                        <span class="step-title text-truncate" style="max-width: 150px;">
-                            <?= character_limiter(esc($question['question_text']), 30) ?>
-                        </span>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-            <?php if ($partial_response): ?>
-                <div class="alert alert-info mt-3" role="alert">
-                    <i data-feather="info"></i>
-                    <small>Anda memiliki jawaban yang tersimpan sebelumnya.</small>
+        <!-- Notifikasi -->
+        <div class="col-12">
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success"><?= esc(session()->getFlashdata('success')) ?></div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger"><?= esc(session()->getFlashdata('error')) ?></div>
+            <?php endif; ?>
+            <?php if (isset($validation) && $validation->getErrors()): ?>
+                <div class="alert alert-danger"><?= $validation->listErrors() ?></div>
+            <?php endif; ?>
+            <?php if ($errs = session()->getFlashdata('errors')): ?>
+                <div class="alert alert-danger">
+                    <ul class="mb-0">
+                        <?php foreach ((array)$errs as $e): ?>
+                            <li><?= esc($e) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
                 </div>
             <?php endif; ?>
+
+        </div>
+
+        <!-- Kolom Kiri: Progress + Form -->
+        <div class="col-lg-8">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <!-- Progress -->
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-muted small">Progress Pengisian</span>
+                        <span id="progress-percentage" class="fw-semibold">0%</span>
+                    </div>
+                    <div class="progress mb-3">
+                        <div id="survey-progress" class="progress-bar" style="width:0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+
+                    <!-- Form -->
+                    <form id="surveyForm" action="<?= esc($action) ?>" method="post" enctype="multipart/form-data">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="survey_id" value="<?= esc($surveyId) ?>">
+
+                        <?php if (count($qList) === 0): ?>
+                            <div class="alert alert-warning mb-0">
+                                Pertanyaan belum tersedia pada view. Sumber yang dicek: <code>$questions</code>, <code>$surveyQuestions</code>, <code>$questionList</code>, dan <code>$survey['questions']</code>.
+                            </div>
+                        <?php endif; ?>
+
+                        <?php foreach ($qList as $idx => $q): ?>
+                            <?php
+                            $qid = $q['id'];
+                            $type = $q['type'];
+                            $req = $q['is_required'];
+                            $help = $q['help_text'];
+                            $ph = $q['placeholder'];
+                            $min = $q['min'];
+                            $max = $q['max'];
+                            $step = $q['step'];
+                            $acc = $q['accept'];
+                            $multi = $q['multiple'];
+                            $opts = $q['options'];
+                            $maxlength = $q['maxlength'];
+                            ?>
+                            <div class="card mb-3" data-question-id="<?= esc($qid) ?>">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start gap-2 mb-2">
+                                        <span class="badge bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width:32px;height:32px;"><?= $idx + 1 ?></span>
+                                        <div class="flex-grow-1">
+                                            <div class="fw-semibold">
+                                                <?= esc($q['label']) ?><?php if ($req): ?><span class="text-danger ms-1">*</span><?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <?php if (!empty($help)): ?>
+                                        <div class="text-muted small mb-3">
+                                            <span class="material-icons-outlined align-text-top me-1" style="font-size:18px;">help_outline</span>
+                                            <?= esc($help) ?>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if (in_array($type, ['text', 'email', 'number', 'date', 'time', 'phone', 'tel'])): ?>
+                                        <?php $inputType = $type === 'phone' ? 'tel' : $type; ?>
+                                        <input
+                                            type="<?= esc($inputType) ?>"
+                                            class="form-control"
+                                            id="q_<?= esc($qid) ?>"
+                                            name="question_<?= esc($qid) ?>"
+                                            placeholder="<?= esc($ph) ?>"
+                                            value="<?= esc(_old_value($qid) ?? '') ?>"
+                                            <?= $req ? 'required' : '' ?>
+                                            <?= ($min !== null && $inputType === 'number') ? 'min="' . esc($min) . '"' : '' ?>
+                                            <?= ($max !== null && $inputType === 'number') ? 'max="' . esc($max) . '"' : '' ?>
+                                            <?= ($step !== null && $inputType === 'number') ? 'step="' . esc($step) . '"' : '' ?>
+                                            <?= ($maxlength !== null && is_numeric($maxlength)) ? 'maxlength="' . esc($maxlength) . '"' : '' ?>>
+
+                                    <?php elseif ($type === 'textarea'): ?>
+                                        <textarea
+                                            class="form-control"
+                                            id="q_<?= esc($qid) ?>"
+                                            name="question_<?= esc($qid) ?>"
+
+                                            rows="4"
+                                            placeholder="<?= esc($ph) ?>"
+                                            <?= $req ? 'required' : '' ?>
+                                            <?= ($maxlength !== null && is_numeric($maxlength)) ? 'maxlength="' . esc($maxlength) . '"' : '' ?>><?= esc(_old_value($qid) ?? '') ?></textarea>
+
+                                    <?php elseif ($type === 'radio'): ?>
+                                        <?php $current = _old_value($qid); ?>
+                                        <div class="d-flex flex-column gap-2">
+                                            <?php if (!$opts): ?>
+                                                <div class="text-muted small">Belum ada opsi.</div>
+                                            <?php endif; ?>
+                                            <?php foreach ($opts as $i => $o): ?>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio"
+                                                        id="q_<?= esc($qid) ?>_<?= $i ?>"
+                                                        name="question_<?= esc($qid) ?>"
+
+                                                        value="<?= esc($o['value']) ?>"
+                                                        <?= ($current !== null && (string)$current === (string)$o['value']) ? 'checked' : '' ?>
+                                                        <?= $req && $i === 0 ? 'required' : '' ?>>
+                                                    <label class="form-check-label" for="q_<?= esc($qid) ?>_<?= $i ?>"><?= esc($o['label']) ?></label>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+
+                                    <?php elseif ($type === 'checkbox'): ?>
+                                        <?php $currArr = _old_array($qid); ?>
+                                        <div class="d-flex flex-column gap-2">
+                                            <?php if (!$opts): ?>
+                                                <div class="text-muted small">Belum ada opsi.</div>
+                                            <?php endif; ?>
+                                            <?php foreach ($opts as $i => $o): ?>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox"
+                                                        id="q_<?= esc($qid) ?>_<?= $i ?>"
+                                                        name="answers[<?= esc($qid) ?>][]"
+                                                        value="<?= esc($o['value']) ?>"
+                                                        <?= in_array((string)$o['value'], array_map('strval', $currArr), true) ? 'checked' : '' ?>
+                                                        <?= $req && $i === 0 ? 'required' : '' ?>>
+                                                    <label class="form-check-label" for="q_<?= esc($qid) ?>_<?= $i ?>"><?= esc($o['label']) ?></label>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+
+                                    <?php elseif ($type === 'dropdown'): ?>
+                                        <?php $current = _old_value($qid); ?>
+                                        <select class="form-select" id="q_<?= esc($qid) ?>" name="question_<?= esc($qid) ?>"
+                                            <?= $req ? 'required' : '' ?>>
+                                            <option value="" hidden selected>Pilih...</option>
+                                            <?php foreach ($opts as $o): ?>
+                                                <option value="<?= esc($o['value']) ?>" <?= ($current !== null && (string)$current === (string)$o['value']) ? 'selected' : '' ?>>
+                                                    <?= esc($o['label']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+
+                                    <?php elseif ($type === 'rating'): ?>
+                                        <?php
+                                        $minR = (int)($min ?? 1);
+                                        $maxR = (int)($max ?? 5);
+                                        if ($maxR < $minR) $maxR = $minR;
+                                        $current = (string)(_old_value($qid) ?? '');
+                                        ?>
+                                        <div class="d-flex align-items-center gap-2" role="radiogroup" aria-label="Rating">
+                                            <?php for ($r = $minR; $r <= $maxR; $r++): ?>
+                                                <input type="radio" class="btn-check"
+                                                    name="question_<?= esc($qid) ?>"
+
+                                                    id="q_<?= esc($qid) ?>_star_<?= $r ?>"
+                                                    value="<?= $r ?>"
+                                                    <?= $current === (string)$r ? 'checked' : '' ?>
+                                                    <?= $r === $minR && $req ? 'required' : '' ?>>
+                                                <label class="btn btn-outline-secondary" for="q_<?= esc($qid) ?>_star_<?= $r ?>" title="<?= $r ?>">
+                                                    <span class="material-icons-outlined">grade</span>
+                                                </label>
+                                            <?php endfor; ?>
+                                        </div>
+
+                                    <?php elseif ($type === 'scale'): ?>
+                                        <?php
+                                        $normOpts = $opts;
+                                        if (!$normOpts) {
+                                            $minS = (int)($min ?? 1);
+                                            $maxS = (int)($max ?? 5);
+                                            for ($s = $minS; $s <= $maxS; $s++) $normOpts[] = ['value' => $s, 'label' => (string)$s];
+                                        }
+                                        $current = _old_value($qid);
+                                        ?>
+                                        <div class="table-responsive">
+                                            <table class="table table-sm align-middle mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-muted small fw-normal" style="width:35%;">Pilihan</th>
+                                                        <?php foreach ($normOpts as $o): ?>
+                                                            <th class="text-center small"><?= esc($o['label']) ?></th>
+                                                        <?php endforeach; ?>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="text-muted small">Pilih salah satu</td>
+                                                        <?php foreach ($normOpts as $i => $o): ?>
+                                                            <td class="text-center">
+                                                                <input class="form-check-input" type="radio"
+                                                                    id="q_<?= esc($qid) ?>_<?= $i ?>"
+                                                                    name="question_<?= esc($qid) ?>"
+
+                                                                    value="<?= esc($o['value']) ?>"
+                                                                    <?= ($current !== null && (string)$current === (string)$o['value']) ? 'checked' : '' ?>
+                                                                    <?= $req && $i === 0 ? 'required' : '' ?>>
+                                                            </td>
+                                                        <?php endforeach; ?>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    <?php elseif ($type === 'file'): ?>
+                                        <div class="d-grid gap-2">
+                                            <input class="form-control" type="file"
+                                                id="q_<?= esc($qid) ?>"
+                                                name="files[<?= esc($qid) ?>]<?= $multi ? '[]' : '' ?>"
+                                                <?= $acc ? 'accept="' . esc($acc) . '"' : '' ?>
+                                                <?= $multi ? 'multiple' : '' ?>
+                                                <?= $req ? 'required' : '' ?>>
+                                            <div class="form-text">Format: <?= $acc ? esc($acc) : 'bebas' ?><?= $multi ? ', bisa lebih dari satu' : '' ?>.</div>
+                                        </div>
+
+                                    <?php else: /* fallback text */ ?>
+                                        <input type="text" class="form-control"
+                                            id="q_<?= esc($qid) ?>"
+                                            name="question_<?= esc($qid) ?>"
+
+                                            placeholder="<?= esc($ph) ?>"
+                                            value="<?= esc(_old_value($qid) ?? '') ?>"
+                                            <?= $req ? 'required' : '' ?>>
+                                    <?php endif; ?>
+
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+
+                        <!-- Tombol aksi -->
+                        <div class="d-flex flex-wrap gap-2 justify-content-end">
+                            <button type="button" class="btn btn-light" id="btnCancel">
+                                <span class="material-icons-outlined me-1">close</span> Batal
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" id="btnSaveDraft">
+                                <span class="material-icons-outlined me-1">save</span> Simpan Draft
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="btnSubmit">
+                                <span class="material-icons-outlined me-1">send</span> Kirim Survei
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kolom Kanan: Meta -->
+        <div class="col-lg-4">
+            <div class="card mb-3">
+                <div class="card-body d-flex flex-column gap-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="text-muted small">Total Pertanyaan</div>
+                        <div class="fw-semibold">
+                            <?php
+                            $qc = _arr($survey, 'question_count', null);
+                            if ($qc === null) $qc = count($qList);
+                            echo number_format((int)$qc);
+                            ?>
+                        </div>
+                    </div>
+
+                    <?php if (_arr($survey, 'start_date', null) || _arr($survey, 'end_date', null)): ?>
+                        <div class="d-flex align-items-start gap-2">
+                            <span class="material-icons-outlined">event</span>
+                            <div>
+                                <?php if ($sd = _arr($survey, 'start_date', null)): ?>
+                                    <div class="small text-muted">Mulai</div>
+                                    <div class="fw-semibold"><?= esc($sd) ?></div>
+                                <?php endif; ?>
+                                <?php if ($ed = _arr($survey, 'end_date', null)): ?>
+                                    <div class="small text-muted mt-2">Selesai</div>
+                                    <div class="fw-semibold"><?= esc($ed) ?></div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($tl = _arr($survey, 'time_limit', null)): ?>
+                        <div class="d-flex align-items-start gap-2">
+                            <span class="material-icons-outlined">schedule</span>
+                            <div>
+                                <div class="small text-muted">Batas Waktu</div>
+                                <div class="fw-semibold"><?= esc($tl) ?> menit</div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (null !== ($anon = _arr($survey, 'is_anonymous', null))): ?>
+                        <div class="d-flex align-items-start gap-2">
+                            <span class="material-icons-outlined">privacy_tip</span>
+                            <div>
+                                <div class="small text-muted">Kerahasiaan</div>
+                                <div class="fw-semibold"><?= _boolish($anon) ? 'Anonym' : 'Nama dicatat' ?></div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="small text-muted mb-2">Tips</div>
+                    <ul class="small ps-3 mb-0">
+                        <li>Gunakan <em>Simpan Draft</em> agar jawaban tidak hilang.</li>
+                        <li>Periksa kembali isian bertanda * (wajib).</li>
+                        <li>Klik <strong>Kirim Survei</strong> untuk menyimpan ke server.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Toast autosave -->
+<div id="autoSaveIndicator" class="position-fixed top-0 end-0 m-3 d-none">
+    <div class="toast align-items-center show" role="status" aria-live="polite" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body">
+                <span class="material-icons-outlined align-text-top me-1">autorenew</span>Tersimpan otomatis
+            </div>
         </div>
     </div>
 </div>
 
-<!-- Auto Save Indicator -->
-<div class="auto-save-indicator" id="autoSaveIndicator">
-    <div class="spinner"></div>
-    <span>Menyimpan...</span>
+<!-- Overlay -->
+<div id="loadingOverlay" class="position-fixed top-0 start-0 w-100 h-100 d-none align-items-center justify-content-center bg-dark bg-opacity-50" style="z-index:1055;">
+    <div class="card shadow-lg">
+        <div class="card-body d-flex align-items-center gap-2">
+            <span class="spinner-border" role="status" aria-hidden="true"></span><span>Memproses, mohon tunggu…</span>
+        </div>
+    </div>
 </div>
 
 <?= $this->endSection() ?>
 
 <?= $this->section('scripts') ?>
-<script src="<?= base_url('plugins/flatpickr/flatpickr.js') ?>"></script>
-<script src="<?= base_url('plugins/sweetalerts/sweetalert2.min.js') ?>"></script>
-
 <script>
-    // Initialize Flatpickr
-    flatpickr('.flatpickr-date', {
-        dateFormat: "Y-m-d"
-    });
-
-    flatpickr('.flatpickr-time', {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: "H:i",
-        time_24hr: true
-    });
-
-    // Initialize feather icons
-    feather.replace();
-
-    // Track progress
-    function updateProgress() {
-        const questions = document.querySelectorAll('.question-card');
-        let answered = 0;
-
-        questions.forEach(card => {
-            const questionId = card.dataset.question;
-            const inputs = card.querySelectorAll('input, textarea, select');
-            let hasValue = false;
-
-            inputs.forEach(input => {
-                if (input.type === 'radio' || input.type === 'checkbox') {
-                    if (input.checked) hasValue = true;
-                } else if (input.value) {
-                    hasValue = true;
-                }
-            });
-
-            const stepElement = document.getElementById(`step-${questionId}`);
-            if (hasValue) {
-                answered++;
-                stepElement.classList.add('completed');
-            } else {
-                stepElement.classList.remove('completed');
-            }
-        });
-
-        const percentage = Math.round((answered / questions.length) * 100);
-        document.getElementById('progressBar').style.width = percentage + '%';
-        document.getElementById('progressBar').setAttribute('aria-valuenow', percentage);
-        document.getElementById('answeredCount').textContent = answered;
-    }
-
-    // Auto save functionality
-    let autoSaveTimer;
-
-    function setupAutoSave() {
+    (function() {
         const form = document.getElementById('surveyForm');
-        const inputs = form.querySelectorAll('input, textarea, select');
-
-        inputs.forEach(input => {
-            input.addEventListener('change', () => {
-                clearTimeout(autoSaveTimer);
-                autoSaveTimer = setTimeout(autoSave, 3000); // Auto save after 3 seconds
-                updateProgress();
-            });
-
-            input.addEventListener('input', () => {
-                clearTimeout(autoSaveTimer);
-                autoSaveTimer = setTimeout(autoSave, 3000);
-                updateProgress();
-            });
-        });
-    }
-
-    function autoSave() {
-        const form = document.getElementById('surveyForm');
-        const formData = new FormData(form);
-
+        const progressBar = document.getElementById('survey-progress');
+        const progressPct = document.getElementById('progress-percentage');
+        const btnCancel = document.getElementById('btnCancel');
+        const btnSaveDraft = document.getElementById('btnSaveDraft');
+        const btnSubmit = document.getElementById('btnSubmit');
+        const overlay = document.getElementById('loadingOverlay');
         const indicator = document.getElementById('autoSaveIndicator');
-        indicator.classList.add('show');
 
-        fetch('<?= base_url('member/surveys/auto-save/' . $survey['id']) ?>', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                setTimeout(() => {
-                    indicator.classList.remove('show');
-                    if (data.success) {
-                        console.log('Auto-saved at', data.timestamp);
-                    }
-                }, 1000);
-            })
-            .catch(error => {
-                console.error('Auto-save failed:', error);
-                indicator.classList.remove('show');
-            });
-    }
+        const draftKey = <?= json_encode($draftKey) ?>;
+        const backUrl = <?= json_encode(site_url('member/surveys')) ?>;
 
-    // Rating selection
-    function selectRating(fieldName, value) {
-        const options = document.querySelectorAll(`[onclick*="${fieldName}"]`);
-        options.forEach(opt => opt.classList.remove('selected'));
-
-        event.target.classList.add('selected');
-        document.getElementById(fieldName).value = value;
-        updateProgress();
-    }
-
-    // Scale value update
-    function updateScaleValue(fieldName, value) {
-        document.getElementById(fieldName + '_value').textContent = value;
-        updateProgress();
-    }
-
-    // File upload handling
-    function handleFileSelect(event, fieldName) {
-        const file = event.target.files[0];
-        if (file) {
-            const preview = document.getElementById(fieldName + '_preview');
-            preview.innerHTML = `
-            <div class="alert alert-success">
-                <i data-feather="file"></i>
-                ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)
-            </div>
-        `;
-            feather.replace();
-            updateProgress();
+        function getCards() {
+            return Array.from(document.querySelectorAll('[data-question-id]'));
         }
-    }
 
-    function handleDragOver(event) {
-        event.preventDefault();
-        event.currentTarget.classList.add('dragover');
-    }
+        function inputsFor(qId) {
+            return document.querySelectorAll(
+                '[name="question_' + CSS.escape(qId) + '"], [name="question_' + CSS.escape(qId) + '[]"], [name^="files[' + CSS.escape(qId) + ']"]'
+            );
+        }
 
-    function handleDragLeave(event) {
-        event.currentTarget.classList.remove('dragover');
-    }
+        function isAnsweredByInputs(nodeList) {
+            const any = Array.from(nodeList);
+            if (!any.length) return false;
+            const t = any[0].type;
 
-    function handleDrop(event, fieldName) {
-        event.preventDefault();
-        event.currentTarget.classList.remove('dragover');
+            if (t === 'radio') return any.some(r => r.checked);
+            if (t === 'checkbox') return any.some(c => c.checked);
+            if (t === 'file') return any.some(f => f.files && f.files.length);
 
-        const file = event.dataTransfer.files[0];
-        const input = document.getElementById(fieldName);
-        input.files = event.dataTransfer.files;
+            // select/text/textarea/number/date/time/tel/email
+            const el = any[0];
+            if (el.tagName === 'SELECT') return (el.value || '').toString().trim().length > 0;
+            return (el.value || '').toString().trim().length > 0;
+        }
 
-        handleFileSelect({
-            target: input
-        }, fieldName);
-    }
+        function updateProgress() {
+            const cards = getCards();
+            const total = cards.length || 1;
+            let answered = 0;
+            cards.forEach(card => {
+                const qId = card.getAttribute('data-question-id');
+                if (isAnsweredByInputs(inputsFor(qId))) answered++;
+            });
+            const pct = Math.round((answered / total) * 100);
+            progressBar.style.width = pct + '%';
+            progressBar.setAttribute('aria-valuenow', pct);
+            progressPct.textContent = pct + '%';
+        }
 
-    // Save draft
-    function saveDraft() {
-        autoSave();
-        Swal.fire({
-            icon: 'success',
-            title: 'Tersimpan',
-            text: 'Jawaban Anda telah disimpan sementara',
-            timer: 2000,
-            showConfirmButton: false
-        });
-    }
+        // === Autosave: simpan nilai dari question_{ID} ke localStorage ===
+        function snapshotForm() {
+            const data = {};
+            getCards().forEach(card => {
+                const qId = card.getAttribute('data-question-id');
+                const inputs = Array.from(inputsFor(qId));
+                if (!inputs.length) return;
 
-    // Form submission
-    document.getElementById('surveyForm').addEventListener('submit', function(e) {
-        e.preventDefault();
+                const t = inputs[0].type;
+                if (t === 'checkbox') {
+                    data[qId] = inputs.filter(i => i.checked).map(i => i.value);
+                } else if (t === 'radio') {
+                    const c = inputs.find(i => i.checked);
+                    data[qId] = c ? c.value : '';
+                } else if (t === 'file') {
+                    // tidak disimpan di localStorage
+                } else {
+                    const el = inputs[0];
+                    data[qId] = (el.value || '').toString();
+                }
+            });
+            return data;
+        }
 
-        Swal.fire({
-            title: 'Konfirmasi',
-            text: 'Apakah Anda yakin ingin mengirim survei ini?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#5c1ac3',
-            cancelButtonColor: '#e7515a',
-            confirmButtonText: 'Ya, Kirim!',
-            cancelButtonText: 'Batal'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Show loading
-                Swal.fire({
-                    title: 'Mengirim...',
-                    text: 'Mohon tunggu',
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
+        function restoreDraft() {
+            try {
+                const raw = localStorage.getItem(draftKey);
+                if (!raw) return;
+                const {
+                    data
+                } = JSON.parse(raw) || {};
+                if (!data) return;
+
+                Object.keys(data).forEach(qId => {
+                    const val = data[qId];
+                    const inputs = Array.from(inputsFor(qId));
+                    if (!inputs.length) return;
+
+                    const t = inputs[0].type;
+                    if (Array.isArray(val)) {
+                        // checkbox
+                        inputs.forEach(i => {
+                            if (val.includes(i.value)) i.checked = true;
+                        });
+                    } else if (t === 'radio') {
+                        const target = inputs.find(i => (i.value === String(val)));
+                        if (target) target.checked = true;
+                    } else if (t !== 'file') {
+                        inputs[0].value = String(val ?? '');
                     }
                 });
-
-                // Submit form
-                this.submit();
-            }
-        });
-    });
-
-    // Highlight current question on scroll
-    function highlightCurrentQuestion() {
-        const questions = document.querySelectorAll('.question-card');
-        const scrollPosition = window.scrollY + 200;
-
-        questions.forEach(card => {
-            const questionId = card.dataset.question;
-            const stepElement = document.getElementById(`step-${questionId}`);
-            stepElement.classList.remove('current');
-
-            const cardTop = card.offsetTop;
-            const cardBottom = cardTop + card.offsetHeight;
-
-            if (scrollPosition >= cardTop && scrollPosition <= cardBottom) {
-                stepElement.classList.add('current');
-            }
-        });
-    }
-
-    // Initialize
-    document.addEventListener('DOMContentLoaded', function() {
-        updateProgress();
-        setupAutoSave();
-
-        window.addEventListener('scroll', highlightCurrentQuestion);
-        highlightCurrentQuestion();
-    });
-
-    // Handle radio/checkbox visual selection
-    document.querySelectorAll('.radio-option input, .checkbox-option input').forEach(input => {
-        input.addEventListener('change', function() {
-            const parent = this.closest('.radio-option, .checkbox-option');
-
-            if (this.type === 'radio') {
-                // Clear other selections
-                const siblings = this.closest('.question-card').querySelectorAll('.radio-option');
-                siblings.forEach(sib => sib.classList.remove('selected'));
-            }
-
-            if (this.checked) {
-                parent.classList.add('selected');
-            } else {
-                parent.classList.remove('selected');
-            }
-        });
-    });
-
-    // Prevent accidental navigation
-    let formChanged = false;
-    document.getElementById('surveyForm').addEventListener('change', function() {
-        formChanged = true;
-    });
-
-    window.addEventListener('beforeunload', function(e) {
-        if (formChanged) {
-            const confirmationMessage = 'Anda memiliki perubahan yang belum disimpan. Yakin ingin meninggalkan halaman?';
-            e.returnValue = confirmationMessage;
-            return confirmationMessage;
+            } catch (e) {}
         }
-    });
 
-    // Remove warning when submitting
-    document.getElementById('surveyForm').addEventListener('submit', function() {
-        formChanged = false;
-    });
+        let saveTimer = null;
+
+        function scheduleAutosave() {
+            if (saveTimer) clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => {
+                try {
+                    const data = snapshotForm();
+                    localStorage.setItem(draftKey, JSON.stringify({
+                        t: Date.now(),
+                        data
+                    }));
+                    showIndicator();
+                } catch (e) {}
+            }, 500);
+        }
+
+        function showIndicator() {
+            indicator.classList.remove('d-none');
+            setTimeout(() => indicator.classList.add('d-none'), 1200);
+        }
+
+        function lockUI(lock) {
+            overlay.classList.toggle('d-none', !lock);
+            btnSubmit.disabled = !!lock;
+        }
+
+        document.addEventListener('input', e => {
+            if (!form.contains(e.target)) return;
+            updateProgress();
+            scheduleAutosave();
+        });
+        document.addEventListener('change', e => {
+            if (!form.contains(e.target)) return;
+            updateProgress();
+            if (e.target.type !== 'file') scheduleAutosave();
+        });
+
+        btnSaveDraft.addEventListener('click', () => {
+            try {
+                const data = snapshotForm();
+                localStorage.setItem(draftKey, JSON.stringify({
+                    t: Date.now(),
+                    data
+                }));
+                showIndicator();
+            } catch (e) {
+                alert('Gagal menyimpan draft.');
+            }
+        });
+        btnCancel.addEventListener('click', () => {
+            if (confirm('Batalkan pengisian? Perubahan yang belum disimpan draft akan hilang.')) window.location.href = backUrl;
+        });
+
+        form.addEventListener('submit', e => {
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                e.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+            lockUI(true);
+            try {
+                const data = snapshotForm();
+                localStorage.setItem(draftKey, JSON.stringify({
+                    t: Date.now(),
+                    data
+                }));
+            } catch (e) {}
+        });
+
+        // init
+        restoreDraft();
+        updateProgress();
+    })();
 </script>
+
 <?= $this->endSection() ?>
