@@ -57,6 +57,10 @@ class ThrottleFilter implements FilterInterface
         if ($this->cache->get($blockKey)) {
             return $this->buildResponse($request, true);
         }
+        // Only count attempts for modifying requests (typically POST)
+        if (strtolower($request->getMethod()) !== 'post') {
+            return null;
+        }
 
         // Get current attempts
         $attempts = (int)$this->cache->get($key) ?: 0;
