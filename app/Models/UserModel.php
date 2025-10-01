@@ -75,6 +75,28 @@ class UserModel extends Model
             ->first();
     }
 
+
+    /**
+     * Get user with detailed profile information for session usage
+     */
+    public function getUserWithDetails($userId)
+    {
+        return $this->select([
+            'users.*',
+            'roles.role_name',
+            'COALESCE(NULLIF(members.nama_lengkap, \'\'), users.nama_lengkap) as nama_lengkap',
+            'members.nomor_anggota',
+            'members.foto_path as member_foto_path',
+            'users.foto as user_foto',
+            'COALESCE(NULLIF(members.foto_path, \'\'), NULLIF(users.foto, \'\')) as foto_path'
+        ])
+            ->join('roles', 'roles.id = users.role_id', 'left')
+            ->join('members', 'members.id = users.member_id', 'left')
+            ->where('users.id', $userId)
+            ->first();
+    }
+
+
     /**
      * Check if user is locked due to failed login attempts
      */

@@ -12,7 +12,22 @@ $session = session();
 $roleId = $session->get('role_id');
 $userName = $session->get('nama_lengkap') ?? $session->get('username') ?? 'User';
 $userEmail = $session->get('email');
-$userPhoto = $session->get('foto_path') ?? 'neptune-assets/images/avatars/avatar.png';
+$defaultPhoto = 'neptune-assets/images/avatars/avatar.png';
+$userPhoto = $session->get('foto_path');
+
+$sidebarPhoto = $defaultPhoto;
+
+if (!empty($userPhoto)) {
+    $normalizedPath = ltrim(str_replace('\\', '/', $userPhoto), '/');
+
+    if (stripos($normalizedPath, 'public/') === 0) {
+        $normalizedPath = substr($normalizedPath, strlen('public/'));
+    }
+
+    if ($normalizedPath !== '' && strpos($normalizedPath, ':') === false) {
+        $sidebarPhoto = $normalizedPath;
+    }
+}
 $roleName = $session->get('role_name') ?? 'User';
 
 // Load menu helper
@@ -36,7 +51,7 @@ $currentUrl = current_url();
         </a>
         <div class="sidebar-user-switcher user-activity-online">
             <a href="<?= base_url('profile') ?>">
-                <img src="<?= base_url($userPhoto) ?>" alt="User Avatar">
+                <img src="<?= base_url($sidebarPhoto) ?>" alt="User Avatar">
                 <span class="activity-indicator"></span>
                 <span class="user-info-text">
                     <?= esc($userName) ?><br>

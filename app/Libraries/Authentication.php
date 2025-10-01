@@ -118,9 +118,9 @@ class Authentication
             'username' => $user['username'],
             'role_id' => $user['role_id'],
             'role_name' => $userDetails['role_name'] ?? 'member',
-            'nama_lengkap' => $userDetails['nama_lengkap'] ?? '',
+            'nama_lengkap' => $userDetails['nama_lengkap'] ?? ($user['nama_lengkap'] ?? ''),
             'nomor_anggota' => $userDetails['nomor_anggota'] ?? '',
-            'foto_path' => $userDetails['foto_path'] ?? null,
+            'foto_path' => $this->resolveUserPhotoPath($userDetails, $user),
             'logged_in' => true,
             'login_time' => time()
         ];
@@ -134,6 +134,80 @@ class Authentication
 
         // Regenerate session ID for security
         $this->session->regenerate();
+    }
+
+    /**
+     * Resolve a usable relative photo path for the logged in user.
+     */
+    protected function resolveUserPhotoPath(?array $userDetails, array $user): ?string
+    {
+        $details = $userDetails ?? [];
+
+        $publicBase = rtrim(str_replace('\\', '/', FCPATH), '/') . '/';
+
+        $normalize = function (?string $value) use ($publicBase): string {
+            if (empty($value)) {
+                return '';
+            }
+
+            $value = str_replace('\\', '/', $value);
+
+            if (stripos($value, $publicBase) === 0) {
+                $value = substr($value, strlen($publicBase));
+            } elseif (stripos($value, 'public/') === 0) {
+                $value = substr($value, strlen('public/'));
+            }
+
+            return ltrim($value, '/');
+        };
+
+        $memberPath = $normalize($details['member_foto_path'] ?? null);
+        $coalescedPath = $normalize($details['foto_path'] ?? null);
+        $userFoto = $normalize($details['user_foto'] ?? ($user['foto'] ?? null));
+
+        $filename = $userFoto !== '' ? basename($userFoto) : '';
+
+        $rawPaths = [];
+        if ($memberPath !== '') {
+            $rawPaths[] = $memberPath;
+        }
+        if ($coalescedPath !== '' && $coalescedPath !== $memberPath) {
+            $rawPaths[] = $coalescedPath;
+        }
+
+        $candidates = [];
+
+        foreach ($rawPaths as $rawPath) {
+            if (pathinfo($rawPath, PATHINFO_EXTENSION) === '') {
+                if ($filename !== '') {
+                    $candidates[] = rtrim($rawPath, '/') . '/' . $filename;
+                }
+            } else {
+                $candidates[] = $rawPath;
+            }
+        }
+
+        if ($userFoto !== '') {
+            $hasExtension = pathinfo($userFoto, PATHINFO_EXTENSION) !== '';
+            $containsSlash = strpos($userFoto, '/') !== false;
+
+            if ($hasExtension && $containsSlash) {
+                $candidates[] = $userFoto;
+            } elseif ($hasExtension) {
+                $candidates[] = 'uploads/photos/' . ltrim($userFoto, '/');
+            }
+        }
+
+        $candidates = array_values(array_unique(array_filter($candidates)));
+
+        foreach ($candidates as $candidate) {
+            $relative = ltrim($candidate, '/');
+            if (is_file($publicBase . $relative)) {
+                return $relative;
+            }
+        }
+
+        return null;
     }
 
     /**
