@@ -1,4 +1,8 @@
 <?php
+// ============================================
+// PERBAIKAN AuthController.php
+// ============================================
+// Path: app/Controllers/AuthController.php
 
 namespace App\Controllers;
 
@@ -24,8 +28,8 @@ class AuthController extends BaseController
      */
     public function login()
     {
-        // Jika sudah login, redirect sesuai role
-        if (session()->get('isLoggedIn')) {
+        // PERBAIKAN: Gunakan key session yang konsisten
+        if (session()->get('logged_in')) {
             return $this->redirectBasedOnRole();
         }
 
@@ -56,8 +60,7 @@ class AuthController extends BaseController
         $password = $this->request->getPost('password');
 
         // Get user from database WITH ROLE
-        $userModel = new \App\Models\UserModel();
-        $user = $userModel->getUserByEmailWithRole($email); // UBAH INI
+        $user = $this->userModel->getUserByEmailWithRole($email);
 
         // Check if user exists
         if (!$user) {
@@ -83,55 +86,58 @@ class AuthController extends BaseController
             return redirect()->back()->withInput();
         }
 
-        // Set session data
+        // Set session data - GUNAKAN KEY YANG KONSISTEN
         $this->setUserSession($user);
 
         // Update last login
-        $userModel->update($user['id'], [
+        $this->userModel->update($user['id'], [
             'last_login' => date('Y-m-d H:i:s'),
             'login_attempts' => 0
         ]);
 
-        // Redirect based on role
-        return $this->redirectBasedOnRole($user['role_id']);
+        // Redirect based on role - LANGSUNG RETURN REDIRECT
+        return $this->redirectBasedOnRole();
     }
+
     /**
-     * Set user session data
+     * Set user session data - PERBAIKAN: Gunakan key yang konsisten
      */
     private function setUserSession($user)
     {
         $sessionData = [
             'user_id' => $user['id'],
-            'id' => $user['id'], // For backward compatibility
             'email' => $user['email'],
             'username' => $user['username'] ?? $user['email'],
             'nama_lengkap' => $user['nama_lengkap'] ?? 'User',
             'role_id' => $user['role_id'],
-            'role_name' => $user['role_name'] ?? 'anggota',
+            'role_name' => $user['role_name'] ?? 'member',
             'foto' => $user['foto'] ?? 'default.png',
-            'member_id' => $user['member_id'], // Langsung ambil dari $user
-            'isLoggedIn' => true
+            'member_id' => $user['member_id'],
+            'logged_in' => true  // KUNCI UTAMA: Gunakan 'logged_in' bukan 'isLoggedIn'
         ];
 
         session()->set($sessionData);
+        session()->regenerate(); // Security: Regenerate session ID
     }
 
     /**
-     * Redirect based on user role
+     * Redirect based on user role - PERBAIKAN: Gunakan role_id, bukan role_name
      */
     private function redirectBasedOnRole()
     {
-        $role = session()->get('role');
+        $roleId = session()->get('role_id');
 
-        switch ($role) {
-            case 'super_admin':
-                return redirect()->to('/admin/dashboard');
-            case 'pengurus':
-                return redirect()->to('/pengurus/dashboard');
-            case 'member':
-                return redirect()->to('/member/dashboard');
-            default:
+        // PERBAIKAN: Redirect berdasarkan role_id yang lebih reliable
+        switch ($roleId) {
+            case 1: // Super Admin
                 return redirect()->to('/dashboard');
+
+            case 2: // Pengurus
+                return redirect()->to('/pengurus/dashboard');
+
+            case 3: // Member/Anggota
+            default:
+                return redirect()->to('/member/profile');
         }
     }
 
@@ -150,7 +156,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * Display forgot password form
+     * Forgot password form
      */
     public function forgotPassword()
     {
@@ -162,7 +168,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * Process forgot password request
+     * Process forgot password
      */
     public function processForgotPassword()
     {
@@ -172,7 +178,6 @@ class AuthController extends BaseController
 
         if (!$this->validate($rules)) {
             return redirect()->back()
-                ->withInput()
                 ->with('errors', $this->validator->getErrors());
         }
 
@@ -180,53 +185,39 @@ class AuthController extends BaseController
         $user = $this->userModel->where('email', $email)->first();
 
         if (!$user) {
-            session()->setFlashdata('error', 'Email tidak terdaftar.');
-            return redirect()->back()->withInput();
+            // Tetap tampilkan pesan sukses untuk keamanan (mencegah email enumeration)
+            session()->setFlashdata('success', 'Jika email terdaftar, link reset password telah dikirim.');
+            return redirect()->to('/login');
         }
 
         // Generate reset token
         $token = bin2hex(random_bytes(32));
         $expiry = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
-        // Save token to database
+        // Update user dengan reset token
         $this->userModel->update($user['id'], [
             'reset_token' => $token,
             'reset_token_expiry' => $expiry
         ]);
 
-        // Send reset email
-        $this->sendResetEmail($email, $token);
+        // Send email (implementasi email service)
+        $this->sendResetEmail($user['email'], $token);
 
         session()->setFlashdata('success', 'Link reset password telah dikirim ke email Anda.');
         return redirect()->to('/login');
     }
 
     /**
-     * Send password reset email
+     * Reset password form
      */
-    private function sendResetEmail($email, $token)
+    public function resetPassword($token = null)
     {
-        $resetLink = base_url('reset-password/' . $token);
+        if (!$token) {
+            session()->setFlashdata('error', 'Token tidak valid.');
+            return redirect()->to('/login');
+        }
 
-        $emailService = \Config\Services::email();
-        $emailService->setTo($email);
-        $emailService->setSubject('Reset Password - SPK');
-        $emailService->setMessage("
-            <h2>Reset Password</h2>
-            <p>Klik link berikut untuk reset password Anda:</p>
-            <p><a href='{$resetLink}'>{$resetLink}</a></p>
-            <p>Link ini akan kadaluarsa dalam 1 jam.</p>
-            <p>Jika Anda tidak meminta reset password, abaikan email ini.</p>
-        ");
-
-        $emailService->send();
-    }
-
-    /**
-     * Display reset password form
-     */
-    public function resetPassword($token)
-    {
+        // Verify token exists and not expired
         $user = $this->userModel->where('reset_token', $token)
             ->where('reset_token_expiry >', date('Y-m-d H:i:s'))
             ->first();
@@ -281,5 +272,18 @@ class AuthController extends BaseController
 
         session()->setFlashdata('success', 'Password berhasil direset. Silakan login dengan password baru.');
         return redirect()->to('/login');
+    }
+
+    /**
+     * Send reset email (stub - implement dengan Email Service)
+     */
+    private function sendResetEmail($email, $token)
+    {
+        // TODO: Implement email sending
+        // Gunakan CodeIgniter Email class atau service seperti PHPMailer
+        $resetLink = base_url("reset-password/{$token}");
+
+        // Log untuk development
+        log_message('info', "Reset password link for {$email}: {$resetLink}");
     }
 }
