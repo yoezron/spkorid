@@ -1,23 +1,12 @@
 <?php
+helper('photo');
 // Ambil data user dari session untuk digunakan di navbar
 $nama_lengkap = session()->get('nama_lengkap') ?? 'Anggota';
 $email = session()->get('email') ?? 'email@example.com';
 $defaultPhoto = 'neptune-assets/images/avatars/avatar.png';
 $fotoPath = session()->get('foto_path');
 
-$navbarPhoto = $defaultPhoto;
-
-if (!empty($fotoPath)) {
-    $normalizedPath = ltrim(str_replace('\\', '/', $fotoPath), '/');
-
-    if (stripos($normalizedPath, 'public/') === 0) {
-        $normalizedPath = substr($normalizedPath, strlen('public/'));
-    }
-
-    if ($normalizedPath !== '' && strpos($normalizedPath, ':') === false) {
-        $navbarPhoto = $normalizedPath;
-    }
-}
+$navbarPhotoUrl = resolve_user_photo_url($fotoPath, $defaultPhoto);
 ?>
 
 <div class="app-header">
@@ -101,7 +90,7 @@ if (!empty($fotoPath)) {
                     <!-- Dropdown Profil Pengguna -->
                     <li class="nav-item">
                         <a class="nav-link" id="profileDropDown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="<?= base_url($navbarPhoto) ?>" alt="profile image" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+                            <img src="<?= esc($navbarPhotoUrl) ?>" alt="profile image" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
                         </a>
                         <div class="dropdown-menu dropdown-menu-end profile-dropdown" aria-labelledby="profileDropDown">
                             <div class="dropdown-header">

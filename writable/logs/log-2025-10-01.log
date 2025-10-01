@@ -930,3 +930,24 @@ AND `forum_threads`.`deleted_at` IS NULL', [...], false)
 14 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')
 DEBUG - 2025-10-01 07:03:12 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
 DEBUG - 2025-10-01 07:03:18 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+DEBUG - 2025-10-01 07:16:05 --> Session: Class initialized using 'CodeIgniter\Session\Handlers\FileHandler' driver.
+CRITICAL - 2025-10-01 07:16:05 --> ErrorException: Undefined variable $sidebarPhotoUrl
+[Method: GET, Route: member/profile]
+in APPPATH\Views\partials\sidebar.php on line 41.
+ 1 APPPATH\Views\partials\sidebar.php(41): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined variable $sidebarPhotoUrl', 'C:\\laragon\\www\\spkorid\\app\\Views\\partials\\sidebar.php', 41)
+ 2 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\partials\\sidebar.php')
+ 3 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 4 SYSTEMPATH\View\View.php(475): CodeIgniter\View\View->render('partials/sidebar', null, true)
+ 5 APPPATH\Views\layouts\main.php(39): CodeIgniter\View\View->include('partials/sidebar')
+ 6 SYSTEMPATH\View\View.php(226): include('C:\\laragon\\www\\spkorid\\app\\Views\\layouts\\main.php')
+ 7 SYSTEMPATH\View\View.php(229): CodeIgniter\View\View->CodeIgniter\View\{closure}()
+ 8 SYSTEMPATH\View\View.php(242): CodeIgniter\View\View->render('layouts/main', [], true)
+ 9 SYSTEMPATH\Common.php(1167): CodeIgniter\View\View->render('member/profile', [], true)
+10 APPPATH\Controllers\MemberController.php(54): view('member/profile', [...])
+11 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\MemberController->profile()
+12 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\MemberController))
+13 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+14 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+15 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+16 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+17 SYSTEMPATH\rewrite.php(44): require_once('C:\\laragon\\www\\spkorid\\public\\index.php')

@@ -3,9 +3,10 @@
 /**
  * Sidebar Navigation Partial - Neptune Theme
  * File: app/Views/partials/sidebar.php
- * 
  * Dynamic sidebar yang sesuai dengan Neptune Light Theme
  */
+
+helper('photo');
 
 // Get current user info from session
 $session = session();
@@ -14,20 +15,6 @@ $userName = $session->get('nama_lengkap') ?? $session->get('username') ?? 'User'
 $userEmail = $session->get('email');
 $defaultPhoto = 'neptune-assets/images/avatars/avatar.png';
 $userPhoto = $session->get('foto_path');
-
-$sidebarPhoto = $defaultPhoto;
-
-if (!empty($userPhoto)) {
-    $normalizedPath = ltrim(str_replace('\\', '/', $userPhoto), '/');
-
-    if (stripos($normalizedPath, 'public/') === 0) {
-        $normalizedPath = substr($normalizedPath, strlen('public/'));
-    }
-
-    if ($normalizedPath !== '' && strpos($normalizedPath, ':') === false) {
-        $sidebarPhoto = $normalizedPath;
-    }
-}
 $roleName = $session->get('role_name') ?? 'User';
 
 // Load menu helper
@@ -51,7 +38,7 @@ $currentUrl = current_url();
         </a>
         <div class="sidebar-user-switcher user-activity-online">
             <a href="<?= base_url('profile') ?>">
-                <img src="<?= base_url($sidebarPhoto) ?>" alt="User Avatar">
+                <img src="<?= esc($sidebarPhotoUrl) ?>" alt="User Avatar">
                 <span class="activity-indicator"></span>
                 <span class="user-info-text">
                     <?= esc($userName) ?><br>
