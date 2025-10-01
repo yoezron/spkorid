@@ -41,25 +41,27 @@ class AuthController extends BaseController
      */
     public function attemptLogin()
     {
+        $validation = \Config\Services::validation();
+
         $rules = [
             'email' => 'required|valid_email',
             'password' => 'required|min_length[6]'
         ];
 
         if (!$this->validate($rules)) {
-            return redirect()->back()
-                ->withInput()
-                ->with('errors', $this->validator->getErrors());
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
         $email = $this->request->getPost('email');
         $password = $this->request->getPost('password');
 
-        // Check user credentials
-        $user = $this->userModel->where('email', $email)->first();
+        // Get user from database WITH ROLE
+        $userModel = new \App\Models\UserModel();
+        $user = $userModel->getUserByEmailWithRole($email); // UBAH INI
 
+        // Check if user exists
         if (!$user) {
-            session()->setFlashdata('error', 'Email tidak terdaftar.');
+            session()->setFlashdata('error', 'Email tidak ditemukan.');
             return redirect()->back()->withInput();
         }
 
@@ -69,23 +71,30 @@ class AuthController extends BaseController
             return redirect()->back()->withInput();
         }
 
+        // Check if email is verified
+        if (!$user['is_verified']) {
+            session()->setFlashdata('error', 'Akun Anda belum diverifikasi. Silakan cek email untuk link verifikasi.');
+            return redirect()->back()->withInput();
+        }
+
         // Check if account is active
-        if ($user['status'] !== 'active') {
-            session()->setFlashdata('error', 'Akun Anda belum aktif atau telah dinonaktifkan.');
+        if (!$user['is_active']) {
+            session()->setFlashdata('error', 'Akun Anda belum diaktifkan atau telah dinonaktifkan. Hubungi pengurus untuk informasi lebih lanjut.');
             return redirect()->back()->withInput();
         }
 
         // Set session data
         $this->setUserSession($user);
 
-        // Log activity
-        $this->logActivity('login', 'User logged in: ' . $user['email']);
+        // Update last login
+        $userModel->update($user['id'], [
+            'last_login' => date('Y-m-d H:i:s'),
+            'login_attempts' => 0
+        ]);
 
-        session()->setFlashdata('success', 'Selamat datang, ' . $user['nama_lengkap'] . '!');
-
-        return $this->redirectBasedOnRole();
+        // Redirect based on role
+        return $this->redirectBasedOnRole($user['role_id']);
     }
-
     /**
      * Set user session data
      */
@@ -96,21 +105,13 @@ class AuthController extends BaseController
             'id' => $user['id'], // For backward compatibility
             'email' => $user['email'],
             'username' => $user['username'] ?? $user['email'],
-            'nama_lengkap' => $user['nama_lengkap'],
-            'role' => $user['role'],
+            'nama_lengkap' => $user['nama_lengkap'] ?? 'User',
+            'role_id' => $user['role_id'],
+            'role_name' => $user['role_name'] ?? 'anggota',
+            'foto' => $user['foto'] ?? 'default.png',
+            'member_id' => $user['member_id'], // Langsung ambil dari $user
             'isLoggedIn' => true
         ];
-
-        // If user is a member, add member data
-        $member = $this->memberModel->where('user_id', $user['id'])->first();
-        if ($member) {
-            $sessionData['member_id'] = $member['id'];
-            $sessionData['member'] = [
-                'id' => $member['id'],
-                'nomor_anggota' => $member['nomor_anggota'],
-                'status_keanggotaan' => $member['status_keanggotaan']
-            ];
-        }
 
         session()->set($sessionData);
     }

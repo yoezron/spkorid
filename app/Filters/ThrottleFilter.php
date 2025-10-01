@@ -57,6 +57,10 @@ class ThrottleFilter implements FilterInterface
         if ($this->cache->get($blockKey)) {
             return $this->buildResponse($request, true);
         }
+        // Only count attempts for modifying requests (typically POST)
+        if (strtolower($request->getMethod()) !== 'post') {
+            return null;
+        }
 
         // Get current attempts
         $attempts = (int)$this->cache->get($key) ?: 0;
@@ -83,10 +87,15 @@ class ThrottleFilter implements FilterInterface
         // If login was successful, clear the throttle
         if ($response->getStatusCode() === 200 || $response->getStatusCode() === 302) {
             $session = session();
-            if ($session->get('logged_in') || $session->get('user_id')) {
+            if ($session->get('isLoggedIn') || $session->get('logged_in') || $session->get('user_id')) {
                 $key = $this->resolveRequestSignature($request);
                 $this->cache->delete($key);
                 $this->cache->delete('blocked_' . $key); // Fixed: use underscore
+                $baseKey = $this->resolveBaseRequestSignature($request);
+                if ($baseKey !== $key) {
+                    $this->cache->delete($baseKey);
+                    $this->cache->delete('blocked_' . $baseKey);
+                }
             }
         }
     }
@@ -115,6 +124,17 @@ class ThrottleFilter implements FilterInterface
         $safeKey = 'throttle_' . md5($ip . '_' . $route . $identifier);
 
         return $safeKey;
+    }
+
+    /**
+     * Generate base signature without user identifier
+     */
+    protected function resolveBaseRequestSignature(RequestInterface $request): string
+    {
+        $ip = $request->getIPAddress();
+        $route = $request->getUri()->getPath();
+
+        return 'throttle_' . md5($ip . '_' . $route);
     }
 
     /**
