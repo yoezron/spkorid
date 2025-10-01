@@ -699,7 +699,7 @@ class SurveyController extends BaseController
     /**
      * Log activity
      */
-    private function logActivity($action, $description)
+    protected function logActivity($action, $description)
     {
         $activityData = [
             'user_id' => session()->get('user_id'),
